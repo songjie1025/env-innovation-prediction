@@ -1,0 +1,19 @@
+# === 数据处理 ===
+pandas>=2.0
+numpy>=1.24
+wbdata>=1.0          # World Bank API
+
+# === 机器学习 ===
+scikit-learn>=1.3
+xgboost>=2.0
+shap>=0.43
+
+# === 可视化 ===
+matplotlib>=3.7
+seaborn>=0.13
+
+# === 实验管理 ===
+optuna>=3.5          # 超参数优化
+
+# === Jupyter（可选）===
+jupyter>=1.0

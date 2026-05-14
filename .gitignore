@@ -1,0 +1,38 @@
+# === 数据文件（太大，不提交到 GitHub）===
+2_data/raw/*
+!2_data/raw/.gitkeep
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# === 虚拟环境 ===
+venv/
+.venv/
+env/
+
+# === 模型文件（太大）===
+3_models/saved_models/*.pkl
+3_models/saved_models/*.joblib
+
+# === 敏感信息 ===
+.env
+*.key
+*.pem
+credentials.json
+
+# === macOS ===
+.DS_Store
+
+# === IDE ===
+.vscode/
+.idea/
+
+# === LaTeX ===
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.pdf
