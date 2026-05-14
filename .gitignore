@@ -1,36 +1,36 @@
-# === 数据文件（太大，不提交到 GitHub）===
+# === Raw & large data files — excluded from version control ===
 2_data/raw/*
 !2_data/raw/.gitkeep
 
-# === Python ===
+# === Python artifacts ===
 __pycache__/
 *.py[cod]
 *.egg-info/
 .ipynb_checkpoints/
 
-# === 虚拟环境 ===
+# === Virtual environments ===
 venv/
 .venv/
 env/
 
-# === 模型文件（太大）===
+# === Trained model files (too large for Git) ===
 3_models/saved_models/*.pkl
 3_models/saved_models/*.joblib
 
-# === 敏感信息 ===
+# === Secrets & credentials ===
 .env
 *.key
 *.pem
 credentials.json
 
-# === macOS ===
+# === macOS system files ===
 .DS_Store
 
-# === IDE ===
+# === IDE & editor config ===
 .vscode/
 .idea/
 
-# === LaTeX ===
+# === LaTeX build artifacts ===
 report/*.aux
 report/*.log
 report/*.out
