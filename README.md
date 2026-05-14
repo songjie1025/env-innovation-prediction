@@ -1,4 +1,4 @@
-# Predicting Environment-Related Innovation
+# Predicting Environment-Related Innovation goodgood
 
 > Managerial AI Course Project — LMU Munich, SS 2026  
 > Prof. Stefan Feuerriegel
