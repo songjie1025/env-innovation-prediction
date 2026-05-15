@@ -31,14 +31,24 @@ Keep documentation small and specific:
 
 1. `0_organization/` stores project rules, requirements, and decision records.
 2. `1_literature_review/` stores literature notes and the variable framework.
-3. `2_data/` stores data scripts, raw data placeholders, processed data, and data dictionaries.
+3. `2_data/` stores data scripts, notebooks, raw data placeholders, processed data, and data dictionaries.
 4. `3_models/` stores model code, model plans, and model outputs.
 5. `4_analysis/` stores figures, tables, interpretation, and case-study material.
 6. `report/` stores the final report or files synced from Overleaf.
 
 Do not duplicate the same explanation across many files. Link to the source file instead.
 
-## 5. Decision Logging
+## 5. Script and Notebook Workflow
+
+Use paired scripts and notebooks for data and modeling work:
+
+1. Put reusable logic in scripts, for example in `2_data/scripts/` or `3_models/scripts/`.
+2. Put narrative exploration in notebooks, for example in `2_data/notebooks/`.
+3. Notebooks should import scripts instead of duplicating large code blocks.
+4. Notebooks should explain the motivation, run the relevant calls, and display key tables or figures.
+5. Important results from notebooks should be exported to committed files such as `2_data/processed/`, `4_analysis/figures/`, or `4_analysis/tables/`.
+
+## 6. Decision Logging
 
 Important choices should be recorded briefly in `0_organization/decision_log.md`.
 
@@ -53,7 +63,7 @@ Log a decision when we choose or change:
 
 Each entry should include the date, the decision, the reason, and any rejected alternative.
 
-## 6. Data Rules
+## 7. Data Rules
 
 1. Raw data belongs in `2_data/raw/` and should not be committed unless it is tiny and explicitly useful.
 2. Processed data belongs in `2_data/processed/`.
@@ -61,7 +71,7 @@ Each entry should include the date, the decision, the reason, and any rejected a
 4. Use country-year panel structure unless there is a clear reason not to.
 5. Avoid time leakage: predictors should come from earlier years when predicting future innovation.
 
-## 7. Modeling Rules
+## 8. Modeling Rules
 
 1. Start with a simple, interpretable baseline before adding complex models.
 2. Add a more complex model only if it improves the research question, not just the score.
@@ -69,7 +79,7 @@ Each entry should include the date, the decision, the reason, and any rejected a
 4. Interpretability is required. Use coefficients, permutation importance, SHAP, partial dependence, or another clearly explained method.
 5. Report both predictive performance and substantive interpretation.
 
-## 8. Commit Rules
+## 9. Commit Rules
 
 Use small, focused commits. One commit should represent one logical change.
 
@@ -107,14 +117,14 @@ Commit message rules:
 4. Do not mix unrelated changes in one commit.
 5. Mention the affected area in the summary when helpful.
 
-## 9. Branch Rules
+## 10. Branch Rules
 
 1. `main` should stay stable and reviewed.
 2. Use feature branches for work in progress.
 3. Branch names should follow `<owner>/<short-task>`, for example `jies/data-oecd-patents`, `teammate/literature-review`, or `codex/project-rules`.
 4. Keep branch names lowercase and use hyphens instead of spaces.
 
-## 10. Anti-Drift Rule
+## 11. Anti-Drift Rule
 
 If the project starts expanding beyond the organization file, pause and ask:
 
