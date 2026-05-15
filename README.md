@@ -5,73 +5,108 @@
 
 ## Project Goal
 
-Build an interpretable machine learning model to forecast environment-related innovation at the country level using publicly available panel data.
+This project predicts country-level environment-related innovation using publicly available panel data.
 
-- **Target variable:** OECD patents on environment technologies (ENV_TECH_SHARE)
-- **Predictors:** Macroeconomic development, R&D, energy, and environmental policy indicators
-- **Approach:** Interpretable ML with SHAP-based feature attribution
+The core task is to:
+
+1. Identify a suitable target variable from OECD patent data.
+2. Select a small, literature-based set of predictors.
+3. Build an interpretable machine learning model.
+4. Assess which predictors are most strongly associated with future environment-related innovation.
+
+The exact target variable, predictor list, country-year coverage, and final model strategy will be confirmed after literature review and data inspection.
+
+## Source of Truth
+
+The main project requirement is:
+
+- `0_organization/predicting_environment-related_innovation.txt`
+
+Project governance and research decisions are documented in:
+
+- `0_organization/project_rules.md`
+- `0_organization/decision_log.md`
+- `1_literature_review/variable_framework.md`
+- `2_data/data_dictionary.md`
+
+Generated or preliminary content should be treated as a starting point, not as a fixed plan.
+
+## Current Research Direction
+
+The project will use a country-year panel structure.
+
+Candidate data sources include:
+
+| Source | Intended role |
+|---|---|
+| OECD patents on environment technologies | Candidate target variable |
+| World Bank World Development Indicators | Candidate macroeconomic, R&D, energy, and emissions predictors |
+| OECD Environmental Policy Stringency index | Candidate environmental policy predictor |
+| RISE | Optional sustainable energy policy predictor |
+
+Candidate predictor groups:
+
+1. Macroeconomic development.
+2. Research and development capacity.
+3. Energy system characteristics.
+4. Environmental policy.
+
+Predictors should normally be lagged so that earlier country conditions are used to predict future innovation.
+
+## Modeling Principle
+
+The modeling strategy should stay interpretable and proportional to the research question.
+
+Planned approach:
+
+1. Start with a simple interpretable baseline.
+2. Add more complex models only if they improve the research question, not just the score.
+3. Use clear interpretation methods such as coefficients, permutation importance, SHAP, or partial dependence.
+4. Report both predictive performance and substantive interpretation.
+
+The final model family and evaluation metrics are deferred decisions and should be recorded in `0_organization/decision_log.md`.
 
 ## Repository Structure
 
-```
-├── 1_literature_review/     Literature review & variable framework
-├── 2_data/                  Data collection & preprocessing
-│   ├── raw/                 Raw datasets (NOT committed — see .gitignore)
+```text
+├── 0_organization/          Project requirements, rules, and decisions
+├── 1_literature_review/     Literature notes and variable framework
+├── 2_data/                  Data collection, raw data placeholders, processed data, and data dictionaries
+│   ├── raw/                 Raw datasets, usually not committed
 │   └── processed/           Cleaned panel data
-├── 3_models/                Model development (v1 → v4 progression)
-│   ├── v1_elasticnet/       Linear baseline (L1 + L2 regularization)
-│   ├── v2_randomforest/     Tree-based model + RFE + permutation importance
-│   ├── v3_xgboost/          Gradient boosting + SHAP + Optuna tuning
-│   └── v4_stacking/         Ensemble + bootstrap CI + LOCO validation
-├── 4_analysis/              SHAP analysis, partial dependence, case studies
+├── 3_models/                Model plans, scripts, experiments, and outputs
+├── 4_analysis/              Figures, tables, interpretation, and case-study material
 │   ├── figures/
 │   └── tables/
-└── report/                  LaTeX final report (or Overleaf sync)
+└── report/                  Final report or Overleaf-synced files
 ```
-
-## Workflow
-
-1. **Literature Review** → Identify target variable & select 10–15 predictors with causal mechanisms
-2. **Data** → Collect country-year panel from OECD, World Bank, RISE; clean & engineer features
-3. **Models** → Progressive 4-version architecture: ElasticNet → RandomForest → XGBoost → Stacking
-4. **Analysis** → SHAP attribution, partial dependence plots, country case studies (DEU, USA, CHN, IND, BRA)
-5. **Report** → LaTeX report (20,000–30,000 characters) + presentation
-
-## Data Sources
-
-| Source | Description | Link |
-|--------|-------------|------|
-| OECD PAT_IND | Patents on environment technologies (target variable) | [OECD Data](https://www.oecd.org/en/data/indicators/patents-on-environment-technologies.html) |
-| World Bank WDI | Macroeconomic, R&D, energy, education indicators | [World Bank](https://data.worldbank.org/) |
-| OECD EPS | Environmental Policy Stringency index | [OECD EPS](https://www.oecd.org/en/topics/sub-issues/economic-policies-to-foster-green-growth/how-stringent-are-environmental-policies.html) |
-| RISE | Regulatory Indicators for Sustainable Energy | [RISE](https://rise.esmap.org/) |
-
-## Team
-
-- @songjie1025 (Jie Song)
-- _(add teammates here)_
 
 ## Setup
 
 ```bash
-# Clone the repository
-git clone git@github.com:songjie1025/env-innovation-prediction.git
-cd env-innovation-prediction
-
-# Create virtual environment
 python3 -m venv venv
 source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
 ```
 
-## Branch Naming Convention
+## Collaboration Rules
 
-- `main` — stable, reviewed code only
-- `jies/<task>` — Jie's feature branches
-- `teammate/<task>` — teammate branches
+Use English for committed project documents, code comments, figure titles, table titles, and commit messages.
 
----
+Use small, focused commits with the format:
 
-*Last updated: May 2026*
+```text
+<type>: <short imperative summary>
+```
+
+Examples:
+
+```text
+docs: add project rules
+data: add OECD patent download script
+model: add elastic net baseline
+analysis: add SHAP summary plot
+fix: correct target variable lag
+```
+
+See `0_organization/project_rules.md` for the full project rules.
