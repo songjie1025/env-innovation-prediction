@@ -48,6 +48,7 @@ Use paired scripts and notebooks for data and modeling work:
 6. Every notebook should include an optional Google Colab setup cell near the top.
 7. The Colab setup cell must be safe for local use: it should detect whether it is running in Colab and skip itself otherwise.
 8. The Colab setup cell should handle repository setup, working-directory setup, and dependency installation only; substantive analysis logic belongs in scripts and later notebook cells.
+9. If the repository is private, the Colab setup cell should support authentication through a Colab secret named `GITHUB_TOKEN`; never hard-code tokens in notebooks.
 
 ## 6. Decision Logging
 
