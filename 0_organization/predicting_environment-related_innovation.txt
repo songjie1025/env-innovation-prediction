@@ -1,0 +1,39 @@
+TOPIC -- Predicting Environment-Related Innovation
+
+OVERVIEW:
+Forecasting environment-related innovation is important for understanding how countries contribute to the green transition and how innovation responds to economic, technological, and policy conditions. Patent-based indicators are particularly useful for this purpose because they allow environment-related innovation to be tracked consistently across countries and over time.
+
+WHAT YOU WILL DO:
+In this project, you will predict environment-related innovation using country-level panel data from publicly available sources. You will identify a suitable target variable from the OECD patent data and, based on your literature review, select a small set of relevant predictors that may help explain innovation performance. The goal is to build an interpretable machine learning model and to identify which predictors are most strongly associated with future environment-related innovation.
+
+HOW YOU WILL DO THIS:
+During the seminar, you will collect and preprocess a country-year dataset on environment-related patenting from the OECD [1]. You will then select a small set of suitable covariates from the literature, for example from the areas of macroeconomic development, research and development, energy, or environmental policy. Based on this dataset, you will develop an interpretable machine learning model to predict environment-related innovation and assess which predictors contribute most to the model’s forecasts.
+
+As a starting point for your literature research, checkout the following introductory references:
+[1] https://www.oecd.org/en/data/indicators/patents-on-environment-technologies.html
+[2] https://www.oecd.org/en/publications/measuring-environmental-innovation-using-patent-data_5js009kf48xw-en.html
+[3] https://data.worldbank.org/
+[4] https://www.oecd.org/en/topics/sub-issues/economic-policies-to-foster-green-growth/how-stringent-are-environmental-policies.html
+[5] https://rise.esmap.org/
+
+
+主题 —— 预测环境相关创新   
+预测环境相关创新对于了解各国如何为绿色转型做出贡献，以及创新如何响应经济、技术和政策状况至关重要 。  
+基于专利的指标在此类用途中特别有用，因为它们允许跨国家和跨时间地对环境相关创新进行一致的追踪 。  
+
+你将要做什么：
+在此项目中，你将利用来自公开渠道的国家层面面板数据来预测环境相关创新。
+你将从 OECD 专利数据中确定一个合适的目标变量，并根据你的文献综述，选择一小组可能有助于解释创新表现的相关预测因子。 目标是建立一个可解释的机器学习模型，并识别哪些预测因子与未来的环境相关创新关联最为紧密 。  
+
+你将如何完成：
+在研讨会期间，你将从 OECD 收集并预处理一份关于环境相关专利的国家-年度数据集。 
+然后，你将从文献中选择一小组合适的协变量，例如来自宏观经济发展、研究与开发 (R&D)、能源或环境政策等领域 。  
+基于该数据集，你将开发一个可解释的机器学习模型来预测环境相关创新，并评估哪些预测因子对模型的预测贡献最大。 
+
+
+作为文献研究的起点，请参考以下入门级参考文献：   
+[1] OECD 环境技术专利指标   
+[2] 使用专利数据衡量环境创新 (OECD 出版物)   
+[3] 世界银行数据库   
+[4] 环境政策严格程度指标 (OECD)   
+[5] 可持续能源监管指标 (RISE)
