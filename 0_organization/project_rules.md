@@ -6,7 +6,6 @@ These rules keep the project focused, traceable, and easy to maintain.
 
 1. The main project requirement is `0_organization/predicting_environment-related_innovation.txt`.
 2. If another file conflicts with the organization file, the organization file wins.
-3. Hermes-generated content, including the current README structure, is treated as a starting point, not as a fixed plan.
 4. New tasks must support the core goal: predicting country-level environment-related innovation with public panel data and interpretable machine learning.
 
 ## 2. Project Scope
@@ -22,7 +21,6 @@ If the answer to any question is unclear, discuss it before adding the item.
 ## 3. Language
 
 1. Use English for committed project documents, code comments, variable descriptions, figure titles, table titles, and commit messages.
-2. Internal chat and quick planning can be in Chinese when helpful.
 3. Final report materials should be written in academic English unless the course explicitly requires otherwise.
 
 ## 4. Documentation Rules

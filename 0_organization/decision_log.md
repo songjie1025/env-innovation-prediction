@@ -86,6 +86,22 @@ Immediately selecting `env_patent_share_tech` was considered but deferred becaus
 Status:
 Deferred
 
+### 2026-05-16: Do not use `env_patent_share_tech` as the main target
+
+Date: 2026-05-16
+
+Decision:
+`env_patent_share_tech` (`PT_TECH.DEV.ENV_PAT._Z`) will not be used as the main target variable.
+
+Reason:
+The OECD API and the locally downloaded raw data both report Eritrea in 2016 with `PT_TECH = 350` and status `Normal value`. This is not a download or parsing error. However, values above 100 make the variable difficult to interpret as a simple country-level share of green innovation. The most plausible explanation is that the "percentage of technologies" measure can be inflated in very small patent systems when inventions are assigned to multiple technology categories. This creates a high interpretation risk for the main analysis.
+
+Alternatives considered:
+Using `env_patent_share_tech` as the main target was rejected. It may still be considered as a robustness or sensitivity variable if the sample is filtered and the interpretation is stated carefully. `env_patents_per_million` and `env_patent_share_inventions` remain candidate target variables.
+
+Status:
+Active
+
 ## Deferred Decisions
 
 The following decisions should be made after literature review and initial data inspection:
