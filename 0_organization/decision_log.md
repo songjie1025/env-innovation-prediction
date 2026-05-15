@@ -54,6 +54,38 @@ Using the generated README as the fixed project plan was rejected because it con
 Status:
 Active
 
+### 2026-05-15: Use controlled first-pass data exploration
+
+Date: 2026-05-15
+
+Decision:
+The first data step is a controlled feasibility exploration of OECD patent indicators, World Bank candidate predictors, and OECD EPS, rather than a full modeling dataset build.
+
+Reason:
+The target variable, final predictor list, country coverage, and year coverage must be checked before committing to a modeling pipeline.
+
+Alternatives considered:
+Building the full data pipeline immediately was rejected because it could lock in weak variables or mismatched coverage too early.
+
+Status:
+Active
+
+### 2026-05-15: Keep target-variable choice deferred after first data exploration
+
+Date: 2026-05-15
+
+Decision:
+The OECD `Patents - indicators` dataset provides strong target candidates, but the final target variable is not selected yet.
+
+Reason:
+The first-pass exploration found three viable candidates: `env_patent_share_tech`, `env_patent_share_inventions`, and `env_patents_per_million`. The final choice should depend on literature fit and modeling interpretation, not coverage alone.
+
+Alternatives considered:
+Immediately selecting `env_patent_share_tech` was considered but deferred because the difference between "percentage of technologies" and "percentage of inventions" should be understood from OECD metadata and the literature first.
+
+Status:
+Deferred
+
 ## Deferred Decisions
 
 The following decisions should be made after literature review and initial data inspection:

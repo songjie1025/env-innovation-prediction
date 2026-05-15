@@ -16,14 +16,17 @@ Candidate target:
 
 | Concept | Candidate source | Candidate measure | Status | Notes |
 |---|---|---|---|---|
-| Environment-related innovation | OECD patents on environment technologies | Share or count of patents related to environment technologies | To confirm | The exact indicator and variable code must be verified after inspecting the OECD data. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_tech`: environment-related technologies as percentage of all technologies | Candidate | Strong coverage in first-pass exploration: 1990-2023, 202 countries. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_inventions`: environment-related technologies as percentage of inventions | Candidate | Strong coverage in first-pass exploration: 1990-2023, 202 countries. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patents_per_million`: environment-related inventions per million people | Candidate | Useful normalized alternative: 1990-2023, 196 countries. |
 
 Target-variable decision rule:
 
 1. Prefer a country-year measure that is comparable across countries and time.
 2. Prefer a normalized measure, such as a patent share, if country size would otherwise dominate the outcome.
 3. Use patent counts only if the model explicitly controls for country size or innovation system scale.
-4. Record the final target choice in `0_organization/decision_log.md`.
+4. Confirm the OECD metadata distinction between "percentage of technologies" and "percentage of inventions" before choosing the final target.
+5. Record the final target choice in `0_organization/decision_log.md`.
 
 ## Predictor Groups
 
