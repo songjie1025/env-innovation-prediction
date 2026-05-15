@@ -45,6 +45,9 @@ Use paired scripts and notebooks for data and modeling work:
 3. Notebooks should import scripts instead of duplicating large code blocks.
 4. Notebooks should explain the motivation, run the relevant calls, and display key tables or figures.
 5. Important results from notebooks should be exported to committed files such as `2_data/processed/`, `4_analysis/figures/`, or `4_analysis/tables/`.
+6. Every notebook should include an optional Google Colab setup cell near the top.
+7. The Colab setup cell must be safe for local use: it should detect whether it is running in Colab and skip itself otherwise.
+8. The Colab setup cell should handle repository setup, working-directory setup, and dependency installation only; substantive analysis logic belongs in scripts and later notebook cells.
 
 ## 6. Decision Logging
 
