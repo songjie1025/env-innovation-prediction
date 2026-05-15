@@ -1,0 +1,15 @@
+dataset_id,variable,source_variable,total_rows,non_missing_observations,missing_observations,countries_total,countries_with_data,years_total,years_with_data,first_year,last_year
+oecd_eps,eps_index,POL_STRINGENCY.EPS,1240,1240,0,40,40,31,31,1990,2020
+oecd_patents_environment,env_patent_share_inventions,PT_INV.DEV.ENV_PAT._Z,3538,3538,0,202,202,34,34,1990,2023
+oecd_patents_environment,env_patent_share_tech,PT_TECH.DEV.ENV_PAT._Z,3538,3538,0,202,202,34,34,1990,2023
+oecd_patents_environment,env_patents_per_million,INV_PS.DEV.ENV_PAT._Z,3528,3528,0,196,196,34,34,1990,2023
+world_bank_wdi,co2_per_capita,EN.ATM.CO2E.PC,6562,5920,642,193,191,34,31,1990,2020
+world_bank_wdi,energy_intensity,EG.EGY.PRIM.PP.KD,7595,4486,3109,217,201,35,23,2000,2022
+world_bank_wdi,fossil_energy_share,EG.USE.COMM.FO.ZS,7595,4978,2617,217,179,35,35,1990,2024
+world_bank_wdi,gdp,NY.GDP.MKTP.KD,7595,7096,499,217,213,35,35,1990,2024
+world_bank_wdi,gdp_per_capita,NY.GDP.PCAP.KD,7595,7096,499,217,213,35,35,1990,2024
+world_bank_wdi,manufacturing_share,NV.IND.MANF.ZS,7595,6000,1595,217,203,35,35,1990,2024
+world_bank_wdi,population,SP.POP.TOTL,7595,7595,0,217,217,35,35,1990,2024
+world_bank_wdi,rd_expenditure_gdp,GB.XPD.RSDV.GD.ZS,7595,2467,5128,217,156,35,29,1996,2024
+world_bank_wdi,renewable_energy_share,EG.FEC.RNEW.ZS,7595,6746,849,217,212,35,33,1990,2022
+world_bank_wdi,researchers_per_million,SP.POP.SCIE.RD.P6,7595,1973,5622,217,145,35,29,1996,2024
