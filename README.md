@@ -20,14 +20,14 @@ The exact target variable, predictor list, country-year coverage, and final mode
 
 The main project requirement is:
 
-- `0_organization/predicting_environment-related_innovation.txt`
+- [Project requirement](0_organization/predicting_environment-related_innovation.txt)
 
 Project governance and research decisions are documented in:
 
-- `0_organization/project_rules.md`
-- `0_organization/decision_log.md`
-- `1_literature_review/variable_framework.md`
-- `2_data/data_dictionary.md`
+- [Project rules](0_organization/project_rules.md)
+- [Decision log](0_organization/decision_log.md)
+- [Variable framework](1_literature_review/variable_framework.md)
+- [Data dictionary](2_data/data_dictionary.md)
 
 Generated or preliminary content should be treated as a starting point, not as a fixed plan.
 
@@ -113,4 +113,4 @@ analysis: add SHAP summary plot
 fix: correct target variable lag
 ```
 
-See `0_organization/project_rules.md` for the full project rules.
+See the [project rules](0_organization/project_rules.md) for the full project rules.
