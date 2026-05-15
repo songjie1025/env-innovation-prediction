@@ -73,6 +73,7 @@ The final model family and evaluation metrics are deferred decisions and should 
 ├── 1_literature_review/     Literature notes and variable framework
 ├── 2_data/                  Data collection, raw data placeholders, processed data, and data dictionaries
 │   ├── scripts/             Data download and preprocessing scripts
+│   ├── notebooks/           Narrative local exploration notebooks
 │   ├── raw/                 Raw datasets, usually not committed
 │   └── processed/           Cleaned panel data
 ├── 3_models/                Model plans, scripts, experiments, and outputs
