@@ -31,6 +31,10 @@ Project governance and research decisions are documented in:
 
 Generated or preliminary content should be treated as a starting point, not as a fixed plan.
 
+Supporting background material is available in:
+
+- [Education guides](5_education/README.md)
+
 ## Current Research Direction
 
 The project will use a country-year panel structure.
@@ -82,6 +86,7 @@ The final model family and evaluation metrics are deferred decisions and should 
 ├── 4_analysis/              Figures, tables, interpretation, and case-study material
 │   ├── figures/
 │   └── tables/
+├── 5_education/             Beginner-friendly computing, data, and ML background
 └── report/                  Final report or Overleaf-synced files
 ```
 
