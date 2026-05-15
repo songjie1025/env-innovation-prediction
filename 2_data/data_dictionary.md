@@ -86,6 +86,10 @@ The final predictor list should be selected through the literature review and da
 |---|---|---|
 | `2_data/processed/data_availability.csv` | Coverage summary for first-pass target and predictor candidates | Created 2026-05-15 |
 | `2_data/processed/data_exploration_summary.md` | Human-readable summary generated from the exploration script | Created 2026-05-15 |
+| `2_data/processed/oecd_patent_dimension_values.csv` | OECD patent indicator dimension values for unit measures, counting types, technology domains, and patent-office breakdowns | Created 2026-05-15 |
+| `2_data/processed/oecd_patent_target_candidates.csv` | Structured explanation of the three broad OECD target candidates and their source-variable construction | Created 2026-05-15 |
+| `2_data/processed/oecd_patent_technology_domains.csv` | OECD technology-domain metadata, including broad available domains and detailed taxonomy codes | Created 2026-05-15 |
+| `2_data/processed/oecd_patent_technology_category_summary.csv` | Summary of broad environment-related patent domains and example detailed subdomains | Created 2026-05-15 |
 
 ## Processed Modeling Dataset
 
@@ -137,3 +141,4 @@ Run and document these checks after creating the processed panel:
 |---|---|---|
 | 2026-05-15 | Created initial data dictionary structure | Establish documentation rules before data collection. |
 | 2026-05-15 | Added first-pass data-source coverage results | Document controlled exploration of OECD patent indicators, OECD EPS, and World Bank predictors. |
+| 2026-05-15 | Added OECD patent metadata catalog outputs | Make target-variable and technology-domain options visible before choosing the final target. |

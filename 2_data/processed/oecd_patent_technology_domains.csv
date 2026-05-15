@@ -1,0 +1,197 @@
+code,label,broad_domain_code,broad_domain_label,available_in_indicator_data,domain_role
+ENV_PAT,Environment-related technologies,ENV_PAT,Environment-related technologies,True,overall environment-related total
+TOT,All technologies (total patents),TOT,All technologies (total patents),True,all technologies denominator
+ADAPT,Climate change adaptation technologies,ADAPT,Climate change adaptation technologies,True,available broad environment subdomain
+BUILD,Climate change mitigation technologies related to buildings,BUILD,Climate change mitigation technologies related to buildings,True,available broad environment subdomain
+ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",True,available broad environment subdomain
+GHG,"Capture, storage, sequestration or disposal of greenhouse gases",GHG,"Capture, storage, sequestration or disposal of greenhouse gases",True,available broad environment subdomain
+GOODS,Climate change mitigation technologies in the production or processing of goods,GOODS,Climate change mitigation technologies in the production or processing of goods,True,available broad environment subdomain
+ICT,Climate change mitigation in information and communication technologies (ICT),ICT,Climate change mitigation in information and communication technologies (ICT),True,available broad environment subdomain
+MAN,Environmental management,MAN,Environmental management,True,available broad environment subdomain
+OCEAN,Sustainable ocean economy,OCEAN,Sustainable ocean economy,True,available broad environment subdomain
+TRA,Climate change mitigation technologies related to transportation,TRA,Climate change mitigation technologies related to transportation,True,available broad environment subdomain
+WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,True,available broad environment subdomain
+ADAPT_AGR,"Adaptation technologies in agriculture, forestry, livestock or agro-alimentary production",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_AGR_AGR,In agriculture,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_AGR_ECO,Ecological corridors or buffer zones,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_AGR_FISH,In fisheries management,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_AGR_FOOD,"In food processing or handling, e.g. food conservation",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_AGR_LIVE,In livestock or poultry,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_COAST,Adaptation at coastal zones or river basin,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_COAST_CON,"Controlling, monitoring or forecasting",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_COAST_DUNE,Dune restoration or creation; cliff stabilisation,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_COAST_FLOOD,Flood prevention; flood or storm water management,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_COAST_HARD,"Hard structures, e.g. dams, dykes or breakwaters",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_COAST_REEF,Artificial reefs or seaweed; restoration or protection of coral reefs,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_HEALTH,"Adaptation technologies in human health protection, e.g. against extreme weather",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_HEALTH_AIR,Air quality improvement or preservation,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_HEALTH_DIS,Against vector-borne diseases whose impact is exacerbated by climate change,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_IND,Technologies having an indirect contribution to adaptation to climate change,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_IND_ICT,"Information and communication technologies [ICT] supporting adaptation to climate change, e.g. for weather forecasting or climate simulation",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_IND_SPEC,Monitoring or fighting invasive species,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_IND_WAT,Assessment of water resources,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_INF,Adapting or protecting infrastructure or their operation,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_INF_EXT,Extreme weather resilient electric power supply systems,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_INF_HVAC,"Relating to heating, ventilation or air conditioning [HVAC] technologies",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_INF_THE,Structural elements or technology for improving thermal insulation,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_INF_TR,In transportation,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_INF_URB,Planning or developing urban green infrastructure,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_NEC,Not elsewhere classified,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES,Water resource management,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_DEM,Demand-side technologies (water conservation),ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_DEM_IN,Indoor water conservation,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_DEM_IRR,Irrigation water conservation,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_DEM_THE,Water conservation in thermoelectric power production,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_SUP,Supply-side technologies (water availability),ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_SUP_COL,"Water collection (rain, surface and ground-water)",ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_SUP_DES,Water desalination,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_SUP_FIL,Water filtration; Water and wastewater treatment,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_SUP_PRO,Protecting water resources,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+ADAPT_WATRES_SUP_ST,Water storage and distribution,ADAPT,Climate change adaptation technologies,False,metadata subdomain under available broad domain
+BUILD_ARC,Architectural or constructional elements improving the thermal performance of buildings,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_ENA,Enabling technologies in buildings,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_ENE,Energy efficiency in buildings,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_ENE_APP,Energy efficiency in home appliances,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_ENE_END,End-user side,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_ENE_HVAC,"Energy efficient heating, ventilation or air conditioning [HVAC]",BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_ENE_LIFT,"Energy efficient elevators, escalators and moving walkways, e.g. energy saving or recuperation technologies",BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_ENE_LIGHT,Energy efficient lighting,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_INT,Integration of renewable energy sources in buildings,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+BUILD_NEC,Not elsewhere classified,BUILD,Climate change mitigation technologies related to buildings,False,metadata subdomain under available broad domain
+ENE_COM,"Combustion technologies with mitigation potential (e.g. using fossil fuels, biomass, waste, etc.)",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_COM_INP,Technologies for improved input efficiency (efficient combustion or heat usage),ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_COM_OUT,"Technologies for improved output efficiency (combined heat and power, combined cycles, etc.)",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA,Enabling technologies (technologies with potential or indirect contribution to GHG emission mitigation),ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_CE,Fuel cells,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_HV,High-voltage direct current transmission,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_HY,Hydrogen technology,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_STO,Energy storage,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_STO_BA,Batteries,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_STO_CA,Capacitors,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_STO_MEC,"Mechanical energy storage, e.g. flywheels or pressurised fluids",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_ENA_STO_TH,Thermal energy storage,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_FUEL,Energy generation from fuels of non-fossil origin,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_FUEL_BIO,"Biofuels, e.g. bio-diesel",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_FUEL_WA,"Fuel from waste, e.g. synthetic alcohol or diesel",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_NEC,Not elsewhere classified,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_NUC,Nuclear energy,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_NUC_FI,Nuclear fission reactors,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_NUC_FU,Nuclear fusion reactors,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_OTHER,Other energy conversion or management systems reducing GHG emissions,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE,Renewable energy generation,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE_GEO,Geothermal energy,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE_HY,Hydro energy,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE_MA,"Marine energy, e.g. using wave energy or salinity gradient",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE_PV,Solar photovoltaic (PV) energy,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE_SO,Solar thermal energy,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE_SOPV,Solar thermal-PV hybrids,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_RE_WI,Wind energy,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_TE,"Technologies for an efficient electrical power generation, transmission or distribution",ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_TE_NC,Not elsewhere classified,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_TE_SG,Smart grids as climate change mitigation technology in the energy generation sector,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+ENE_TE_SU,Superconducting electric elements or equipment,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",False,metadata subdomain under available broad domain
+GHG_CH4,Capture or disposal of methane (CH4),GHG,"Capture, storage, sequestration or disposal of greenhouse gases",False,metadata subdomain under available broad domain
+GHG_CO2,Capture or disposal of carbon dioxide (CO2),GHG,"Capture, storage, sequestration or disposal of greenhouse gases",False,metadata subdomain under available broad domain
+GHG_N20,Capture or disposal of nitrous oxide (N2O),GHG,"Capture, storage, sequestration or disposal of greenhouse gases",False,metadata subdomain under available broad domain
+GHG_NEC,Not elsewhere classified,GHG,"Capture, storage, sequestration or disposal of greenhouse gases",False,metadata subdomain under available broad domain
+GHG_PFC_HFC_SF6,"Capture or disposal of perfluorocarbons (PFC), hydrofluorocarbons (HFC) or sulfur hexafluoride (SF6)",GHG,"Capture, storage, sequestration or disposal of greenhouse gases",False,metadata subdomain under available broad domain
+GOODS_AGR,"Technologies relating to agriculture, livestock or agroalimentary industries",GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_AFF,Afforestation or reforestation,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_FISH,Fishing; Aquaculture; Aquafarming,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_FOOD,"Food processing, e.g. use of renewable energies or variable speed drives in handling, conveying or stacking",GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_GHG,Reduction of greenhouse gas [GHG] emissions in agriculture,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_LAND,Land use policy measures,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_LIVE,Livestock or poultry management,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_RENEW,"Using renewable energies, e.g. solar water pumping",GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_AGR_SAVE,"Measures for saving energy, e.g. in green houses",GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM,Technologies relating to chemical industry,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM_ADI,Improvements relating to adipic acid or caprolactam production,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM_BULK,Improvements relating to the production of bulk chemicals,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM_CHL,Improvements relating to chlorine production,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM_FEED,Feedstock,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM_GHG,"Reduction of greenhouse gas [GHG] emissions, e.g. CO2",GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM_HCFC_22,"Improvements relating to fluorochloro hydrocarbon, e.g. chlorodifluoromethane [HCFC-22] production",GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_CHEM_PROC,Process efficiency in chemical industry,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MET,Technologies related to metal processing,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MET_GHG,Reduction of greenhouse gas (GHG) emissions,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MIN,Technologies relating to the processing of minerals,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MIN_CEM,Production of cement,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MIN_CER,Production of ceramic materials or ceramic elements,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MIN_GLASS,Glass production,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MIN_LIME,Production or processing of lime,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_MIT,Enabling technologies with a potential contribution to GHG emissions mitigation,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_NEC,Not elsewhere classified,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_OIL,Technologies relating to oil refining and petrochemical industry,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_OIL_BIO,Bio-feedstock,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_OIL_ETH,Ethylene production,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_PROC,Process efficiency,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_PROD,Technologies in the production process for final industrial or consumer products,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+GOODS_SEC,Climate change mitigation technologies for sector-wide applications,GOODS,Climate change mitigation technologies in the production or processing of goods,False,metadata subdomain under available broad domain
+ICT_CN,Energy efficiency in communication networks,ICT,Climate change mitigation in information and communication technologies (ICT),False,metadata subdomain under available broad domain
+ICT_EE,Energy efficient computing,ICT,Climate change mitigation in information and communication technologies (ICT),False,metadata subdomain under available broad domain
+ICT_NEC,Not elsewhere classified,ICT,Climate change mitigation in information and communication technologies (ICT),False,metadata subdomain under available broad domain
+MAN_AIR,Air pollution abatement,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_AIR_MO,"Emissions abatement from mobile sources (e.g. NOx, CO, HC, PM emissions from motor vehicles)",MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_AIR_NC,Air pollution abatement - Not elsewhere classified,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_AIR_ST,"Emissions abatement from stationary sources (e.g. SOx, NOx, PM emissions from combustion plants)",MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_MO,Environmental monitoring,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_SO,Soil remediation,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WA,Waste management,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WAT,Water pollution abatement,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WAT_FE,Fertilizers from wastewater,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WAT_OIL,Oil spill and pollutant clean-up,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WAT_TR,Water and wastewater treatment,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WA_FE,Fertilizers from waste,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WA_IN,Incineration and energy recovery,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WA_MA,"Material recovery, recycling and re-use",MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WA_SO,Solid waste collection,MAN,Environmental management,False,metadata subdomain under available broad domain
+MAN_WA_WA,Waste management – Not elsewhere classified,MAN,Environmental management,False,metadata subdomain under available broad domain
+OCEAN_COAST,Climate change adaptation in coastal zones,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_DES,Desalination of sea water,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_FISH,"Climate change mitigation and adaptation in fishing, aquaculture and aquafarming",OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_POL,Ocean pollution abatement,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_POL_BAL,Ballast water treatment,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_POL_OIL,Oil spill (and other floating debris) prevention and cleanup,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_REN,Ocean renewable energy generation,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_REN_SOLAR,Offshore solar energy,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_REN_TIDE,"Tide, wave, current and other marine energy",OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_REN_WIND,Offshore wind energy,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_TR,Climate change mitigation in maritime transport,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_TR_FUEL,Fuel-efficient propulsion or fuel substitution,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+OCEAN_TR_VES,Improved vessel design,OCEAN,Sustainable ocean economy,False,metadata subdomain under available broad domain
+TRA_AIR,Aeronautics or air transport,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_EN,Enabling technologies in transport,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_EN_CE,"Application of hydrogen technology to transportation, e.g. using fuel cells",TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_EN_EL,Electric vehicle charging,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_MA,Maritime or waterways transport,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_NEC,Not elsewhere classified,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_RA,Rail transport,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_RO,Road transport,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_RO_CO,Conventional vehicles (based on internal combustion engine),TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_RO_EF,Fuel efficiency-improving vehicle design (common to all road vehicles),TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_RO_EL,Electric vehicles,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+TRA_RO_HY,Hybrid vehicles,TRA,Climate change mitigation technologies related to transportation,False,metadata subdomain under available broad domain
+WAT_WASTE_GHG,Enabling technologies or technologies with a potential or indirect contribution to GHG emissions mitigation,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_NEC,Not elsewhere classified,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_ORG,Bio-organic fraction processing; Production of fertilisers from the organic fraction of waste or refuse,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC,"Reuse, recycling or recovery technologies",WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_BAT,Recycling of batteries or fuel cells,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_CD,Construction or demolition [C&D] waste,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_DIS,"Mechanical processing of waste for the recovery of materials, e.g. crushing, shredding, separation or disassembly",WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_ELEC,Recycling of waste of electrical or electronic equipment (WEEE),WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_FAT,"Recovery of fats, fatty oils, fatty acids or other fatty substances, e.g. lanolin or waxes",WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_FIB,Disintegrating fibre-containing textile articles to obtain fibres for re-use,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_GL,Glass recycling,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_MET,Waste management of vehicles,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_NUC,Use of waste materials as fillers for mortars or concrete,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_PA,Paper recycling,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_PACK,"Packaging reuse or recycling, e.g. of multilayer packaging",WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_PL,Plastics and rubber recycling,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_REC_WOOD,Recycling of wood or furniture waste,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_TREAT,Wastewater treatment,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_WASTE,Solid waste management,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_WASTE_FILL,Landfill technologies aiming to mitigate methane emissions,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_WASTE_SEP,Waste processing or separation,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+WAT_WASTE_WASTE_TR,"Waste collection, transportation, transfer or storage",WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,False,metadata subdomain under available broad domain
+CCM,Climate change mitigation,CCM,Climate change mitigation,False,climate mitigation umbrella
+NA,Not available,NA,Not available,False,metadata technology domain

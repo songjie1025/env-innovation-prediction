@@ -28,3 +28,12 @@ Raw downloads are stored in `2_data/raw/` and are not committed.
 1. Coverage counts exclude common aggregate areas such as `WLD`, `OECD`, and World Bank regional aggregates.
 2. The OECD target candidates are exploratory. The final target must be recorded in `0_organization/decision_log.md`.
 3. World Bank data are downloaded for candidate predictors only; inclusion in the final model is not decided here.
+
+## Related OECD Metadata Outputs
+
+The script also writes structured OECD patent indicator metadata tables:
+
+1. `2_data/processed/oecd_patent_dimension_values.csv`
+2. `2_data/processed/oecd_patent_target_candidates.csv`
+3. `2_data/processed/oecd_patent_technology_domains.csv`
+4. `2_data/processed/oecd_patent_technology_category_summary.csv`

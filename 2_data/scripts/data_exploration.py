@@ -5,6 +5,7 @@ import json
 from io import StringIO
 from pathlib import Path
 from typing import Iterable
+import xml.etree.ElementTree as ET
 
 import pandas as pd
 import requests
@@ -15,6 +16,10 @@ RAW_DIR = ROOT_DIR / "2_data" / "raw"
 PROCESSED_DIR = ROOT_DIR / "2_data" / "processed"
 
 OECD_PAT_IND_BASE_URL = "https://sdmx.oecd.org/public/rest/data/OECD.ENV.EPI,DSD_PAT_IND@DF_PAT_IND,1.0"
+OECD_PAT_IND_METADATA_URL = (
+    "https://sdmx.oecd.org/public/rest/dataflow/"
+    "OECD.ENV.EPI/DSD_PAT_IND@DF_PAT_IND/1.0?references=all"
+)
 OECD_EPS_URL = (
     "https://sdmx.oecd.org/public/rest/data/"
     "OECD.ECO.MAD,DSD_EPS@DF_EPS,1.0/.A..EPS"
@@ -89,20 +94,143 @@ OECD_PATENT_TARGET_CANDIDATES = [
         "source_variable": "PT_TECH.DEV.ENV_PAT._Z",
         "unit_measure": "PT_TECH",
         "description": "Environment-related technologies as a percentage of all technologies.",
+        "measurement_note": "Percent share; normalized by the country's overall technology portfolio.",
+        "selection_rationale": (
+            "broad normalized target candidate for comparing the environment-related share "
+            "of each country's technology portfolio."
+        ),
     },
     {
         "variable": "env_patent_share_inventions",
         "source_variable": "PT_INV.DEV.ENV_PAT._Z",
         "unit_measure": "PT_INV",
         "description": "Environment-related technologies as a percentage of inventions.",
+        "measurement_note": "Percent share; normalized by the country's overall invention output.",
+        "selection_rationale": (
+            "broad normalized target candidate for comparing the environment-related share "
+            "of each country's invention output."
+        ),
     },
     {
         "variable": "env_patents_per_million",
         "source_variable": "INV_PS.DEV.ENV_PAT._Z",
         "unit_measure": "INV_PS",
         "description": "Environment-related inventions per million people.",
+        "measurement_note": (
+            "OECD labels the unit as inventions per person; the downloaded CSV uses unit multiplier 6, "
+            "so project outputs interpret the value as inventions per million people."
+        ),
+        "selection_rationale": (
+            "broad size-normalized target candidate that keeps patent intensity visible "
+            "without letting population dominate mechanically."
+        ),
     },
 ]
+
+OECD_PATENT_DIMENSION_CODELISTS = {
+    "UNIT_MEASURE": "CL_UNIT_MEASURE",
+    "TYPE": "CL_TYPE_PAT_IND",
+    "TECH": "CL_TECH_PAT",
+    "PAT": "CL_PAT_PAT_DIFF",
+}
+
+OECD_PATENT_DIMENSION_LABELS = {
+    "UNIT_MEASURE": "Indicator measure",
+    "TYPE": "Patent counting type",
+    "TECH": "Technological domain",
+    "PAT": "Regional patent office",
+}
+
+OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK = {
+    "UNIT_MEASURE": [
+        "INV_PS",
+        "INV_RD_S13",
+        "INV_RD_S1ZS",
+        "IX",
+        "PT_INV",
+        "PT_TECH",
+        "PT_TECH_COL",
+        "PT_TECH_ENV",
+    ],
+    "TYPE": ["COL", "DEV", "DIFF", "RENEW"],
+    "TECH": [
+        "ADAPT",
+        "BUILD",
+        "ENE",
+        "ENV_PAT",
+        "GHG",
+        "GOODS",
+        "ICT",
+        "MAN",
+        "OCEAN",
+        "TOT",
+        "TRA",
+        "WAT_WASTE",
+    ],
+    "PAT": ["_Z", "ARIPO", "EAPO", "EPO", "GCC", "OAPI", "PCT"],
+}
+
+OECD_PATENT_LABEL_FALLBACK = {
+    "UNIT_MEASURE": {
+        "INV_PS": "Inventions per person",
+        "INV_RD_S13": "Inventions per unit of government R&D",
+        "INV_RD_S1ZS": "Inventions per unit of public R&D",
+        "IX": "Index",
+        "PT_INV": "Percentage of inventions",
+        "PT_TECH": "Percentage of technologies",
+        "PT_TECH_COL": "Percentage of collaborations in all technologies",
+        "PT_TECH_ENV": "Percentage of environment related technologies",
+    },
+    "TYPE": {
+        "COL": "International collaboration in development of environment-related technologies",
+        "DEV": "Development of environment-related technologies",
+        "DIFF": "Diffusion of environment-related technologies",
+        "RENEW": "Development of renewable energy technologies",
+    },
+    "TECH": {
+        "ADAPT": "Climate change adaptation technologies",
+        "BUILD": "Climate change mitigation technologies related to buildings",
+        "ENE": "Climate change mitigation technologies related to energy generation, transmission or distribution",
+        "ENV_PAT": "Environment-related technologies",
+        "GHG": "Capture, storage, sequestration or disposal of greenhouse gases",
+        "GOODS": "Climate change mitigation technologies in the production or processing of goods",
+        "ICT": "Climate change mitigation in information and communication technologies (ICT)",
+        "MAN": "Environmental management",
+        "OCEAN": "Sustainable ocean economy",
+        "TOT": "All technologies (total patents)",
+        "TRA": "Climate change mitigation technologies related to transportation",
+        "WAT_WASTE": "Climate change mitigation technologies related to wastewater treatment or waste management",
+    },
+    "PAT": {
+        "_Z": "Not applicable",
+        "ARIPO": "African Regional Industrial Property Organisation",
+        "EAPO": "Eurasian Patent Organization",
+        "EPO": "European Patent Office",
+        "GCC": "Patent Office of the Cooperation Council for the Arab States of the Gulf",
+        "OAPI": "African Intellectual Property Organization",
+        "PCT": "Patent Cooperation Treaty",
+    },
+}
+
+OECD_PATENT_BROAD_TECH_DOMAINS = [
+    "ADAPT",
+    "BUILD",
+    "ENE",
+    "GHG",
+    "GOODS",
+    "ICT",
+    "MAN",
+    "OCEAN",
+    "TRA",
+    "WAT_WASTE",
+]
+
+SDMX_NAMESPACES = {
+    "structure": "http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure",
+    "common": "http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common",
+}
+
+XML_LANG = "{http://www.w3.org/XML/1998/namespace}lang"
 
 WORLD_BANK_INDICATORS = {
     "gdp_per_capita": {
@@ -212,6 +340,10 @@ def fetch_text(url: str, timeout: int = 90) -> str:
     return response.text
 
 
+def fetch_oecd_patent_metadata() -> str:
+    return fetch_text(OECD_PAT_IND_METADATA_URL)
+
+
 def read_oecd_csv(url: str) -> pd.DataFrame:
     return pd.read_csv(StringIO(fetch_text(url)))
 
@@ -238,6 +370,197 @@ def oecd_patent_frame(raw: pd.DataFrame, candidate: dict) -> pd.DataFrame:
         }
     )
     return frame.dropna(subset=["year"]).astype({"year": int})
+
+
+def build_oecd_patent_catalog(xml_text: str | None = None) -> dict[str, pd.DataFrame]:
+    """Build reusable OECD patent indicator metadata tables for notebooks."""
+    labels = {dimension: values.copy() for dimension, values in OECD_PATENT_LABEL_FALLBACK.items()}
+    available_codes = {
+        dimension: list(codes) for dimension, codes in OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK.items()
+    }
+
+    if xml_text:
+        root = ET.fromstring(xml_text)
+        labels.update(_extract_oecd_patent_codelist_labels(root))
+        available_codes.update(_extract_oecd_patent_available_codes(root))
+
+    dimension_values = _build_oecd_patent_dimension_values(available_codes, labels)
+    technology_domains = _build_oecd_patent_technology_domains(available_codes, labels)
+    technology_summary = _summarize_oecd_patent_technology_domains(technology_domains, labels)
+    target_candidates = _build_oecd_patent_target_candidate_catalog(labels)
+
+    return {
+        "dimension_values": dimension_values,
+        "technology_domains": technology_domains,
+        "technology_category_summary": technology_summary,
+        "target_candidates": target_candidates,
+    }
+
+
+def write_oecd_patent_catalog(catalog: dict[str, pd.DataFrame], output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for name, data in catalog.items():
+        data.to_csv(output_dir / f"oecd_patent_{name}.csv", index=False)
+
+
+def _extract_oecd_patent_codelist_labels(root: ET.Element) -> dict[str, dict[str, str]]:
+    labels = {}
+    for dimension, codelist_id in OECD_PATENT_DIMENSION_CODELISTS.items():
+        codelist = root.find(f".//structure:Codelist[@id='{codelist_id}']", SDMX_NAMESPACES)
+        if codelist is None:
+            continue
+        labels[dimension] = {}
+        for code in codelist.findall("structure:Code", SDMX_NAMESPACES):
+            code_id = code.attrib["id"]
+            labels[dimension][code_id] = _english_sdmx_name(code) or code_id
+    return labels
+
+
+def _extract_oecd_patent_available_codes(root: ET.Element) -> dict[str, list[str]]:
+    available_codes = {}
+    constraint = root.find(".//structure:ContentConstraint[@type='Actual']", SDMX_NAMESPACES)
+    if constraint is None:
+        return available_codes
+    for key_value in constraint.findall(".//common:KeyValue", SDMX_NAMESPACES):
+        dimension = key_value.attrib.get("id")
+        if dimension not in OECD_PATENT_DIMENSION_CODELISTS:
+            continue
+        available_codes[dimension] = [
+            value.text for value in key_value.findall("common:Value", SDMX_NAMESPACES) if value.text
+        ]
+    return available_codes
+
+
+def _english_sdmx_name(element: ET.Element) -> str | None:
+    names = element.findall("common:Name", SDMX_NAMESPACES)
+    for name in names:
+        if name.attrib.get(XML_LANG) == "en":
+            return name.text
+    return names[0].text if names else None
+
+
+def _build_oecd_patent_dimension_values(
+    available_codes: dict[str, list[str]], labels: dict[str, dict[str, str]]
+) -> pd.DataFrame:
+    rows = []
+    for dimension, codes in available_codes.items():
+        for position, code in enumerate(codes, start=1):
+            rows.append(
+                {
+                    "dimension": dimension,
+                    "dimension_label": OECD_PATENT_DIMENSION_LABELS.get(dimension, dimension),
+                    "code": code,
+                    "label": labels.get(dimension, {}).get(code, code),
+                    "position": position,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def _build_oecd_patent_target_candidate_catalog(labels: dict[str, dict[str, str]]) -> pd.DataFrame:
+    rows = []
+    for candidate in OECD_PATENT_TARGET_CANDIDATES:
+        unit_measure, patent_type, tech_domain, patent_office = candidate["source_variable"].split(".")
+        rows.append(
+            {
+                "variable": candidate["variable"],
+                "source_variable": candidate["source_variable"],
+                "unit_measure": unit_measure,
+                "unit_measure_label": labels["UNIT_MEASURE"].get(unit_measure, unit_measure),
+                "type": patent_type,
+                "type_label": labels["TYPE"].get(patent_type, patent_type),
+                "technology_domain": tech_domain,
+                "technology_domain_label": labels["TECH"].get(tech_domain, tech_domain),
+                "regional_patent_office": patent_office,
+                "regional_patent_office_label": labels["PAT"].get(patent_office, patent_office),
+                "description": candidate["description"],
+                "measurement_note": candidate["measurement_note"],
+                "selection_rationale": candidate["selection_rationale"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _build_oecd_patent_technology_domains(
+    available_codes: dict[str, list[str]], labels: dict[str, dict[str, str]]
+) -> pd.DataFrame:
+    tech_labels = labels.get("TECH", {})
+    available_tech_codes = set(available_codes.get("TECH", []))
+    rows = []
+    for code, label in tech_labels.items():
+        broad_code = _infer_broad_oecd_patent_technology_domain(code, available_tech_codes)
+        rows.append(
+            {
+                "code": code,
+                "label": label,
+                "broad_domain_code": broad_code,
+                "broad_domain_label": tech_labels.get(broad_code, broad_code),
+                "available_in_indicator_data": code in available_tech_codes,
+                "domain_role": _technology_domain_role(code, broad_code, available_tech_codes),
+            }
+        )
+    data = pd.DataFrame(rows)
+    role_order = {
+        "overall environment-related total": 0,
+        "all technologies denominator": 1,
+        "available broad environment subdomain": 2,
+        "metadata subdomain under available broad domain": 3,
+        "climate mitigation umbrella": 4,
+        "metadata technology domain": 5,
+    }
+    data["role_order"] = data["domain_role"].map(role_order).fillna(99).astype(int)
+    return data.sort_values(["role_order", "broad_domain_code", "code"]).drop(columns="role_order").reset_index(
+        drop=True
+    )
+
+
+def _infer_broad_oecd_patent_technology_domain(code: str, available_tech_codes: set[str]) -> str:
+    if code in {"NA", "TOT", "ENV_PAT", "CCM"}:
+        return code
+    candidate_broad_domains = [
+        domain
+        for domain in OECD_PATENT_BROAD_TECH_DOMAINS
+        if domain in available_tech_codes or domain in OECD_PATENT_LABEL_FALLBACK["TECH"]
+    ]
+    for domain in sorted(candidate_broad_domains, key=len, reverse=True):
+        if code == domain or code.startswith(f"{domain}_"):
+            return domain
+    return code
+
+
+def _technology_domain_role(code: str, broad_code: str, available_tech_codes: set[str]) -> str:
+    if code == "ENV_PAT":
+        return "overall environment-related total"
+    if code == "TOT":
+        return "all technologies denominator"
+    if code == "CCM":
+        return "climate mitigation umbrella"
+    if code in OECD_PATENT_BROAD_TECH_DOMAINS and code in available_tech_codes:
+        return "available broad environment subdomain"
+    if broad_code in OECD_PATENT_BROAD_TECH_DOMAINS and code != broad_code:
+        return "metadata subdomain under available broad domain"
+    return "metadata technology domain"
+
+
+def _summarize_oecd_patent_technology_domains(
+    technology_domains: pd.DataFrame, labels: dict[str, dict[str, str]]
+) -> pd.DataFrame:
+    rows = []
+    for broad_code in OECD_PATENT_BROAD_TECH_DOMAINS:
+        group = technology_domains[technology_domains["broad_domain_code"].eq(broad_code)]
+        if group.empty:
+            continue
+        detailed = group[~group["code"].eq(broad_code)]
+        rows.append(
+            {
+                "broad_domain_code": broad_code,
+                "broad_domain_label": labels["TECH"].get(broad_code, broad_code),
+                "available_in_indicator_data": bool(group["available_in_indicator_data"].any()),
+                "metadata_subdomain_count": int(len(detailed)),
+                "example_subdomains": "; ".join(detailed["label"].head(4).tolist()),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def oecd_eps_frame(raw: pd.DataFrame) -> pd.DataFrame:
@@ -310,6 +633,15 @@ def write_markdown_summary(summary: pd.DataFrame, output_path: Path) -> None:
         "2. The OECD target candidates are exploratory. The final target must be recorded in `0_organization/decision_log.md`.",
         "3. World Bank data are downloaded for candidate predictors only; inclusion in the final model is not decided here.",
         "",
+        "## Related OECD Metadata Outputs",
+        "",
+        "The script also writes structured OECD patent indicator metadata tables:",
+        "",
+        "1. `2_data/processed/oecd_patent_dimension_values.csv`",
+        "2. `2_data/processed/oecd_patent_target_candidates.csv`",
+        "3. `2_data/processed/oecd_patent_technology_domains.csv`",
+        "4. `2_data/processed/oecd_patent_technology_category_summary.csv`",
+        "",
     ]
     output_path.write_text("\n".join(text), encoding="utf-8")
 
@@ -328,6 +660,10 @@ def dataframe_to_markdown(data: pd.DataFrame) -> str:
 def run_exploration(start_year: int, end_year: int) -> pd.DataFrame:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
+    metadata_text = fetch_oecd_patent_metadata()
+    (RAW_DIR / "oecd_patents_indicator_metadata.xml").write_text(metadata_text, encoding="utf-8")
+    write_oecd_patent_catalog(build_oecd_patent_catalog(metadata_text), PROCESSED_DIR)
 
     frames = []
 

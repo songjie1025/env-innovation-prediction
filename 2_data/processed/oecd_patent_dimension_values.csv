@@ -1,0 +1,32 @@
+dimension,dimension_label,code,label,position
+UNIT_MEASURE,Indicator measure,INV_PS,Inventions per person,1
+UNIT_MEASURE,Indicator measure,INV_RD_S13,Inventions per unit of government R&D,2
+UNIT_MEASURE,Indicator measure,INV_RD_S1ZS,Inventions per unit of public R&D,3
+UNIT_MEASURE,Indicator measure,IX,Index,4
+UNIT_MEASURE,Indicator measure,PT_INV,Percentage of inventions,5
+UNIT_MEASURE,Indicator measure,PT_TECH,Percentage of technologies,6
+UNIT_MEASURE,Indicator measure,PT_TECH_COL,Percentage of collaborations in all technologies,7
+UNIT_MEASURE,Indicator measure,PT_TECH_ENV,Percentage of environment related technologies,8
+TYPE,Patent counting type,COL,International collaboration in development of environment-related technologies,1
+TYPE,Patent counting type,DEV,Development of environment-related technologies,2
+TYPE,Patent counting type,DIFF,Diffusion of environment-related technologies,3
+TYPE,Patent counting type,RENEW,Development of renewable energy technologies,4
+TECH,Technological domain,ADAPT,Climate change adaptation technologies,1
+TECH,Technological domain,BUILD,Climate change mitigation technologies related to buildings,2
+TECH,Technological domain,ENE,"Climate change mitigation technologies related to energy generation, transmission or distribution",3
+TECH,Technological domain,ENV_PAT,Environment-related technologies,4
+TECH,Technological domain,GHG,"Capture, storage, sequestration or disposal of greenhouse gases",5
+TECH,Technological domain,GOODS,Climate change mitigation technologies in the production or processing of goods,6
+TECH,Technological domain,ICT,Climate change mitigation in information and communication technologies (ICT),7
+TECH,Technological domain,MAN,Environmental management,8
+TECH,Technological domain,OCEAN,Sustainable ocean economy,9
+TECH,Technological domain,TOT,All technologies (total patents),10
+TECH,Technological domain,TRA,Climate change mitigation technologies related to transportation,11
+TECH,Technological domain,WAT_WASTE,Climate change mitigation technologies related to wastewater treatment or waste management,12
+PAT,Regional patent office,_Z,Not applicable,1
+PAT,Regional patent office,ARIPO,African Regional Industrial Property Organisation,2
+PAT,Regional patent office,EAPO,Eurasian Patent Organization,3
+PAT,Regional patent office,EPO,European Patent Office,4
+PAT,Regional patent office,GCC,Patent Office of the Cooperation Council for the Arab States of the Gulf,5
+PAT,Regional patent office,OAPI,African Intellectual Property Organization,6
+PAT,Regional patent office,PCT,Patent Cooperation Treaty,7
