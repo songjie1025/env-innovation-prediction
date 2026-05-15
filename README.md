@@ -75,6 +75,8 @@ The final model family and evaluation metrics are deferred decisions and should 
 │   ├── raw/                 Raw datasets, usually not committed
 │   └── processed/           Cleaned panel data
 ├── 3_models/                Model plans, scripts, experiments, and outputs
+│   ├── scripts/             Modeling scripts and experiment code
+│   └── outputs/             Model metrics, summaries, and importance tables
 ├── 4_analysis/              Figures, tables, interpretation, and case-study material
 │   ├── figures/
 │   └── tables/

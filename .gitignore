@@ -14,8 +14,8 @@ venv/
 env/
 
 # === Trained model files (too large for Git) ===
-3_models/saved_models/*.pkl
-3_models/saved_models/*.joblib
+3_models/outputs/*.pkl
+3_models/outputs/*.joblib
 
 # === Secrets & credentials ===
 .env
