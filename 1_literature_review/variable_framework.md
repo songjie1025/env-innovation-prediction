@@ -151,6 +151,22 @@ These hypotheses are provisional and should be updated after the literature revi
 3. Higher income levels may support innovation capacity, but the relationship may weaken after controlling for R&D.
 4. Energy-system variables may capture both transition pressure and structural lock-in, so their expected signs are less certain.
 
+## Current Evidence Assessment
+
+The first paper-note pass in `1_literature_review/review_checklist.md` supports the following reviewer-style interpretation. These are not final modeling decisions; they should be revisited after note review and coverage checks.
+
+| Project decision | Current assessment | Evidence basis | Caveat |
+|---|---|---|---|
+| Main target | Prefer `env_patent_share_inventions` as the leading target candidate. | OECD patent indicator metadata, Hascic and Migotto (2015), and OECD patent-statistics guidance. | Confirm exact OECD indicator definition and value filter before finalizing. |
+| Robustness target | Keep `env_patents_per_million` as a robustness or alternative intensity target. | Patent-statistics normalization logic. | May be more sensitive to general innovation-system scale and skewness. |
+| Dropped main target | Keep `env_patent_share_tech` out of the main model. | Prior data-quality decision and interpretation risk for values above 100. | Could remain a carefully caveated sensitivity variable. |
+| Policy predictor | Treat lagged `eps_index` as the strongest policy predictor candidate. | Kruse et al. (2022), Johnstone et al. (2010), Nesta et al. (2014), and Johnstone et al. (2012). | EPS narrows the panel and should be interpreted as predictive association, not causal proof. |
+| R&D capacity | Treat `rd_expenditure_gdp` as a strong candidate if coverage permits. | Patent-policy and induced-innovation literature repeatedly points to innovation capacity or knowledge stocks. | WDI R&D is general R&D, not green R&D. |
+| Researchers | Keep `researchers_per_million` as a secondary capacity proxy. | Conceptually aligned with innovation capacity. | Direct environmental-patent evidence is weaker and coverage is thin. |
+| Energy variables | Use at most one energy-system variable in the first small model. | Popp (2002), Johnstone et al. (2010), and Nesta et al. (2014). | WDI renewable share, fossil share, energy intensity, and CO2 are not equivalent to energy prices or policy incentives. |
+| Manufacturing share | Keep as optional structural control. | Brunnermeier and Cohen (2003) and competition/structure evidence. | Country-level manufacturing share is a rough proxy for industry composition. |
+| RISE | Keep optional until coverage is verified. | RISE methodology note. | Direct patent evidence is weaker than for EPS. |
+
 ## Open Research Decisions
 
 Record final answers in `0_organization/decision_log.md`.

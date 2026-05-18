@@ -18,13 +18,15 @@ The review is not a general survey of green innovation. It should focus on sourc
 
 | Item | Count |
 |---|---:|
-| Sources screened | 0 |
-| PDFs or access notes stored | 0 |
-| Paper notes drafted | 0 |
+| Sources screened | 12 |
+| PDFs or access notes stored | 12 |
+| Paper notes drafted | 12 |
 | Paper notes reviewed | 0 |
-| Sources used for predictor selection | 0 |
+| Sources used for predictor selection | 9 |
 
 Update these counts whenever a source is added or reviewed.
+
+The predictor-selection count refers to sources with draft notes that currently inform candidate predictors. Final inclusion should wait until the relevant notes are checked against full text where access allows.
 
 ## Folder Convention
 
@@ -63,11 +65,18 @@ Examples:
 
 | ID | Citation / source | Type | Status | PDF or access note | Paper note | Main relevance | Decision use | Owner | Last updated |
 |---|---|---|---|---|---|---|---|---|---|
-| L001 | OECD, `Patents on environment technologies` | OECD data source | Candidate | To add | To add | Target-variable metadata | Target choice | Unassigned | 2026-05-18 |
-| L002 | OECD, `Measuring environmental innovation using patent data` | OECD methodological source | Candidate | To add | To add | Patent measurement and technology taxonomy | Target choice | Unassigned | 2026-05-18 |
-| L003 | OECD, `Environmental Policy Stringency` | OECD data source | Candidate | To add | To add | Environmental policy predictor | Predictor selection | Unassigned | 2026-05-18 |
-| L004 | World Bank Data / WDI documentation | Data source | Candidate | To add | To add | Candidate macro, R&D, energy, and emissions predictors | Predictor selection | Unassigned | 2026-05-18 |
-| L005 | RISE, Regulatory Indicators for Sustainable Energy | Data source | Candidate | To add | To add | Optional energy-policy predictor | Predictor selection | Unassigned | 2026-05-18 |
+| L001 | OECD, `Patents on environment technologies` | OECD data source | Notes drafted | `1_literature_review/pdfs/2026_oecd_patents-on-environment-technologies_access.md` | `1_literature_review/notes/2026_oecd_patents-on-environment-technologies.md` | Target-variable metadata | Target choice | Codex | 2026-05-18 |
+| L002 | Hascic and Migotto, `Measuring environmental innovation using patent data` | OECD methodological source | Notes drafted | `1_literature_review/pdfs/2015_hascic_measuring-environmental-innovation_access.md` | `1_literature_review/notes/2015_hascic_measuring-environmental-innovation.md` | Patent measurement and technology taxonomy | Target choice | Codex | 2026-05-18 |
+| L003 | Kruse et al., `Measuring environmental policy stringency in OECD countries` | OECD data documentation / working paper | Notes drafted | `1_literature_review/pdfs/2022_kruse_measuring-environmental-policy-stringency_access.md` | `1_literature_review/notes/2022_kruse_measuring-environmental-policy-stringency.md` | Environmental policy predictor | Predictor selection | Codex | 2026-05-18 |
+| L004 | World Bank Data / WDI documentation | Data source | Notes drafted | `1_literature_review/pdfs/2026_world-bank-open-data_access.md` | `1_literature_review/notes/2026_world-bank-open-data.md` | Candidate macro, R&D, energy, and emissions predictors | Predictor data source | Codex | 2026-05-18 |
+| L005 | RISE, Regulatory Indicators for Sustainable Energy | Data source | Notes drafted | `1_literature_review/pdfs/2026_esmap_rise-methodology_access.md` | `1_literature_review/notes/2026_esmap_rise-methodology.md` | Optional energy-policy predictor | Predictor selection | Codex | 2026-05-18 |
+| L006 | OECD, `OECD Patent Statistics Manual` | Methodological manual | Notes drafted | `1_literature_review/pdfs/2009_oecd_patent-statistics-manual_access.md` | `1_literature_review/notes/2009_oecd_patent-statistics-manual.md` | Patent counting and comparability | Target choice | Codex | 2026-05-18 |
+| L007 | Johnstone, Hascic and Popp, `Renewable Energy Policies and Technological Innovation` | Journal article / working paper | Notes drafted | `1_literature_review/pdfs/2010_johnstone_renewable-energy-policies_access.md` | `1_literature_review/notes/2010_johnstone_renewable-energy-policies.md` | Policy-induced renewable patenting | Predictor selection | Codex | 2026-05-18 |
+| L008 | Nesta, Vona and Nicolli, `Environmental policies, competition and innovation in renewable energy` | Journal article | Notes drafted | `1_literature_review/pdfs/2014_nesta_environmental-policies-competition_access.md` | `1_literature_review/notes/2014_nesta_environmental-policies-competition.md` | Policy, R&D, competition, renewable patenting | Predictor selection | Codex | 2026-05-18 |
+| L009 | Popp, `Induced Innovation and Energy Prices` | Journal article / working paper | Notes drafted | `1_literature_review/pdfs/2002_popp_induced-innovation-energy-prices_access.md` | `1_literature_review/notes/2002_popp_induced-innovation-energy-prices.md` | Energy-price induced innovation mechanism | Predictor selection | Codex | 2026-05-18 |
+| L010 | Jaffe and Palmer, `Environmental Regulation and Innovation` | Journal article / working paper | Notes drafted | `1_literature_review/pdfs/1997_jaffe_environmental-regulation-innovation_access.md` | `1_literature_review/notes/1997_jaffe_environmental-regulation-innovation.md` | Porter-hypothesis caution and R&D/patent distinction | Predictor interpretation | Codex | 2026-05-18 |
+| L011 | Brunnermeier and Cohen, `Determinants of environmental innovation in US manufacturing industries` | Journal article | Notes drafted | `1_literature_review/pdfs/2003_brunnermeier_determinants-environmental-innovation_access.md` | `1_literature_review/notes/2003_brunnermeier_determinants-environmental-innovation.md` | Regulation and industrial-structure mechanisms | Predictor interpretation | Codex | 2026-05-18 |
+| L012 | Johnstone et al., `Environmental Policy Stringency and Technological Innovation` | Journal article | Notes drafted | `1_literature_review/pdfs/2012_johnstone_environmental-policy-stringency_access.md` | `1_literature_review/notes/2012_johnstone_environmental-policy-stringency.md` | Country-level policy stringency and environmental patents | Predictor selection | Codex | 2026-05-18 |
 
 Add empirical papers below this block as they are found.
 

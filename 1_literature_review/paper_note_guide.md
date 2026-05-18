@@ -4,6 +4,18 @@ This guide defines how to write literature notes for the project. It is designed
 
 The note style should be project-focused and reviewer-like: concise, skeptical, and oriented toward whether the source helps our target-variable choice, predictor selection, data construction, or interpretation.
 
+## Bilingual Note Requirement
+
+Every paper note should keep the main working note in English, because project documentation is written in English. Each note must also include a Chinese translation section at the end so Chinese-speaking collaborators can review the evidence quickly.
+
+Use this section title:
+
+```markdown
+## Chinese Translation
+```
+
+The Chinese section should mirror the English note structure rather than provide a compressed summary. Translate the same headings, lists, and tables into Chinese, including the bibliographic metadata table, data/measurement table, predictor-implication table, strengths, limitations, use decision, extractable report text, and open questions. It may preserve source titles, variable names, file paths, indicator codes, and method labels in English when that improves precision. Keep the same reviewer-like style: concise, skeptical, and explicit about what is evidence from the source versus our inference for the project.
+
 ## What Matters Most
 
 For this project, prioritize:
@@ -163,6 +175,10 @@ Paraphrase useful ideas. Do not copy long passages.
 
 1.
 2.
+
+## Chinese Translation
+
+Translate the note's substantive content into Chinese using the same structure as the English note. Mirror the English headings, numbered lists, bullet lists, and Markdown tables. Preserve technical variable names, indicator codes, file paths, URLs, and citation titles when needed. The translation should be useful to a Chinese-speaking reviewer without opening the English section.
 ```
 
 ## Reviewer Standards
@@ -198,3 +214,4 @@ Before changing a note status to `Notes reviewed`, verify:
 4. Predictor implications table is filled in for all variables discussed by the source.
 5. Strengths and limitations are specific, not generic.
 6. The note explains how the source should or should not affect our project.
+7. The note has a `Chinese Translation` section that mirrors the English note structure, including translated tables and lists, while preserving technical names accurately.

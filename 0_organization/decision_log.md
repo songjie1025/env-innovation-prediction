@@ -102,6 +102,22 @@ Using `env_patent_share_tech` as the main target was rejected. It may still be c
 Status:
 Active
 
+### 2026-05-18: Treat `env_patent_share_inventions` as the leading target candidate
+
+Date: 2026-05-18
+
+Decision:
+The first literature-review pass treats `env_patent_share_inventions` as the leading main target candidate, with `env_patents_per_million` kept as a robustness or alternative intensity target.
+
+Reason:
+OECD target metadata and patent-measurement sources support a normalized patent-share measure tied to domestic inventions. This choice is easier to defend than `env_patent_share_tech`, which was already excluded as a main target because values above 100 create interpretation risk. A per-million indicator remains useful because it preserves patent intensity, but it may be more sensitive to general innovation-system scale.
+
+Alternatives considered:
+Using `env_patents_per_million` as the main target was considered but deferred because the project should first check skewness and size effects. Returning to `env_patent_share_tech` as the main target was rejected under the active 2026-05-16 decision.
+
+Status:
+Deferred
+
 ## Deferred Decisions
 
 The following decisions should be made after literature review and initial data inspection:
