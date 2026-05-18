@@ -27,6 +27,8 @@ Project governance and research decisions are documented in:
 - [Project rules](0_organization/project_rules.md)
 - [Decision log](0_organization/decision_log.md)
 - [Variable framework](1_literature_review/variable_framework.md)
+- [Literature review checklist](1_literature_review/review_checklist.md)
+- [Paper note guide](1_literature_review/paper_note_guide.md)
 - [Data dictionary](2_data/data_dictionary.md)
 
 Generated or preliminary content should be treated as a starting point, not as a fixed plan.
@@ -74,7 +76,7 @@ The final model family and evaluation metrics are deferred decisions and should 
 
 ```text
 ├── 0_organization/          Project requirements, rules, and decisions
-├── 1_literature_review/     Literature notes and variable framework
+├── 1_literature_review/     Literature workflow, PDFs, paper notes, and variable framework
 ├── 2_data/                  Data collection, raw data placeholders, processed data, and data dictionaries
 │   ├── scripts/             Data download and preprocessing scripts
 │   ├── notebooks/           Narrative local exploration notebooks
