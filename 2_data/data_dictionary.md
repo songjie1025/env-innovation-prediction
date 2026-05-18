@@ -91,6 +91,16 @@ The final predictor list should be selected through the literature review and da
 | `2_data/processed/oecd_patent_technology_domains.csv` | OECD technology-domain metadata, including broad available domains and detailed taxonomy codes | Created 2026-05-15 |
 | `2_data/processed/oecd_patent_technology_category_summary.csv` | Summary of broad environment-related patent domains and example detailed subdomains | Created 2026-05-15 |
 
+## Candidate Discovery Outputs
+
+These files document the systematic candidate screen before final variable selection.
+
+| File | Description | Status |
+|---|---|---|
+| `2_data/processed/target_candidate_catalog.csv` | OECD patent target search-space catalog built from available `UNIT_MEASURE`, `TYPE`, `TECH`, and `PAT` metadata combinations, with reviewer-facing inclusion status and coverage where checked | Created 2026-05-19 |
+| `2_data/processed/predictor_candidate_catalog.csv` | Literature- and metadata-driven predictor candidate catalog with source codes, rationale, coverage status, lag recommendation, measurement caveats, and inclusion decision | Created 2026-05-19 |
+| `2_data/processed/candidate_discovery_summary.md` | Human-readable summary generated from `2_data/scripts/candidate_discovery.py` | Created 2026-05-19 |
+
 ## Processed Modeling Dataset
 
 Planned processed file:
@@ -142,3 +152,4 @@ Run and document these checks after creating the processed panel:
 | 2026-05-15 | Created initial data dictionary structure | Establish documentation rules before data collection. |
 | 2026-05-15 | Added first-pass data-source coverage results | Document controlled exploration of OECD patent indicators, OECD EPS, and World Bank predictors. |
 | 2026-05-15 | Added OECD patent metadata catalog outputs | Make target-variable and technology-domain options visible before choosing the final target. |
+| 2026-05-19 | Added candidate discovery catalogs | Document systematic target and predictor candidate screening before model construction. |

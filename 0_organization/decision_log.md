@@ -118,6 +118,22 @@ Using `env_patents_per_million` as the main target was considered but deferred b
 Status:
 Deferred
 
+### 2026-05-19: Add candidate discovery before model building
+
+Date: 2026-05-19
+
+Decision:
+Before building the modeling panel, the project will use a dedicated candidate discovery step that catalogs OECD patent target combinations and literature/database-driven predictor candidates.
+
+Reason:
+The first-pass data exploration checked feasibility for a small initial set, but it did not by itself show that the relevant target and predictor candidate space had been systematically screened. A candidate discovery catalog makes the screening logic, coverage status, inclusion decisions, and dropped alternatives auditable before final variable selection.
+
+Alternatives considered:
+Moving directly to model construction was rejected because it would make variable selection look ad hoc. Downloading every possible indicator time series was also rejected because it would add complexity without improving the interpretability of the final project.
+
+Status:
+Active
+
 ## Deferred Decisions
 
 The following decisions should be made after literature review and initial data inspection:
