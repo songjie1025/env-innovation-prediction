@@ -8,17 +8,39 @@ The catalogs are reviewer-facing discovery artifacts, not final modeling decisio
 
 | candidate_role | include | candidate_count |
 | --- | --- | --- |
+| breakdown_candidate | False | 2112 |
+| context_only | False | 224 |
 | main_target_candidate | True | 1 |
-| not_suitable | False | 2615 |
-| secondary_target | False | 71 |
+| mechanism_candidate | False | 198 |
+| not_suitable | False | 12 |
+| secondary_target | False | 140 |
 | secondary_target | True | 1 |
+
+## Target Candidate Uses
+
+| candidate_role | recommended_use | include | candidate_count |
+| --- | --- | --- | --- |
+| breakdown_candidate | diagnostic breakdown candidate | False | 2112 |
+| context_only | denominator or context variable | False | 224 |
+| main_target_candidate | main outcome candidate | True | 1 |
+| mechanism_candidate | mechanism or descriptive candidate | False | 198 |
+| not_suitable | do not use without separate justification | False | 12 |
+| secondary_target | robustness or thematic outcome candidate | False | 140 |
+| secondary_target | robustness outcome candidate | True | 1 |
 
 ## Included Or Leading Target Candidates
 
-| source_variable | candidate_role | include | coverage_checked | countries_with_data | first_year | last_year | reason |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| PT_INV.DEV.ENV_PAT._Z | main_target_candidate | True | True | 202 | 1990 | 2023 | Preferred normalized target: environment-related technologies as a share of inventions. |
-| INV_PS.DEV.ENV_PAT._Z | secondary_target | True | True | 196 | 1990 | 2023 | Size-normalized patent intensity candidate; useful robustness target. |
+| source_variable | candidate_role | recommended_use | include | coverage_checked | countries_with_data | first_year | last_year | reason |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PT_INV.DEV.ENV_PAT._Z | main_target_candidate | main outcome candidate | True | True | 202 | 1990 | 2023 | Preferred normalized target: environment-related technologies as a share of inventions. |
+| INV_PS.DEV.ENV_PAT._Z | secondary_target | robustness outcome candidate | True | True | 196 | 1990 | 2023 | Size-normalized patent intensity candidate; useful robustness target. |
+
+## Mechanism Or Descriptive Target Candidates
+
+| source_variable | unit_measure_label | type_label | technology_domain_label | recommended_use | reason |
+| --- | --- | --- | --- | --- | --- |
+| INV_PS.COL.ADAPT._Z | Inventions per person | International collaboration in development of environment-related technologies | Climate change adaptation technologies | mechanism or descriptive candidate | International collaboration is relevant for mechanisms and descriptive analysis, but it is not the broad country-year innovation outcome for the main target. |
+| INV_PS.DIFF.ADAPT._Z | Inventions per person | Diffusion of environment-related technologies | Climate change adaptation technologies | mechanism or descriptive candidate | Diffusion is relevant for adoption and international spread of environmental technologies, but it is analytically different from domestic technology development. |
 
 ## Predictor Decision Counts
 

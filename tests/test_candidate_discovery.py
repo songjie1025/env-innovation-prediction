@@ -12,6 +12,7 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from candidate_discovery import (  # noqa: E402
     build_predictor_candidate_catalog,
     build_target_candidate_catalog,
+    classify_target_candidate,
     filter_world_bank_metadata,
     run_candidate_discovery,
     source_variable,
@@ -67,12 +68,38 @@ class CandidateDiscoveryTests(unittest.TestCase):
         collaboration = catalog[catalog["source_variable"].eq("PT_TECH_COL.COL.ENV_PAT._Z")].iloc[0]
 
         self.assertEqual(main["candidate_role"], "main_target_candidate")
+        self.assertEqual(main["recommended_use"], "main outcome candidate")
         self.assertTrue(bool(main["include"]))
         self.assertTrue(bool(main["coverage_checked"]))
         self.assertEqual(main["non_missing_observations"], 100)
         self.assertEqual(intensity["candidate_role"], "secondary_target")
+        self.assertEqual(intensity["recommended_use"], "robustness outcome candidate")
         self.assertFalse(bool(office_breakdown["include"]))
-        self.assertEqual(collaboration["candidate_role"], "not_suitable")
+        self.assertEqual(collaboration["candidate_role"], "mechanism_candidate")
+        self.assertEqual(collaboration["recommended_use"], "mechanism or descriptive candidate")
+
+    def test_collaboration_candidates_are_relevant_mechanism_candidates(self):
+        role, include, reason = classify_target_candidate("PT_TECH_COL", "COL", "ENV_PAT", "_Z")
+
+        self.assertEqual(role, "mechanism_candidate")
+        self.assertFalse(include)
+        self.assertIn("collaboration", reason.lower())
+        self.assertIn("mechanism", reason.lower())
+
+    def test_diffusion_and_renewable_candidates_are_not_silently_dropped(self):
+        diffusion_role, diffusion_include, diffusion_reason = classify_target_candidate(
+            "PT_INV", "DIFF", "ENV_PAT", "_Z"
+        )
+        renewable_role, renewable_include, renewable_reason = classify_target_candidate(
+            "PT_INV", "RENEW", "ENV_PAT", "_Z"
+        )
+
+        self.assertEqual(diffusion_role, "mechanism_candidate")
+        self.assertFalse(diffusion_include)
+        self.assertIn("diffusion", diffusion_reason.lower())
+        self.assertEqual(renewable_role, "secondary_target")
+        self.assertFalse(renewable_include)
+        self.assertIn("renewable", renewable_reason.lower())
 
     def test_filter_world_bank_metadata_matches_keywords_without_network(self):
         records = [

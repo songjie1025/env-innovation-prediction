@@ -412,6 +412,9 @@ def build_target_candidate_catalog(processed_dir: Path = PROCESSED_DIR) -> pd.Da
                         "regional_patent_office": pat,
                         "regional_patent_office_label": lookups["PAT"][pat],
                         "candidate_role": role,
+                        "recommended_use": recommended_target_use(
+                            unit_measure, patent_type, tech, pat, role, include
+                        ),
                         "include": include,
                         "reason": reason,
                     }
@@ -419,7 +422,14 @@ def build_target_candidate_catalog(processed_dir: Path = PROCESSED_DIR) -> pd.Da
                     rows.append(row)
 
     data = pd.DataFrame(rows)
-    role_order = {"main_target_candidate": 0, "secondary_target": 1, "not_suitable": 2}
+    role_order = {
+        "main_target_candidate": 0,
+        "secondary_target": 1,
+        "mechanism_candidate": 2,
+        "breakdown_candidate": 3,
+        "context_only": 4,
+        "not_suitable": 5,
+    }
     data["_role_order"] = data["candidate_role"].map(role_order).fillna(99).astype(int)
     return (
         data.sort_values(["_role_order", "include", "source_variable"], ascending=[True, False, True])
@@ -433,31 +443,57 @@ def classify_target_candidate(
 ) -> tuple[str, bool, str]:
     variable = source_variable(unit_measure, patent_type, tech, pat)
 
-    if pat != "_Z":
-        return (
-            "not_suitable",
-            False,
-            "Patent-office breakdown rather than country-level not-applicable total; unsuitable as main target.",
-        )
-    if patent_type in {"COL", "DIFF", "RENEW"}:
-        return (
-            "not_suitable",
-            False,
-            "Patent type is collaboration, diffusion, or renewable-only rather than broad development.",
-        )
     if tech == "TOT":
         return (
-            "not_suitable",
+            "context_only",
             False,
-            "All-technologies denominator; useful context but not environment-related innovation outcome.",
+            "All-technologies denominator; useful context for normalization but not an environment-related innovation outcome.",
         )
-    if "COL" in unit_measure:
+    if pat != "_Z":
+        return (
+            "breakdown_candidate",
+            False,
+            (
+                "Patent-office breakdown may help diagnose regional patenting routes, "
+                "but it is too narrow for the main country-year outcome."
+            ),
+        )
+    if patent_type == "COL" or "COL" in unit_measure:
+        return (
+            "mechanism_candidate",
+            False,
+            (
+                "International collaboration is relevant for mechanisms and descriptive analysis, "
+                "but it is not the broad country-year innovation outcome for the main target."
+            ),
+        )
+    if patent_type == "DIFF":
+        return (
+            "mechanism_candidate",
+            False,
+            (
+                "Diffusion is relevant for adoption and international spread of environmental technologies, "
+                "but it is analytically different from domestic technology development."
+            ),
+        )
+    if patent_type == "RENEW":
+        return (
+            "secondary_target",
+            False,
+            "Renewable-energy patenting is substantively important but narrower than the broad environmental-innovation target.",
+        )
+    if unit_measure in {"INV_RD_S13", "INV_RD_S1ZS"} and patent_type == "DEV" and tech == "ENV_PAT":
+        return (
+            "secondary_target",
+            False,
+            "R&D-normalized patent intensity may be useful for robustness, but the denominator is harder to compare broadly.",
+        )
+    if unit_measure == "IX":
         return (
             "not_suitable",
             False,
-            "Collaboration measure captures co-invention structure rather than innovation output.",
+            "Index measure is less directly interpretable as a target for country-year innovation levels.",
         )
-
     if variable == "PT_INV.DEV.ENV_PAT._Z":
         return (
             "main_target_candidate",
@@ -488,6 +524,30 @@ def classify_target_candidate(
         False,
         "Does not match the conservative broad country-year target definition for this project.",
     )
+
+
+def recommended_target_use(
+    unit_measure: str,
+    patent_type: str,
+    tech: str,
+    pat: str,
+    candidate_role: str,
+    include: bool,
+) -> str:
+    variable = source_variable(unit_measure, patent_type, tech, pat)
+    if candidate_role == "main_target_candidate" and include:
+        return "main outcome candidate"
+    if variable == "INV_PS.DEV.ENV_PAT._Z":
+        return "robustness outcome candidate"
+    if candidate_role == "secondary_target":
+        return "robustness or thematic outcome candidate"
+    if candidate_role == "mechanism_candidate":
+        return "mechanism or descriptive candidate"
+    if candidate_role == "breakdown_candidate":
+        return "diagnostic breakdown candidate"
+    if candidate_role == "context_only":
+        return "denominator or context variable"
+    return "do not use without separate justification"
 
 
 def keyword_matches(text: str, keywords: Iterable[str]) -> bool:
@@ -573,6 +633,7 @@ def write_markdown_summary(
     metadata_scan_used: bool = False,
 ) -> None:
     target_counts = _value_counts_frame(target_catalog, ["candidate_role", "include"])
+    target_use_counts = _value_counts_frame(target_catalog, ["candidate_role", "recommended_use", "include"])
     predictor_counts = _value_counts_frame(predictor_catalog, ["include_decision"])
     included_targets = (
         target_catalog[target_catalog["include"]].copy()
@@ -588,6 +649,14 @@ def write_markdown_summary(
         if "include_decision" in predictor_catalog.columns
         else predictor_catalog.head(0).copy()
     )
+    mechanism_targets = (
+        target_catalog[target_catalog["candidate_role"].eq("mechanism_candidate")]
+        .drop_duplicates("reason")
+        .head(8)
+        .copy()
+        if "candidate_role" in target_catalog.columns
+        else target_catalog.head(0).copy()
+    )
 
     text = [
         "# Candidate Discovery Summary",
@@ -600,6 +669,10 @@ def write_markdown_summary(
         "",
         dataframe_to_markdown(target_counts),
         "",
+        "## Target Candidate Uses",
+        "",
+        dataframe_to_markdown(target_use_counts),
+        "",
         "## Included Or Leading Target Candidates",
         "",
         dataframe_to_markdown(
@@ -608,11 +681,28 @@ def write_markdown_summary(
                 [
                     "source_variable",
                     "candidate_role",
+                    "recommended_use",
                     "include",
                     "coverage_checked",
                     "countries_with_data",
                     "first_year",
                     "last_year",
+                    "reason",
+                ],
+            )
+        ),
+        "",
+        "## Mechanism Or Descriptive Target Candidates",
+        "",
+        dataframe_to_markdown(
+            _select_existing_columns(
+                mechanism_targets,
+                [
+                    "source_variable",
+                    "unit_measure_label",
+                    "type_label",
+                    "technology_domain_label",
+                    "recommended_use",
                     "reason",
                 ],
             )
