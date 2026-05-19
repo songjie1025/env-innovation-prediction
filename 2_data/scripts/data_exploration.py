@@ -10,10 +10,20 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import requests
 
-
-ROOT_DIR = Path(__file__).resolve().parents[2]
-RAW_DIR = ROOT_DIR / "2_data" / "raw"
-PROCESSED_DIR = ROOT_DIR / "2_data" / "processed"
+from data_common import (
+    AGGREGATE_AREA_CODES,
+    OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK,
+    OECD_PATENT_BROAD_TECH_DOMAINS,
+    OECD_PATENT_DIMENSION_CODELISTS,
+    OECD_PATENT_DIMENSION_LABELS,
+    OECD_PATENT_LABEL_FALLBACK,
+    PROCESSED_DIR,
+    RAW_DIR,
+    ROOT_DIR,
+    dataframe_to_markdown,
+    fetch_text,
+    filter_country_rows,
+)
 
 OECD_PAT_IND_BASE_URL = "https://sdmx.oecd.org/public/rest/data/OECD.ENV.EPI,DSD_PAT_IND@DF_PAT_IND,1.0"
 OECD_PAT_IND_METADATA_URL = (
@@ -26,67 +36,6 @@ OECD_EPS_URL = (
     "?startPeriod=1990&endPeriod=2020&dimensionAtObservation=AllDimensions&format=csvfilewithlabels"
 )
 WORLD_BANK_BASE_URL = "https://api.worldbank.org/v2/country/all/indicator"
-
-AGGREGATE_AREA_CODES = {
-    "",
-    "_Z",
-    "AFE",
-    "AFW",
-    "ARB",
-    "CEB",
-    "CSS",
-    "EAP",
-    "EAR",
-    "EAS",
-    "ECA",
-    "ECS",
-    "EMU",
-    "EU27",
-    "EU27_2020",
-    "EUU",
-    "FCS",
-    "HIC",
-    "HPC",
-    "IBD",
-    "IBT",
-    "IDA",
-    "IDB",
-    "IDX",
-    "INX",
-    "LAC",
-    "LCN",
-    "LDC",
-    "LIC",
-    "LMC",
-    "LMY",
-    "LTE",
-    "MEA",
-    "MIC",
-    "MNA",
-    "NAC",
-    "OED",
-    "OECD",
-    "OECDA",
-    "OECDE",
-    "OECDSO",
-    "OSS",
-    "PRE",
-    "PSS",
-    "PST",
-    "SAS",
-    "SSA",
-    "SSF",
-    "SST",
-    "TEA",
-    "TEC",
-    "TLA",
-    "TMN",
-    "TSA",
-    "TSS",
-    "UMC",
-    "W",
-    "WLD",
-}
 
 OECD_PATENT_TARGET_CANDIDATES = [
     {
@@ -125,104 +74,6 @@ OECD_PATENT_TARGET_CANDIDATES = [
             "without letting population dominate mechanically."
         ),
     },
-]
-
-OECD_PATENT_DIMENSION_CODELISTS = {
-    "UNIT_MEASURE": "CL_UNIT_MEASURE",
-    "TYPE": "CL_TYPE_PAT_IND",
-    "TECH": "CL_TECH_PAT",
-    "PAT": "CL_PAT_PAT_DIFF",
-}
-
-OECD_PATENT_DIMENSION_LABELS = {
-    "UNIT_MEASURE": "Indicator measure",
-    "TYPE": "Patent counting type",
-    "TECH": "Technological domain",
-    "PAT": "Regional patent office",
-}
-
-OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK = {
-    "UNIT_MEASURE": [
-        "INV_PS",
-        "INV_RD_S13",
-        "INV_RD_S1ZS",
-        "IX",
-        "PT_INV",
-        "PT_TECH",
-        "PT_TECH_COL",
-        "PT_TECH_ENV",
-    ],
-    "TYPE": ["COL", "DEV", "DIFF", "RENEW"],
-    "TECH": [
-        "ADAPT",
-        "BUILD",
-        "ENE",
-        "ENV_PAT",
-        "GHG",
-        "GOODS",
-        "ICT",
-        "MAN",
-        "OCEAN",
-        "TOT",
-        "TRA",
-        "WAT_WASTE",
-    ],
-    "PAT": ["_Z", "ARIPO", "EAPO", "EPO", "GCC", "OAPI", "PCT"],
-}
-
-OECD_PATENT_LABEL_FALLBACK = {
-    "UNIT_MEASURE": {
-        "INV_PS": "Inventions per person",
-        "INV_RD_S13": "Inventions per unit of government R&D",
-        "INV_RD_S1ZS": "Inventions per unit of public R&D",
-        "IX": "Index",
-        "PT_INV": "Percentage of inventions",
-        "PT_TECH": "Percentage of technologies",
-        "PT_TECH_COL": "Percentage of collaborations in all technologies",
-        "PT_TECH_ENV": "Percentage of environment related technologies",
-    },
-    "TYPE": {
-        "COL": "International collaboration in development of environment-related technologies",
-        "DEV": "Development of environment-related technologies",
-        "DIFF": "Diffusion of environment-related technologies",
-        "RENEW": "Development of renewable energy technologies",
-    },
-    "TECH": {
-        "ADAPT": "Climate change adaptation technologies",
-        "BUILD": "Climate change mitigation technologies related to buildings",
-        "ENE": "Climate change mitigation technologies related to energy generation, transmission or distribution",
-        "ENV_PAT": "Environment-related technologies",
-        "GHG": "Capture, storage, sequestration or disposal of greenhouse gases",
-        "GOODS": "Climate change mitigation technologies in the production or processing of goods",
-        "ICT": "Climate change mitigation in information and communication technologies (ICT)",
-        "MAN": "Environmental management",
-        "OCEAN": "Sustainable ocean economy",
-        "TOT": "All technologies (total patents)",
-        "TRA": "Climate change mitigation technologies related to transportation",
-        "WAT_WASTE": "Climate change mitigation technologies related to wastewater treatment or waste management",
-    },
-    "PAT": {
-        "_Z": "Not applicable",
-        "ARIPO": "African Regional Industrial Property Organisation",
-        "EAPO": "Eurasian Patent Organization",
-        "EPO": "European Patent Office",
-        "GCC": "Patent Office of the Cooperation Council for the Arab States of the Gulf",
-        "OAPI": "African Intellectual Property Organization",
-        "PCT": "Patent Cooperation Treaty",
-    },
-}
-
-OECD_PATENT_BROAD_TECH_DOMAINS = [
-    "ADAPT",
-    "BUILD",
-    "ENE",
-    "GHG",
-    "GOODS",
-    "ICT",
-    "MAN",
-    "OCEAN",
-    "TRA",
-    "WAT_WASTE",
 ]
 
 SDMX_NAMESPACES = {
@@ -277,14 +128,6 @@ WORLD_BANK_INDICATORS = {
 }
 
 
-def filter_country_rows(data: pd.DataFrame) -> pd.DataFrame:
-    filtered = data.copy()
-    filtered["country_code"] = filtered["country_code"].fillna("").astype(str).str.strip()
-    is_country_like = filtered["country_code"].str.len().eq(3)
-    is_aggregate = filtered["country_code"].isin(AGGREGATE_AREA_CODES)
-    return filtered[is_country_like & ~is_aggregate].reset_index(drop=True)
-
-
 def summarize_panel_coverage(data: pd.DataFrame) -> pd.DataFrame:
     group_columns = ["dataset_id", "variable"]
     if "source_variable" in data.columns:
@@ -332,12 +175,6 @@ def world_bank_records_to_frame(
     frame = pd.DataFrame(rows)
     frame["value"] = pd.to_numeric(frame["value"], errors="coerce")
     return frame
-
-
-def fetch_text(url: str, timeout: int = 90) -> str:
-    response = requests.get(url, timeout=timeout)
-    response.raise_for_status()
-    return response.text
 
 
 def fetch_oecd_patent_metadata() -> str:
@@ -644,17 +481,6 @@ def write_markdown_summary(summary: pd.DataFrame, output_path: Path) -> None:
         "",
     ]
     output_path.write_text("\n".join(text), encoding="utf-8")
-
-
-def dataframe_to_markdown(data: pd.DataFrame) -> str:
-    columns = list(data.columns)
-    rows = []
-    rows.append("| " + " | ".join(columns) + " |")
-    rows.append("| " + " | ".join(["---"] * len(columns)) + " |")
-    for _, row in data.iterrows():
-        values = ["" if pd.isna(row[column]) else str(row[column]) for column in columns]
-        rows.append("| " + " | ".join(values) + " |")
-    return "\n".join(rows)
 
 
 def run_exploration(start_year: int, end_year: int) -> pd.DataFrame:

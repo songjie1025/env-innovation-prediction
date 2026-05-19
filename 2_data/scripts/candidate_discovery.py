@@ -9,10 +9,17 @@ from typing import Iterable
 import pandas as pd
 import requests
 
-
-ROOT_DIR = Path(__file__).resolve().parents[2]
-RAW_DIR = ROOT_DIR / "2_data" / "raw"
-PROCESSED_DIR = ROOT_DIR / "2_data" / "processed"
+from data_common import (
+    OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK,
+    OECD_PATENT_BROAD_TECH_DOMAINS,
+    OECD_PATENT_DIMENSION_LABELS,
+    OECD_PATENT_LABEL_FALLBACK,
+    PROCESSED_DIR,
+    RAW_DIR,
+    dataframe_to_markdown,
+    select_existing_columns,
+    value_counts_frame,
+)
 
 TARGET_CATALOG_NAME = "target_candidate_catalog.csv"
 PREDICTOR_CATALOG_NAME = "predictor_candidate_catalog.csv"
@@ -49,116 +56,7 @@ GENERIC_SINGLE_KEYWORDS = {
     "rise",
 }
 
-OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK = {
-    "UNIT_MEASURE": [
-        "INV_PS",
-        "INV_RD_S13",
-        "INV_RD_S1ZS",
-        "IX",
-        "PT_INV",
-        "PT_TECH",
-        "PT_TECH_COL",
-        "PT_TECH_ENV",
-    ],
-    "TYPE": ["COL", "DEV", "DIFF", "RENEW"],
-    "TECH": [
-        "ADAPT",
-        "BUILD",
-        "ENE",
-        "ENV_PAT",
-        "GHG",
-        "GOODS",
-        "ICT",
-        "MAN",
-        "OCEAN",
-        "TOT",
-        "TRA",
-        "WAT_WASTE",
-    ],
-    "PAT": ["_Z", "ARIPO", "EAPO", "EPO", "GCC", "OAPI", "PCT"],
-}
-
-OECD_PATENT_LABEL_FALLBACK = {
-    "UNIT_MEASURE": {
-        "INV_PS": "Inventions per person",
-        "INV_RD_S13": "Inventions per unit of government R&D",
-        "INV_RD_S1ZS": "Inventions per unit of public R&D",
-        "IX": "Index",
-        "PT_INV": "Percentage of inventions",
-        "PT_TECH": "Percentage of technologies",
-        "PT_TECH_COL": "Percentage of collaborations in all technologies",
-        "PT_TECH_ENV": "Percentage of environment related technologies",
-    },
-    "TYPE": {
-        "COL": "International collaboration in development of environment-related technologies",
-        "DEV": "Development of environment-related technologies",
-        "DIFF": "Diffusion of environment-related technologies",
-        "RENEW": "Development of renewable energy technologies",
-    },
-    "TECH": {
-        "ADAPT": "Climate change adaptation technologies",
-        "BUILD": "Climate change mitigation technologies related to buildings",
-        "ENE": "Climate change mitigation technologies related to energy generation, transmission or distribution",
-        "ENV_PAT": "Environment-related technologies",
-        "GHG": "Capture, storage, sequestration or disposal of greenhouse gases",
-        "GOODS": "Climate change mitigation technologies in the production or processing of goods",
-        "ICT": "Climate change mitigation in information and communication technologies (ICT)",
-        "MAN": "Environmental management",
-        "OCEAN": "Sustainable ocean economy",
-        "TOT": "All technologies (total patents)",
-        "TRA": "Climate change mitigation technologies related to transportation",
-        "WAT_WASTE": "Climate change mitigation technologies related to wastewater treatment or waste management",
-    },
-    "PAT": {
-        "_Z": "Not applicable",
-        "ARIPO": "African Regional Industrial Property Organisation",
-        "EAPO": "Eurasian Patent Organization",
-        "EPO": "European Patent Office",
-        "GCC": "Patent Office of the Cooperation Council for the Arab States of the Gulf",
-        "OAPI": "African Intellectual Property Organization",
-        "PCT": "Patent Cooperation Treaty",
-    },
-}
-
-OECD_PATENT_DIMENSION_LABELS = {
-    "UNIT_MEASURE": "Indicator measure",
-    "TYPE": "Patent counting type",
-    "TECH": "Technological domain",
-    "PAT": "Regional patent office",
-}
-
-BROAD_ENVIRONMENT_TECH_DOMAINS = {
-    "ADAPT",
-    "BUILD",
-    "ENE",
-    "GHG",
-    "GOODS",
-    "ICT",
-    "MAN",
-    "OCEAN",
-    "TRA",
-    "WAT_WASTE",
-}
-
-try:
-    import data_exploration as _data_exploration
-
-    OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK = getattr(
-        _data_exploration,
-        "OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK",
-        OECD_PATENT_AVAILABLE_DIMENSION_FALLBACK,
-    )
-    OECD_PATENT_LABEL_FALLBACK = getattr(
-        _data_exploration, "OECD_PATENT_LABEL_FALLBACK", OECD_PATENT_LABEL_FALLBACK
-    )
-    OECD_PATENT_DIMENSION_LABELS = getattr(
-        _data_exploration, "OECD_PATENT_DIMENSION_LABELS", OECD_PATENT_DIMENSION_LABELS
-    )
-    BROAD_ENVIRONMENT_TECH_DOMAINS = set(
-        getattr(_data_exploration, "OECD_PATENT_BROAD_TECH_DOMAINS", BROAD_ENVIRONMENT_TECH_DOMAINS)
-    )
-except ImportError:
-    pass
+BROAD_ENVIRONMENT_TECH_DOMAINS = set(OECD_PATENT_BROAD_TECH_DOMAINS)
 
 PREDICTOR_COLUMNS = [
     "variable_concept",
@@ -632,9 +530,11 @@ def write_markdown_summary(
     output_path: Path,
     metadata_scan_used: bool = False,
 ) -> None:
-    target_counts = _value_counts_frame(target_catalog, ["candidate_role", "include"])
-    target_use_counts = _value_counts_frame(target_catalog, ["candidate_role", "recommended_use", "include"])
-    predictor_counts = _value_counts_frame(predictor_catalog, ["include_decision"])
+    target_counts = value_counts_frame(target_catalog, ["candidate_role", "include"])
+    target_use_counts = value_counts_frame(
+        target_catalog, ["candidate_role", "recommended_use", "include"]
+    )
+    predictor_counts = value_counts_frame(predictor_catalog, ["include_decision"])
     included_targets = (
         target_catalog[target_catalog["include"]].copy()
         if "include" in target_catalog.columns
@@ -676,7 +576,7 @@ def write_markdown_summary(
         "## Included Or Leading Target Candidates",
         "",
         dataframe_to_markdown(
-            _select_existing_columns(
+            select_existing_columns(
                 included_targets,
                 [
                     "source_variable",
@@ -695,7 +595,7 @@ def write_markdown_summary(
         "## Mechanism Or Descriptive Target Candidates",
         "",
         dataframe_to_markdown(
-            _select_existing_columns(
+            select_existing_columns(
                 mechanism_targets,
                 [
                     "source_variable",
@@ -715,7 +615,7 @@ def write_markdown_summary(
         "## Leading Predictor Candidates",
         "",
         dataframe_to_markdown(
-            _select_existing_columns(
+            select_existing_columns(
                 included_predictors,
                 [
                     "variable_concept",
@@ -753,35 +653,6 @@ def run_candidate_discovery(
     predictor_catalog = build_predictor_candidate_catalog(processed_dir, scan_world_bank=scan_world_bank)
     write_outputs(target_catalog, predictor_catalog, output_dir, metadata_scan_used=scan_world_bank)
     return target_catalog, predictor_catalog
-
-
-def dataframe_to_markdown(data: pd.DataFrame) -> str:
-    if data.empty:
-        return "_No rows._"
-    columns = list(data.columns)
-    rows = []
-    rows.append("| " + " | ".join(columns) + " |")
-    rows.append("| " + " | ".join(["---"] * len(columns)) + " |")
-    for _, row in data.iterrows():
-        values = ["" if pd.isna(row[column]) else str(row[column]) for column in columns]
-        rows.append("| " + " | ".join(values) + " |")
-    return "\n".join(rows)
-
-
-def _value_counts_frame(data: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    if data.empty or any(column not in data.columns for column in columns):
-        return pd.DataFrame(columns=[*columns, "candidate_count"])
-    return (
-        data.groupby(columns, dropna=False)
-        .size()
-        .reset_index(name="candidate_count")
-        .sort_values(columns)
-    )
-
-
-def _select_existing_columns(data: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    existing = [column for column in columns if column in data.columns]
-    return data.loc[:, existing] if existing else data.head(0).copy()
 
 
 def fetch_world_bank_indicator_metadata(timeout: int = 90) -> list[dict]:
