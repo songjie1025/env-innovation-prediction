@@ -737,7 +737,8 @@ def write_markdown_summary(
             if metadata_scan_used
             else "2. Optional World Bank metadata scanning was not enabled for this run."
         ),
-        "3. Final target and predictor choices should be recorded in `0_organization/decision_log.md`.",
+        "3. The predictor catalog is provisional because the literature review is still in progress.",
+        "4. Final target and predictor choices should be recorded in `0_organization/decision_log.md`.",
         "",
     ]
     output_path.write_text("\n".join(text), encoding="utf-8")

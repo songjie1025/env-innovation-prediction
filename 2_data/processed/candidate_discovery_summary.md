@@ -68,4 +68,5 @@ The catalogs are reviewer-facing discovery artifacts, not final modeling decisio
 
 1. `coverage_checked` only reflects variables present in `data_availability.csv`.
 2. Optional World Bank metadata scanning was not enabled for this run.
-3. Final target and predictor choices should be recorded in `0_organization/decision_log.md`.
+3. The predictor catalog is provisional because the literature review is still in progress.
+4. Final target and predictor choices should be recorded in `0_organization/decision_log.md`.

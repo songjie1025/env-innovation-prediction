@@ -155,6 +155,8 @@ These hypotheses are provisional and should be updated after the literature revi
 
 The first paper-note pass in `1_literature_review/review_checklist.md` supports the following reviewer-style interpretation. These are not final modeling decisions; they should be revisited after note review and coverage checks.
 
+The predictor assessment is especially provisional. The literature review is still ongoing, so the candidate predictor catalog should be read as a structured search record rather than the final model specification.
+
 | Project decision | Current assessment | Evidence basis | Caveat |
 |---|---|---|---|
 | Main target | Prefer `env_patent_share_inventions` as the leading target candidate. | OECD patent indicator metadata, Hascic and Migotto (2015), and OECD patent-statistics guidance. | Confirm exact OECD indicator definition and value filter before finalizing. |

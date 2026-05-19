@@ -45,7 +45,7 @@ The exact target variable must still be selected. The first exploration identifi
 
 ## Candidate Predictor Variables
 
-The final predictor list should be selected through the literature review and data coverage checks.
+The final predictor list should be selected through the literature review and data coverage checks. The variables below and the predictor discovery catalog are provisional candidate sets, not the final modeling specification, because the literature review is still in progress.
 
 ### Macroeconomic Development
 
@@ -98,7 +98,7 @@ These files document the systematic candidate screen before final variable selec
 | File | Description | Status |
 |---|---|---|
 | `2_data/processed/target_candidate_catalog.csv` | OECD patent target search-space catalog built from available `UNIT_MEASURE`, `TYPE`, `TECH`, and `PAT` metadata combinations, with reviewer-facing role, recommended use, inclusion status, and coverage where checked | Created 2026-05-19 |
-| `2_data/processed/predictor_candidate_catalog.csv` | Literature- and metadata-driven predictor candidate catalog with source codes, rationale, coverage status, lag recommendation, measurement caveats, and inclusion decision | Created 2026-05-19 |
+| `2_data/processed/predictor_candidate_catalog.csv` | Provisional literature- and metadata-driven predictor candidate catalog with source codes, rationale, coverage status, lag recommendation, measurement caveats, and inclusion decision; final predictors remain deferred until the literature review is complete | Created 2026-05-19 |
 | `2_data/processed/candidate_discovery_summary.md` | Human-readable summary generated from `2_data/scripts/candidate_discovery.py` | Created 2026-05-19 |
 
 ## Processed Modeling Dataset

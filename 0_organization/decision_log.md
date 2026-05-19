@@ -134,6 +134,22 @@ Moving directly to model construction was rejected because it would make variabl
 Status:
 Active
 
+### 2026-05-19: Keep predictor selection provisional
+
+Date: 2026-05-19
+
+Decision:
+The predictor candidate catalog is a provisional discovery artifact, not the final predictor list for modeling.
+
+Reason:
+The literature review is still in progress. The current catalog organizes plausible predictors, coverage status, measurement caveats, and inclusion labels so the project can avoid ad hoc variable choice, but the final predictor set should only be selected after the remaining literature notes and coverage checks are reviewed together.
+
+Alternatives considered:
+Treating the current predictor catalog as the final model specification was rejected because it would overstate the completeness of the literature review.
+
+Status:
+Active
+
 ## Deferred Decisions
 
 The following decisions should be made after literature review and initial data inspection:
