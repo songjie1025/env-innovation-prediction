@@ -167,7 +167,7 @@ The predictor assessment is especially provisional. The literature review is sti
 | Researchers | Keep `researchers_per_million` as a secondary capacity proxy. | Conceptually aligned with innovation capacity. | Direct environmental-patent evidence is weaker and coverage is thin. |
 | Energy variables | Use at most one energy-system variable in the first small model. | Popp (2002), Johnstone et al. (2010), and Nesta et al. (2014). | WDI renewable share, fossil share, energy intensity, and CO2 are not equivalent to energy prices or policy incentives. |
 | Manufacturing share | Keep as optional structural control. | Brunnermeier and Cohen (2003) and competition/structure evidence. | Country-level manufacturing share is a rough proxy for industry composition. |
-| RISE | Keep optional until coverage is verified. | RISE methodology note. | Direct patent evidence is weaker than for EPS. |
+| RISE | Keep as an alternative or robustness policy predictor, preferably using lagged Renewable Energy or Energy Efficiency pillar scores rather than the overall score. | RISE methodology note and 2026-05-20 decision log update. | Broader coverage than EPS, but conceptually wider and with weaker direct patent evidence. |
 
 ## Open Research Decisions
 

@@ -150,6 +150,22 @@ Treating the current predictor catalog as the final model specification was reje
 Status:
 Active
 
+### 2026-05-20: Treat RISE as an alternative policy predictor
+
+Date: 2026-05-20
+
+Decision:
+RISE will be kept as an alternative or robustness policy predictor rather than replacing OECD EPS as the main policy candidate at this stage.
+
+Reason:
+OECD EPS has stronger direct support in the environmental-policy and green-patent literature, but its country coverage is narrow. RISE has broader country coverage and annual pillar data from 2010-2023, but it measures sustainable-energy regulatory readiness rather than general environmental policy stringency. If used, the project should prefer lagged RISE Renewable Energy or Energy Efficiency pillar scores over the overall RISE score.
+
+Alternatives considered:
+Replacing EPS with RISE was rejected for now because RISE is conceptually broader and has weaker direct patent-innovation evidence. Dropping RISE was also rejected because its broader country coverage may be valuable for an alternative policy specification.
+
+Status:
+Active
+
 ## Deferred Decisions
 
 The following decisions should be made after literature review and initial data inspection:
