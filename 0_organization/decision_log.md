@@ -30,6 +30,7 @@ Establish 27 candidate predictors across four domains.
 
 Reason: 
 A broad initial screening based on supporting literature, known database filters, and joint discussions yielded 28 candidate predictors across R&D (6), energy (7), environmental policy (6), and macroeconomic (9) domains. Out of these, 27 have usable data (energy prices were excluded due to a lack of reliable data).
+Predictor-Sheet: https://docs.google.com/spreadsheets/d/1SlEGhS8oKusUw6yMD-uIx9nkF4bgEVjYap7jfiHd6Q8/edit?gid=0#gid=0 
 
 Alternatives considered: 
 A preliminary review indicates high correlation among many of the predictors. We estimate that the final modeling set will likely be narrowed down to 6-8 predictors representing the various domains.
