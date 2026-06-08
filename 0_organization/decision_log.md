@@ -22,6 +22,20 @@ Status options:
 
 ## Decisions
 
+### 2026-06-08: Use lagged moving averages for predictors
+
+Decision:
+Use three-year lagged moving averages as the main predictor timing specification. For each selected predictor `x`, construct `x_lag1_3_mean` as the mean of years `t-1`, `t-2`, and `t-3` to predict the target in year `t`.
+
+Reason:
+Environment-related innovation is unlikely to respond immediately to economic, R&D, energy-system, or policy conditions. A three-year lagged moving average captures persistent pre-outcome conditions, reduces reliance on a single arbitrary lag year, and preserves temporal ordering so that future information does not enter the prediction. This specification is especially defensible for R&D capacity and environmental policy, where the literature suggests delayed innovation responses.
+
+Alternatives considered:
+Using only `t-1` lags was considered too short for innovation responses, although it remains useful as a robustness check. Selecting different single-year lags separately for each predictor was rejected for the main model because it would increase researcher degrees of freedom and make the specification harder to defend. Single-year `t-1`, `t-2`, and `t-3` lags may still be used in robustness checks.
+
+Status:
+Active
+
 ### 2026-05-29: Initial screening of predictors
 
 Decision: 
