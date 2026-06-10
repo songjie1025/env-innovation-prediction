@@ -8,10 +8,14 @@ The data dictionary should be updated whenever a dataset is added, cleaned, rena
 
 | Dataset ID | Source | Purpose | File location | Download date | Coverage | Status |
 |---|---|---|---|---|---|---|
-| `oecd_patents_environment` | OECD Patents - indicators | Main target and robustness target variables | `2_data/raw/` | 2026-05-15 | 1990-2023, 196-202 countries depending on indicator | Raw |
-| `world_bank_wdi` | World Bank World Development Indicators and ESG source for CO2 | Candidate macroeconomic, R&D, energy, and emissions predictors | `2_data/raw/` | 2026-05-15 | 1990-2024 requested; coverage varies by indicator | Raw |
-| `oecd_eps` | OECD Environmental Policy Stringency index | Candidate environmental policy predictor | `2_data/raw/` | 2026-05-15 | 1990-2020, 40 countries | Raw |
-| `rise` | Regulatory Indicators for Sustainable Energy | Candidate sustainable energy policy predictor | `2_data/raw/` | Not downloaded yet | To verify after download | Optional |
+| `oecd_patents_environment` | OECD Patents - indicators | Main target and robustness target variables | `2_data/raw/predictorsv1/` | 2026-05-15 | 1990-2023, 196-202 countries depending on indicator | Raw |
+| `world_bank_wdi` | World Bank World Development Indicators and ESG source for CO2 | Candidate macroeconomic, R&D, energy, and emissions predictors | `2_data/raw/predictorsv1/` | 2026-05-15 | 1990-2024 requested; coverage varies by indicator | Raw |
+| `world_bank_wgi` | World Bank Worldwide Governance Indicators | Governance and regulatory-quality predictors from the literature CSV | `2_data/raw/predictorsv1/` | 2026-06-11 | 1990-2024 requested; coverage varies by country and year | Raw |
+| `oecd_eps` | OECD Environmental Policy Stringency index | Candidate environmental policy predictor | `2_data/raw/predictorsv1/` | 2026-05-15 | 1990-2020, 40 countries | Raw |
+| `world_bank_data360` | World Bank Data360 Regulatory Indicators for Sustainable Energy | Candidate sustainable energy policy predictors, including RISE aggregate and sub-indicators | `2_data/raw/predictorsv1/` | 2026-06-11 | 2010-2023 long-form RISE table | Raw |
+| `oecd_carbon_pricing` | OECD Net Effective Carbon Rates | Carbon and energy price policy predictors from the literature CSV | `2_data/raw/predictorsv1/` | 2026-06-11 | 1990-2024 requested; OECD coverage varies by country and year | Raw |
+| `oecd_environment_tax` | OECD Environmentally Related Tax Revenue | Environmental tax revenue predictor from the literature CSV | `2_data/raw/predictorsv1/` | 2026-06-11 | 1990-2024 requested; OECD coverage varies by country and year | Raw |
+| `policy_uncertainty` | Economic Policy Uncertainty Index | Economic policy uncertainty predictor from the literature CSV | `2_data/raw/predictorsv1/` | 2026-06-11 | All-country workbook; coverage varies by country | Raw |
 
 Status options:
 
@@ -58,7 +62,7 @@ The final predictor list should be selected through literature review, data cove
 | `trade_openness` | `NE.TRD.GNFS.ZS` | `world_bank_wdi` | Trade as percent of GDP | Percent of GDP | None or standardized | Consideration | From literature CSV; download and coverage check needed. |
 | `inflation` | `FP.CPI.TOTL.ZG` | `world_bank_wdi` | Inflation, consumer prices | Annual percent | Winsorization or standardization may be needed | Consideration | From literature CSV; download and coverage check needed. |
 | `fdi` | `BX.KLT.DINV.CD.WD` | `world_bank_wdi` | Foreign direct investment, net inflows | Current US dollars | Log or percent-of-GDP alternative likely preferable | Consideration | From literature CSV; source-variable choice should be checked before use. |
-| `institutional_quality` | To verify | WGI or related governance source | Institutional or regulatory quality | Index | None or standardized | Consideration | From literature CSV; source and coverage not yet verified. |
+| `institutional_quality` | `GOV_WGI_RQ.EST` | `world_bank_wgi` | Institutional or regulatory quality | Index | None or standardized | Consideration | From literature CSV; mapped to WGI regulatory-quality estimate. |
 
 ### Research and Development Capacity
 
@@ -82,18 +86,18 @@ The final predictor list should be selected through literature review, data cove
 | `energy_intensity` | `EG.EGY.PRIM.PP.KD` | `world_bank_wdi` | Energy intensity level of primary energy | To verify from World Bank metadata | Log transform possible | Candidate | 4,486 observations, 201 countries, 2000-2022. |
 | `co2_per_capita` | `EN.ATM.CO2E.PC` | `world_bank_wdi` source 75 | CO2 emissions per capita | Metric tons per capita | Log transform possible | Candidate | 5,920 observations, 191 countries, 1990-2020; default WDI API source archived this indicator, so the script uses World Bank source 75. |
 | `energy_imports_net` | `EG.IMP.CONS.ZS` | `world_bank_wdi` | Net energy imports | Percent of energy use | None or standardized | Consideration | From literature CSV; download and coverage check needed. |
-| `energy_or_carbon_prices` | To verify | OECD, IEA, or other public source | Carbon or energy price pressure | Index, tax, or price | Depends on source | Data-limited consideration | From literature CSV; literature support is strong, but clean country-year coverage is unresolved. |
+| `carbon_energy_prices` | `OECD.CTP.TPS,DSD_NECR@DF_NECRS,1.1/.ENE.FFUEL.NETECR._Z.EUR_TCO2.MEANW.V.A` | `oecd_carbon_pricing` | Net effective carbon rate for energy-use sectors and fossil fuels | EUR per tonne of CO2 | None or standardized | Consideration | From literature CSV; raw OECD SDMX table downloaded by `2_data/scripts/raw_data_download.py`. |
 
 ### Environmental Policy
 
 | Final variable name | Source variable name | Dataset ID | Description | Unit | Expected transform | Status | Notes |
 |---|---|---|---|---|---|---|---|
 | `eps_index` | `POL_STRINGENCY.EPS` | `oecd_eps` | Environmental Policy Stringency index | 0-6 scale | None or standardized | Candidate | 1,240 observations, 40 countries, 1990-2020; useful but likely restricts sample coverage. |
-| `rise_score` | To verify | `rise` | Sustainable energy regulation score | Index value | None or standardized | Optional | Use if coverage aligns with the main panel. |
-| `carbon_tax` | To verify | OECD carbon pricing and energy taxation data | Carbon tax or carbon-pricing signal | Tax, price, or policy indicator | Depends on source | Consideration | From literature CSV; source and coverage need verification. |
-| `environmental_tax_revenue` | To verify | OECD environmental tax data | Environmental tax revenue | Percent of GDP or total tax revenue | None or standardized | Consideration | From literature CSV; source and coverage need verification. |
+| `rise_score` | `WB_RISE` | `world_bank_data360` | Sustainable energy regulation score and RISE sub-indicators | Index value | None or standardized | Optional | Full World Bank Data360 RISE long table is downloaded; select aggregate or sub-indicator series during cleaning. |
+| `carbon_tax` | `OECD.CTP.TPS,DSD_NECR@DF_NECRS,1.1/.ENE.FFUEL.CARBTAX._Z.EUR_TCO2.MEANW.V.A` | `oecd_carbon_pricing` | Carbon tax rate for energy-use sectors and fossil fuels | EUR per tonne of CO2 | None or standardized | Consideration | From literature CSV; raw OECD SDMX table downloaded by `2_data/scripts/raw_data_download.py`. |
+| `environmental_tax_revenue` | `OECD.ENV.EPI,DSD_ERTR@DF_ERTR,1.0/A..TAXREV._T._T.PT_B1GQ._Z` | `oecd_environment_tax` | Total environmentally related tax revenue | Percent of GDP | None or standardized | Consideration | From literature CSV; raw OECD SDMX table downloaded by `2_data/scripts/raw_data_download.py`. |
 | `fossil_fuel_subsidies` | To verify | OECD, IEA, IMF, or other public source | Fossil fuel support or subsidy measure | Currency, percent of GDP, or index | Depends on source | Consideration | From literature CSV; do not substitute fossil consumption share without relabeling the concept. |
-| `economic_policy_uncertainty` | To verify | Economic Policy Uncertainty Index | Policy uncertainty | Index | None or standardized | Consideration | From literature CSV; country-year coverage needs verification. |
+| `economic_policy_uncertainty` | `All_Country_Data` | `policy_uncertainty` | Policy uncertainty | Index | None or standardized | Consideration | From literature CSV; all-country workbook downloaded by `2_data/scripts/raw_data_download.py`; country-year extraction is a cleaning step. |
 | `policy_stability` | To calculate | OECD EPS | Stability of environmental policy stringency | Inverse rolling standard deviation | Rolling calculation | Consideration | From literature CSV; possible robustness variable distinct from EPS level. |
 
 ## First-Pass Availability Outputs
@@ -137,7 +141,7 @@ Expected columns:
 
 ## Transformation Rules
 
-1. Preserve raw downloaded files unchanged in `2_data/raw/`.
+1. Preserve raw downloaded files unchanged in their versioned subfolder under `2_data/raw/`, for example `2_data/raw/predictorsv1/`.
 2. Cleaned variables should use lowercase `snake_case` names.
 3. Use ISO 3-letter country codes for merges.
 4. Record all unit changes and transformations in this file.
@@ -171,3 +175,4 @@ Run and document these checks after creating the processed panel:
 | 2026-05-15 | Added OECD patent metadata catalog outputs | Make target-variable and technology-domain options visible before choosing the final target. |
 | 2026-05-19 | Added candidate discovery catalogs | Document systematic target and predictor candidate screening before model construction. |
 | 2026-06-10 | Synchronized target, lag, and predictor consideration pool with decision log and manual CSV screening | Reflect selected main target, three-year lagged moving-average timing, and the instruction not to directly exclude CSV predictors. |
+| 2026-06-11 | Synchronized raw source inventory with the reproducible literature-based downloader | Document code-generated RISE, OECD carbon-pricing, OECD environmental-tax, WGI, and EPU raw sources. |

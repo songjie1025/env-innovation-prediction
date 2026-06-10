@@ -8,6 +8,7 @@ import requests
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT_DIR / "2_data" / "raw"
+RAW_PREDICTORS_V1_DIR = RAW_DIR / "predictorsv1"
 PROCESSED_DIR = ROOT_DIR / "2_data" / "processed"
 
 AGGREGATE_AREA_CODES = {
