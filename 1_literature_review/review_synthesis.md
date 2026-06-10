@@ -13,7 +13,7 @@ When these criteria conflict, direct dataset and measurement relevance wins. A l
 
 ## Current Reviewer Position
 
-The strongest main target candidate is `env_patent_share_inventions`.
+The selected main target is `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z`.
 
 Reasons:
 
@@ -21,7 +21,7 @@ Reasons:
 2. It is normalized by overall invention output, which helps avoid country-size dominance.
 3. It avoids the interpretation problem already observed for `env_patent_share_tech`, where technology-domain percentages can exceed 100 in small or multi-classified patent portfolios.
 
-`env_patents_per_million` should remain a robustness or alternative target because it captures patent intensity per population, but it may be more sensitive to country innovation-system scale and skewness.
+`env_patents_per_million` should remain a robustness or alternative target because it captures patent intensity per population, but it may be more sensitive to country innovation-system scale and skewness. `env_patent_share_tech` should stay out of the main target role because values above 100 create interpretation risk, but it can still be used for diagnostic or sensitivity discussion if needed.
 
 ## Predictor Evidence Assessment
 
@@ -41,11 +41,11 @@ Reasons:
 
 ## Design Implications
 
-Use lagged predictors as the default. The literature commonly uses one- to several-year lags for policy, energy prices, R&D, and knowledge stocks. A one-year lag is defensible for the course project; a two- or three-year lag can be used as a robustness check if coverage allows.
+Use three-year lagged moving averages as the main predictor timing specification. For each selected predictor `x`, construct `x_lag1_3_mean` as the mean of years `t-1`, `t-2`, and `t-3` to predict the target in year `t`. Single-year `t-1`, `t-2`, and `t-3` lags can remain robustness checks.
 
 Avoid claiming causal effects from the final machine-learning model. The literature provides mechanisms and expected signs, but this project's goal is interpretable prediction. The report should say predictors are associated with future environment-related innovation in the model, not that they cause innovation.
 
-Keep the model small. A reviewer will likely prefer fewer well-defended predictors over a broad WDI variable grab. A defensible first model would include one target, lagged R&D intensity, lagged GDP per capita or GDP, one policy variable, and one carefully interpreted energy-system variable.
+Keep the main model small. A reviewer will likely prefer fewer well-defended predictors in the main specification over a broad WDI variable grab. At the same time, the broader predictor pool from `Managerial AI- literature review - List 1.csv` and the candidate catalog should remain in consideration; variables should be assigned to main-model, robustness, exploratory, or data-limited roles after coverage and collinearity checks. A defensible first model would include the selected target, lagged R&D intensity, lagged GDP per capita or GDP, one policy variable, and one carefully interpreted energy-system variable.
 
 ## First-Pass Source Tiers
 
@@ -73,4 +73,3 @@ Keep the model small. A reviewer will likely prefer fewer well-defended predicto
 2. RISE methodology documentation.
 3. New OECD environmental innovation metrics papers.
 4. Country- or firm-specific green innovation papers that do not map cleanly to the project panel.
-

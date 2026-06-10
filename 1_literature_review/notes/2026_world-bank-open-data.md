@@ -41,7 +41,7 @@ World Bank Open Data and the World Development Indicators provide the project's 
 | Unit of analysis | Country-year indicators. | Matches the project panel. |
 | Countries / regions | Broad global coverage, varying by indicator. | Helps keep a broad sample if EPS or R&D constraints are not binding. |
 | Years | Local exploration requested 1990-2024, with indicator-specific coverage. | Some energy and emissions variables end earlier. |
-| Lag structure | Not specified by data source. | Apply project lag rules, usually `t-1`. |
+| Lag structure | Not specified by data source. | Apply the project rule: three-year lagged moving averages, `x_lag1_3_mean`, for the main specification. |
 | Data sources | World Bank Open Data / WDI and ESG source for some indicators. | Must record exact indicator codes in `2_data/data_dictionary.md`. |
 | Transformations | Logs for size/income variables; standardization or direct shares for percentage variables. | Transformations should be documented after final variable selection. |
 
@@ -135,7 +135,7 @@ World Bank Open Data 和 World Development Indicators 为本项目提供广泛�
 | 分析单位 | Country-year indicators。 | 与项目面板一致。 |
 | 国家 / 地区 | 覆盖全球范围较广，但因指标而异。 | 如果 EPS 或 R&D 约束不具约束性，有助于保持较大样本。 |
 | 年份 | 本地探索请求了 1990-2024，覆盖范围因指标而异。 | 部分能源和排放变量较早结束。 |
-| 滞后结构 | 数据来源未指定。 | 应用项目滞后规则，通常为 `t-1`。 |
+| 滞后结构 | 数据来源未指定。 | 应用项目规则：主规格使用三年滞后移动平均 `x_lag1_3_mean`。 |
 | 数据来源 | World Bank Open Data / WDI，以及部分指标的 ESG source。 | 必须在 `2_data/data_dictionary.md` 中记录确切 indicator codes。 |
 | 变换 | 对规模和收入变量取 logs；对百分比变量进行标准化或直接使用 shares。 | 最终变量选择后应记录变换。 |
 

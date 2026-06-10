@@ -2,11 +2,11 @@
 
 This file documents the modeling strategy for the project.
 
-The model plan should stay aligned with the organization file, the variable framework, and the data dictionary. Specific model choices should be added only after the target variable, predictor list, and panel coverage are known.
+The model plan should stay aligned with the organization file, the decision log, the variable framework, and the data dictionary. Specific model choices should be added only after the predictor subset and panel coverage are known.
 
 ## Modeling Goal
 
-Predict future country-level environment-related innovation using a small set of interpretable predictors from public country-year panel data.
+Predict future country-level environment-related innovation using `env_patent_share_inventions` and a small set of interpretable predictors from public country-year panel data.
 
 The model should support two outputs:
 
@@ -15,19 +15,24 @@ The model should support two outputs:
 
 ## Current Status
 
-The final target variable, predictor list, sample coverage, evaluation metric, and model family are not yet fixed.
+The main target variable and main predictor timing specification are fixed:
+
+1. Main target: `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z`.
+2. Main timing: for each selected predictor `x`, use `x_lag1_3_mean`, the mean of years `t-1`, `t-2`, and `t-3`, to predict target year `t`.
+
+The final predictor subset, sample coverage, evaluation metric, and model family are not yet fixed. Predictors from the literature CSV and candidate catalog remain in consideration until they are assigned to main-model, robustness, exploratory, or data-limited roles.
 
 Before finalizing the model strategy, complete:
 
 1. Literature-based predictor selection in `1_literature_review/variable_framework.md`.
 2. Data-source verification in `2_data/data_dictionary.md`.
 3. Initial processed panel construction in `2_data/processed/`.
-4. Target-variable decision in `0_organization/decision_log.md`.
+4. Predictor role assignment for the manual CSV and candidate catalog variables.
 
 ## Default Modeling Workflow
 
 1. Build a clean country-year modeling panel.
-2. Create lagged predictors, usually using year `t-1` predictors for year `t` innovation.
+2. Create three-year lagged moving-average predictors using years `t-1`, `t-2`, and `t-3` for year `t` innovation.
 3. Split data in a way that respects time and panel structure.
 4. Train a simple interpretable baseline.
 5. Evaluate predictive performance.
@@ -91,9 +96,10 @@ Large trained model files should not be committed unless explicitly needed and s
 
 Record final choices in `0_organization/decision_log.md`.
 
-1. Main target variable.
-2. Main train-test or validation strategy.
-3. Primary evaluation metric.
-4. Final baseline model.
-5. Whether an advanced model is justified.
-6. Final interpretability method.
+1. Main predictor subset.
+2. Robustness and exploratory predictor sets.
+3. Main train-test or validation strategy.
+4. Primary evaluation metric.
+5. Final baseline model.
+6. Whether an advanced model is justified.
+7. Final interpretability method.

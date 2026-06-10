@@ -2,7 +2,7 @@
 
 This guide explains the basic machine learning ideas used in this project. It is written for collaborators who may be new to statistics, programming, or prediction models.
 
-The project goal is to predict future country-level environment-related innovation using public country-year data. The exact target variable, predictor list, sample coverage, and final model are still open decisions.
+The project goal is to predict future country-level environment-related innovation using public country-year data. The main target variable is fixed as `env_patent_share_inventions`; the predictor list, sample coverage, and final model are still open decisions.
 
 A country-year panel is a dataset where each row is one country in one year, such as Germany in 2014 or Brazil in 2018. This structure lets the project compare countries over time while keeping the timing of predictors and target values visible.
 
@@ -43,13 +43,13 @@ In this project, possible features include:
 
 The target is the value the model tries to predict.
 
-In this project, the target will be a country-year measure of environment-related innovation. Candidate targets include OECD patent-based indicators such as environment-related patent shares or environment-related inventions per million people. The final target has not been selected yet.
+In this project, the target is a country-year OECD patent-based measure of environment-related innovation: `env_patent_share_inventions`. A robustness target such as environment-related inventions per million people may still be used to check whether the findings depend on the target definition.
 
 ## Training Data
 
 Training data are the examples the model uses to learn.
 
-For this project, training data may contain many country-year rows. Each row would usually describe one country in one year, with predictor values from an earlier year and a target innovation value from a later year.
+For this project, training data may contain many country-year rows. Each row would usually describe one country in one year, with predictor values summarized from the previous three years and a target innovation value from the current target year.
 
 For example:
 

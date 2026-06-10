@@ -18,7 +18,7 @@
 
 ## One-Paragraph Summary
 
-This OECD data source is the closest match to the project's intended outcome because it defines environment-related innovation through patent indicators. The public indicator describes the measure as the share of environment-related inventions in all domestic inventions, covering domains such as environmental management, water-related adaptation, and climate-change mitigation, and focusing on higher-value inventions. It provides public metadata and data access for environment-related technologies, including percentage indicators and intensity indicators that can be mapped to the project's three target candidates. For this project, the most important distinction is between the OECD measure based on percentage of inventions and the measure based on percentage of technologies, because those labels affect interpretability. The source is not an empirical study of determinants, so it cannot justify predictors by itself.
+This OECD data source is the closest match to the project's intended outcome because it defines environment-related innovation through patent indicators. The public indicator describes the measure as the share of environment-related inventions in all domestic inventions, covering domains such as environmental management, water-related adaptation, and climate-change mitigation, and focusing on higher-value inventions. It provides public metadata and data access for environment-related technologies, including the selected main target and robustness alternatives. For this project, the most important distinction is between the OECD measure based on percentage of inventions and the measure based on percentage of technologies, because those labels affect interpretability. The source is not an empirical study of determinants, so it cannot justify predictors by itself.
 
 ## Why This Source Is Relevant
 
@@ -39,11 +39,11 @@ This OECD data source is the closest match to the project's intended outcome bec
 | Energy or emissions variables | Not applicable. | Technology domains may include energy-related environmental technologies, but this is target-side classification. |
 | Macro controls | Not applicable. | Use WDI or OECD macro data separately. |
 | Unit of analysis | Country-year indicator values. | Matches the planned panel structure. |
-| Countries / regions | OECD data include broad country coverage; local exploration found 196-202 countries depending on target candidate. | Good target coverage relative to most predictor sources. |
-| Years | Local exploration found 1990-2023 coverage for the main target candidates. | Fits the project horizon, but predictors may shorten the usable panel. |
+| Countries / regions | OECD data include broad country coverage; local exploration found 202 countries for the selected main target and 196 countries for the main robustness target. | Good target coverage relative to most predictor sources. |
+| Years | Local exploration found 1990-2023 coverage for the selected main target and robustness target. | Fits the project horizon, but predictors may shorten the usable panel. |
 | Lag structure | Not applicable. | Target should remain at outcome year `t`; predictors should be lagged. |
 | Data sources | OECD Patents - indicators / OECD Data Explorer. | Official source for raw target extraction. |
-| Transformations | Percentage of inventions, percentage of technologies, and inventions per population options. | `env_patent_share_inventions` is currently the most defensible main target candidate; `env_patents_per_million` is a robustness option. |
+| Transformations | Percentage of inventions, percentage of technologies, and inventions per population options. | `env_patent_share_inventions` is the selected main target; `env_patents_per_million` is a robustness option. |
 
 ## Key Findings for Predictor Selection
 
@@ -112,7 +112,7 @@ This OECD data source is the closest match to the project's intended outcome bec
 
 ### 一段式摘要
 
-该 OECD 数据来源最接近本项目预期的结果变量，因为它通过专利指标定义 environment-related innovation。公共指标将该度量描述为环境相关发明在全部国内发明中的占比，覆盖 environmental management、water-related adaptation 和 climate-change mitigation 等领域，并聚焦于 higher-value inventions。它为环境相关技术提供公开元数据和数据访问，包括 percentage indicators 和 intensity indicators，可映射到本项目的三个目标候选变量。对本项目而言，最重要的区别是基于 percentage of inventions 的 OECD 度量与基于 percentage of technologies 的度量之间的区别，因为这些标签会影响可解释性。该来源不是关于决定因素的实证研究，因此不能单独为预测变量提供依据。
+该 OECD 数据来源最接近本项目预期的结果变量，因为它通过专利指标定义 environment-related innovation。公共指标将该度量描述为环境相关发明在全部国内发明中的占比，覆盖 environmental management、water-related adaptation 和 climate-change mitigation 等领域，并聚焦于 higher-value inventions。它为环境相关技术提供公开元数据和数据访问，包括已选主目标和稳健性替代指标。对本项目而言，最重要的区别是基于 percentage of inventions 的 OECD 度量与基于 percentage of technologies 的度量之间的区别，因为这些标签会影响可解释性。该来源不是关于决定因素的实证研究，因此不能单独为预测变量提供依据。
 
 ### 为什么这个来源相关
 
@@ -133,11 +133,11 @@ This OECD data source is the closest match to the project's intended outcome bec
 | 能源或排放变量 | 不适用。 | 技术领域可能包括能源相关环境技术，但这是目标侧分类。 |
 | 宏观控制变量 | 不适用。 | WDI 或 OECD macro data 应单独使用。 |
 | 分析单位 | Country-year indicator values。 | 与计划中的面板结构一致。 |
-| 国家 / 地区 | OECD data 覆盖范围较广；本地探索显示，不同目标候选变量覆盖 196-202 个国家。 | 相对于大多数预测变量来源，目标覆盖较好。 |
-| 年份 | 本地探索显示，主要目标候选变量覆盖 1990-2023。 | 符合项目时间范围，但预测变量可能缩短可用面板。 |
+| 国家 / 地区 | OECD data 覆盖范围较广；本地探索显示，已选主目标覆盖 202 个国家，主要稳健性目标覆盖 196 个国家。 | 相对于大多数预测变量来源，目标覆盖较好。 |
+| 年份 | 本地探索显示，已选主目标和稳健性目标覆盖 1990-2023。 | 符合项目时间范围，但预测变量可能缩短可用面板。 |
 | 滞后结构 | 不适用。 | 目标应保持在结果年份 `t`；预测变量应进行滞后处理。 |
 | 数据来源 | OECD Patents - indicators / OECD Data Explorer。 | 原始目标提取的官方来源。 |
-| 变换 | Percentage of inventions、percentage of technologies 和 inventions per population 选项。 | `env_patent_share_inventions` 目前是最可辩护的主目标候选变量；`env_patents_per_million` 可作为稳健性选项。 |
+| 变换 | Percentage of inventions、percentage of technologies 和 inventions per population 选项。 | `env_patent_share_inventions` 是已选主目标；`env_patents_per_million` 可作为稳健性选项。 |
 
 ### 预测变量选择的关键发现
 

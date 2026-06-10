@@ -8,7 +8,7 @@ Use this file together with `1_literature_review/paper_note_guide.md`.
 
 The literature review should support three project decisions:
 
-1. Which OECD patent indicator is the most defensible target variable.
+1. How to justify the selected OECD patent indicator as the main target variable.
 2. Which small set of country-year predictors should enter the main model.
 3. How to interpret predictor signs, lags, sample limits, and robustness checks.
 
@@ -18,15 +18,15 @@ The review is not a general survey of green innovation. It should focus on sourc
 
 | Item | Count |
 |---|---:|
-| Sources screened | 12 |
+| Sources screened | 16 |
 | PDFs or access notes stored | 12 |
-| Paper notes drafted | 12 |
+| Paper notes drafted | 16 |
 | Paper notes reviewed | 0 |
-| Sources used for predictor selection | 9 |
+| Sources used for predictor selection | 13 |
 
 Update these counts whenever a source is added or reviewed.
 
-The predictor-selection count refers to sources with draft notes that currently inform candidate predictors. Final inclusion should wait until the relevant notes are checked against full text where access allows.
+The predictor-selection count refers to sources with draft notes that currently inform candidate predictors. Final main-model inclusion should wait until the relevant notes are checked against full text where access allows. Predictor concepts remain in consideration unless they are assigned to a robustness, exploratory, or data-limited role.
 
 ## Folder Convention
 
@@ -77,6 +77,10 @@ Examples:
 | L010 | Jaffe and Palmer, `Environmental Regulation and Innovation` | Journal article / working paper | Notes drafted | `1_literature_review/pdfs/1997_jaffe_environmental-regulation-innovation_access.md` | `1_literature_review/notes/1997_jaffe_environmental-regulation-innovation.md` | Porter-hypothesis caution and R&D/patent distinction | Predictor interpretation | Codex | 2026-05-18 |
 | L011 | Brunnermeier and Cohen, `Determinants of environmental innovation in US manufacturing industries` | Journal article | Notes drafted | `1_literature_review/pdfs/2003_brunnermeier_determinants-environmental-innovation_access.md` | `1_literature_review/notes/2003_brunnermeier_determinants-environmental-innovation.md` | Regulation and industrial-structure mechanisms | Predictor interpretation | Codex | 2026-05-18 |
 | L012 | Johnstone et al., `Environmental Policy Stringency and Technological Innovation` | Journal article | Notes drafted | `1_literature_review/pdfs/2012_johnstone_environmental-policy-stringency_access.md` | `1_literature_review/notes/2012_johnstone_environmental-policy-stringency.md` | Country-level policy stringency and environmental patents | Predictor selection | Codex | 2026-05-18 |
+| L013 | Bettarelli et al., `Environmental policies and innovation in renewable energy` | Working paper | Candidate note | Direct PDF URL recorded in note; access note not yet stored | `1_literature_review/notes/energy/2023_bettarelli_environmental-policies-renewable-energy.md` | Environmental policy, renewable-energy patenting, nonlinear policy effects | Predictor selection | Jie Song | 2026-05-20 |
+| L014 | Ozbay, `Green Innovation for a Sustainable Environment` | Journal article | Candidate note | DOI / URL recorded in note; access note not yet stored | `1_literature_review/notes/R&D/2025_ozbay_green-knowledge-production-function-oecd.md` | Green knowledge production function, R&D, researchers, lags | Predictor selection | Jie Song | 2026-05-20 |
+| L015 | Buesa et al., `The determinants of regional innovation in Europe` | Journal article | Candidate note | Access information recorded in note; access note not yet stored | `1_literature_review/notes/R&D/2010_buesa_determinants-regional-innovation-kpf.md` | Knowledge production function, R&D, researchers, institutional context | Predictor selection | Jie Song | 2026-05-20 |
+| L016 | Ley et al., `The impact of energy prices on green innovation` | Journal article | Candidate note | Direct PDF URL recorded in note; access note not yet stored | `1_literature_review/notes/energy/2016_ley_energy-prices-green-innovation.md` | Energy prices, energy intensity, induced green innovation | Predictor selection | Jie Song | 2026-05-20 |
 
 Add empirical papers below this block as they are found.
 

@@ -18,6 +18,8 @@ An input variable used to make a prediction. Examples include GDP per capita, R&
 
 A lag uses an earlier value of a variable. If we use GDP per capita from 2010 to predict innovation in 2011, GDP per capita is lagged by one year.
 
+This project's main predictor timing uses a three-year lagged moving average, such as the mean of 2010, 2011, and 2012 predictor values to predict 2013 innovation.
+
 ## Time Leakage
 
 Time leakage happens when information from the future accidentally enters the model. For example, using a 2015 policy value to predict 2014 innovation would make the evaluation misleading.

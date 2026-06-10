@@ -12,25 +12,32 @@ How can country-level economic, technological, energy-related, and policy condit
 
 Environment-related innovation is measured through patent-based indicators from the OECD.
 
-Candidate target:
+Selected main target and robustness targets:
 
 | Concept | Candidate source | Candidate measure | Status | Notes |
 |---|---|---|---|---|
-| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_tech`: environment-related technologies as percentage of all technologies | Candidate | Strong coverage in first-pass exploration: 1990-2023, 202 countries. |
-| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_inventions`: environment-related technologies as percentage of inventions | Candidate | Strong coverage in first-pass exploration: 1990-2023, 202 countries. |
-| Environment-related innovation | OECD `Patents - indicators` | `env_patents_per_million`: environment-related inventions per million people | Candidate | Useful normalized alternative: 1990-2023, 196 countries. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_inventions`: `PT_INV.DEV.ENV_PAT._Z`, environment-related technologies as percentage of inventions | Main target | Active decision in `0_organization/decision_log.md`; strong coverage in first-pass exploration: 1990-2023, 202 countries. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patents_per_million`: `INV_PS.DEV.ENV_PAT._Z`, environment-related inventions per million people | Robustness target | Useful normalized intensity alternative: 1990-2023, 196 countries. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_tech`: `PT_TECH.DEV.ENV_PAT._Z`, environment-related technologies as percentage of all technologies | Diagnostic / sensitivity only | Not used as the main target because values above 100 create interpretation risk. |
 
-Target-variable decision rule:
+Target-variable rule:
 
-1. Prefer a country-year measure that is comparable across countries and time.
-2. Prefer a normalized measure, such as a patent share, if country size would otherwise dominate the outcome.
-3. Use patent counts only if the model explicitly controls for country size or innovation system scale.
-4. Confirm the OECD metadata distinction between "percentage of technologies" and "percentage of inventions" before choosing the final target.
-5. Record the final target choice in `0_organization/decision_log.md`.
+1. Use `env_patent_share_inventions` as the main outcome in year `t`.
+2. Keep `env_patents_per_million` as the main robustness outcome.
+3. Use `env_patent_share_tech` only for diagnostic or sensitivity discussion because of its interpretation risk.
+4. Use raw patent counts only if the model explicitly controls for country size or innovation-system scale.
 
 ## Predictor Groups
 
 The organization file suggests a small set of covariates from macroeconomic development, research and development, energy, and environmental policy. The framework below follows those areas.
+
+The predictor consideration pool combines:
+
+1. The structured catalog in `2_data/processed/predictor_candidate_catalog.csv`.
+2. The manual literature screening sheet `1_literature_review/Managerial AI- literature review - List 1.csv`.
+3. Paper notes in `1_literature_review/notes/`.
+
+Predictors should remain in the consideration pool at this stage. They should be assigned to one of four roles after literature, coverage, and statistical checks: main-model candidate, robustness candidate, exploratory/descriptive variable, or data-limited variable.
 
 ### 1. Macroeconomic Development
 
@@ -44,6 +51,10 @@ Candidate variables:
 | Economic development | GDP per capita | World Bank WDI | Positive | Candidate |
 | Market size | GDP or population | World Bank WDI | Positive, but may require normalization | Candidate |
 | Industrial structure | Manufacturing value added share | World Bank WDI | Ambiguous | Candidate |
+| Trade exposure | Trade openness | World Bank WDI | Ambiguous / positive | Candidate from CSV; data source to verify. |
+| Macroeconomic stability | Inflation | World Bank WDI | Ambiguous | Candidate from CSV; data source to verify. |
+| International capital links | Foreign direct investment | World Bank WDI | Ambiguous / positive | Candidate from CSV; data source to verify. |
+| Institutional quality | Regulatory quality or WGI-style institutional indicator | WGI or related source | Positive | Candidate from CSV; source and coverage to verify. |
 
 Research notes to collect:
 
@@ -63,6 +74,11 @@ Candidate variables:
 | R&D intensity | R&D expenditure as percent of GDP | World Bank WDI or OECD | Positive | Candidate |
 | Human capital in innovation | Researchers per million people | World Bank WDI or OECD | Positive | Candidate |
 | Education or skills | Tertiary enrollment or education attainment | World Bank WDI or OECD | Positive | Candidate |
+| Scientific output | Scientific journal articles | World Bank WDI | Positive | Candidate from CSV; likely exploratory or capacity proxy. |
+| Technology-intensive production | High-tech exports | World Bank WDI | Positive / ambiguous | Candidate from CSV; may proxy innovation system or industrial composition. |
+| General patenting capacity | Total resident patent applications | World Bank WDI | Positive | Candidate from CSV; use cautiously because the target is patent-based. |
+| Green technology specialization | Lagged environmental-technology RTA | OECD patent data, calculated | Positive | Candidate from CSV; useful for path dependence or predictive baseline. |
+| International collaboration | Co-invention rate | OECD patent data, calculated | Positive | Candidate from CSV; useful for knowledge diffusion mechanisms. |
 
 Research notes to collect:
 
@@ -83,6 +99,8 @@ Candidate variables:
 | Fossil-fuel dependence | Fossil fuel energy consumption share | World Bank WDI | Ambiguous | Candidate |
 | Energy efficiency pressure | Energy intensity | World Bank WDI | Ambiguous | Candidate |
 | Emissions pressure | CO2 emissions per capita | World Bank WDI | Ambiguous | Candidate |
+| Energy security exposure | Net energy imports | World Bank WDI | Ambiguous | Candidate from CSV; source and coverage to verify. |
+| Energy cost pressure | Carbon or energy prices | OECD, IEA, or other source | Positive | Candidate from CSV; data-limited and likely exploratory unless a clean panel is available. |
 
 Research notes to collect:
 
@@ -102,6 +120,10 @@ Candidate variables:
 | Environmental policy stringency | OECD Environmental Policy Stringency index | OECD | Positive | Candidate |
 | Sustainable energy regulation | RISE score or sub-index | RISE | Positive | Candidate |
 | Carbon pricing or climate policy | Carbon tax, emissions trading, or policy score | OECD, World Bank, or other public source | Positive | Optional |
+| Environmental tax burden | Environmental tax revenue | OECD | Positive | Candidate from CSV; source and coverage to verify. |
+| Fossil-fuel support | Fossil-fuel subsidies or inverse fossil-support proxy | OECD, IEA, IMF, or WDI proxy | Negative / ambiguous | Candidate from CSV; measurement must not conflate subsidies with fossil consumption share. |
+| Policy uncertainty | Economic Policy Uncertainty index | PolicyUncertainty.com | Negative / ambiguous | Candidate from CSV; country-year coverage to verify. |
+| Policy stability | Rolling stability measure of EPS | Calculated from OECD EPS | Positive | Candidate from CSV; possible robustness feature distinct from policy strictness. |
 
 Research notes to collect:
 
@@ -111,17 +133,18 @@ Research notes to collect:
 
 ## Lag Structure
 
-The project predicts future innovation, so predictors should usually be lagged.
+The project predicts future innovation, so predictors should be measured before the target year.
 
-Default plan:
+Main timing specification:
 
-1. Use predictor values from year `t-1` to predict environment-related innovation in year `t`.
-2. Test `t-2` lags if the literature suggests slower innovation response or if `t-1` is too short.
-3. Avoid using same-year predictors unless clearly justified and documented.
+1. For each selected predictor `x`, construct `x_lag1_3_mean` as the mean of years `t-1`, `t-2`, and `t-3`.
+2. Use `x_lag1_3_mean` to predict `env_patent_share_inventions` in year `t`.
+3. Keep single-year `t-1`, `t-2`, and `t-3` lags as possible robustness checks.
+4. Avoid using same-year predictors unless clearly justified and documented.
 
 ## Selection Principles
 
-The final model should use a small predictor set. Prefer variables that satisfy most of the following:
+The final main model should use a small predictor set, but the broader literature-based predictor pool remains in consideration. Prefer variables that satisfy most of the following:
 
 1. Clear theoretical mechanism.
 2. Reliable public source.
@@ -129,6 +152,13 @@ The final model should use a small predictor set. Prefer variables that satisfy 
 4. Comparable units across countries.
 5. Low risk of measuring the same concept twice.
 6. Interpretability for the final report.
+
+Screening should classify variables rather than remove them prematurely:
+
+1. `Main model`: strongest theory, coverage, and interpretability.
+2. `Robustness`: useful alternative measures of the same mechanism.
+3. `Exploratory / descriptive`: conceptually relevant but weaker, overlapping, or more difficult to operationalize.
+4. `Data-limited`: relevant in the literature but not currently usable without additional data work.
 
 ## Literature Review Tasks
 
@@ -159,21 +189,23 @@ The predictor assessment is especially provisional. The literature review is sti
 
 | Project decision | Current assessment | Evidence basis | Caveat |
 |---|---|---|---|
-| Main target | Prefer `env_patent_share_inventions` as the leading target candidate. | OECD patent indicator metadata, Hascic and Migotto (2015), and OECD patent-statistics guidance. | Confirm exact OECD indicator definition and value filter before finalizing. |
+| Main target | Use `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z` as the selected main target. | Active 2026-05-20 decision, OECD patent indicator metadata, Hascic and Migotto (2015), and OECD patent-statistics guidance. | Report the exact indicator code and unit. |
 | Robustness target | Keep `env_patents_per_million` as a robustness or alternative intensity target. | Patent-statistics normalization logic. | May be more sensitive to general innovation-system scale and skewness. |
-| Dropped main target | Keep `env_patent_share_tech` out of the main model. | Prior data-quality decision and interpretation risk for values above 100. | Could remain a carefully caveated sensitivity variable. |
+| Non-main target | Keep `env_patent_share_tech` out of the main model. | Prior data-quality decision and interpretation risk for values above 100. | Could remain a carefully caveated sensitivity variable. |
+| Predictor timing | Use three-year lagged moving averages, `x_lag1_3_mean`, as the main timing specification. | Active 2026-06-08 decision and literature support for delayed innovation responses. | Single-year lags remain robustness checks. |
 | Policy predictor | Treat lagged `eps_index` as the strongest policy predictor candidate. | Kruse et al. (2022), Johnstone et al. (2010), Nesta et al. (2014), and Johnstone et al. (2012). | EPS narrows the panel and should be interpreted as predictive association, not causal proof. |
 | R&D capacity | Treat `rd_expenditure_gdp` as a strong candidate if coverage permits. | Patent-policy and induced-innovation literature repeatedly points to innovation capacity or knowledge stocks. | WDI R&D is general R&D, not green R&D. |
 | Researchers | Keep `researchers_per_million` as a secondary capacity proxy. | Conceptually aligned with innovation capacity. | Direct environmental-patent evidence is weaker and coverage is thin. |
 | Energy variables | Use at most one energy-system variable in the first small model. | Popp (2002), Johnstone et al. (2010), and Nesta et al. (2014). | WDI renewable share, fossil share, energy intensity, and CO2 are not equivalent to energy prices or policy incentives. |
 | Manufacturing share | Keep as optional structural control. | Brunnermeier and Cohen (2003) and competition/structure evidence. | Country-level manufacturing share is a rough proxy for industry composition. |
 | RISE | Keep as an alternative or robustness policy predictor, preferably using lagged Renewable Energy or Energy Efficiency pillar scores rather than the overall score. | RISE methodology note and 2026-05-20 decision log update. | Broader coverage than EPS, but conceptually wider and with weaker direct patent evidence. |
+| Manual predictor sheet | Treat all predictor concepts in `Managerial AI- literature review - List 1.csv` as part of the current consideration pool. | 2026-05-29 screening decision and team discussion. | Classify into main, robustness, exploratory, or data-limited roles after coverage and collinearity checks. |
 
 ## Open Research Decisions
 
 Record final answers in `0_organization/decision_log.md`.
 
-1. Should the target be a patent share, a patent count, or both?
-2. Which countries and years have enough data for a balanced or usable unbalanced panel?
-3. Which predictors survive the literature and coverage checks?
-4. Which lag structure is most defensible?
+1. Which countries and years have enough data for a balanced or usable unbalanced panel?
+2. Which predictors enter the compact main model, and which stay as robustness or exploratory variables?
+3. Which data-limited CSV predictors can be operationalized without adding excessive complexity?
+4. Which final evaluation metric and model family are most defensible?

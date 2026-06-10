@@ -42,7 +42,7 @@ This OECD working paper documents the updated Environmental Policy Stringency (E
 | Unit of analysis | Country-year policy index. | Matches project panel structure. |
 | Countries / regions | 40 countries in the updated EPS source according to subagent screening. | Local data show a narrower sample than OECD patent target coverage. |
 | Years | Local exploration found 1990-2020 for downloaded EPS data. | Shortens usable panel if used in the main model. |
-| Lag structure | Policy effects on innovation are unlikely to be instantaneous. | Use at least `t-1`; consider longer lags as robustness if coverage allows. |
+| Lag structure | Policy effects on innovation are unlikely to be instantaneous. | Supports the project main rule of three-year lagged moving averages; single-year lags can remain robustness checks. |
 | Data sources | OECD EPS data and methodology, drawing on public, country-specific, and ministry data collection. | Official source for `eps_index`. |
 | Transformations | Raw policy measures converted to 0-6 scores, then weighted into subindices and composite EPS; missing observations are partly imputed in the source construction. | Keep original scale documented and note imputation limits. |
 
@@ -138,7 +138,7 @@ This OECD working paper documents the updated Environmental Policy Stringency (E
 | 分析单位 | Country-year policy index。 | 匹配项目的 panel structure。 |
 | 国家 / 地区 | 根据 subagent screening，更新后的 EPS 来源覆盖 40 个国家。 | 本地数据样本比 OECD patent target coverage 更窄。 |
 | 年份 | 本地探索发现下载的 EPS 数据覆盖 1990-2020 年。 | 如果在主模型中使用，会缩短可用 panel。 |
-| 滞后结构 | 政策对创新的影响不太可能是即时的。 | 至少使用 `t-1`；如果覆盖范围允许，可考虑更长滞后作为稳健性检验。 |
+| 滞后结构 | 政策对创新的影响不太可能是即时的。 | 支持项目主规则：三年滞后移动平均；单年滞后可作为稳健性检验。 |
 | 数据来源 | OECD EPS data and methodology，基于 public、country-specific 和 ministry data collection。 | `eps_index` 的官方来源。 |
 | 转换 | 原始政策度量被转换为 0-6 scores，然后加权形成 subindices 和 composite EPS；来源构造中对部分缺失观测进行了 imputation。 | 记录原始尺度，并注明 imputation 限制。 |
 

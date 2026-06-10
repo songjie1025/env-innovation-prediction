@@ -15,13 +15,13 @@ Code helps because it makes the workflow repeatable:
 - Mistakes are easier to find because the steps are written down.
 - Results can be updated when a source file changes.
 
-Using code does not mean every decision is automatic. Research choices, such as the final target variable, predictor list, country-year coverage, and model strategy, still need human judgment and documentation.
+Using code does not mean every decision is automatic. The main target and timing specification are now documented decisions, but the predictor list, country-year coverage, and model strategy still need human judgment and documentation.
 
 ## The Country-Year Panel Idea
 
 The main dataset should be a country-year panel. This means each row represents one country in one calendar year, such as Germany in 2010 or Brazil in 2015.
 
-An outcome is the value a later analysis or model tries to explain or predict. In this project, a candidate outcome could be an OECD environment-related patent measure.
+An outcome is the value a later analysis or model tries to explain or predict. In this project, the selected outcome is the OECD environment-related patent measure `env_patent_share_inventions`.
 
 A predictor is an input variable that may help explain or predict the outcome. Candidate predictors usually come from earlier years, such as GDP per capita, R&D expenditure, renewable energy share, CO2 emissions per capita, or an environmental policy index. Same-year predictors should be used only if they are clearly justified and documented.
 
@@ -79,7 +79,7 @@ Together, these files form a chain:
 4. The exploration notebook helps collaborators inspect and discuss those results.
 5. The model plan explains how a cleaned panel may later be used for interpretable prediction.
 
-The chain is still provisional. The final target, final predictors, final coverage, and final model are not fixed yet.
+The chain is still partly provisional. The main target is fixed as `env_patent_share_inventions`, and the main predictor timing uses three-year lagged moving averages. The final predictor subset, final coverage, and final model are not fixed yet.
 
 ## What Collaborators Should Know
 

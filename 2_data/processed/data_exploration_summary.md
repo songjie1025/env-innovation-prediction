@@ -26,8 +26,9 @@ Raw downloads are stored in `2_data/raw/` and are not committed.
 ## Notes
 
 1. Coverage counts exclude common aggregate areas such as `WLD`, `OECD`, and World Bank regional aggregates.
-2. The OECD target candidates are exploratory. The final target must be recorded in `0_organization/decision_log.md`.
-3. World Bank data are downloaded for candidate predictors only; inclusion in the final model is not decided here.
+2. The main target has since been selected in `0_organization/decision_log.md`: `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z`.
+3. World Bank data are downloaded for candidate predictors only; final predictor roles are not decided here.
+4. Predictor screening should also consider `1_literature_review/Managerial AI- literature review - List 1.csv`; variables should remain in consideration until assigned to main-model, robustness, exploratory, or data-limited roles.
 
 ## Related OECD Metadata Outputs
 

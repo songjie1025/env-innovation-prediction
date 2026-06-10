@@ -40,7 +40,7 @@ RISE documents regulatory indicators for sustainable energy, including policy an
 | Unit of analysis | Country and period indicators, depending on RISE release. | Must be checked before use in a country-year panel. |
 | Countries / regions | Broad country coverage is likely, but exact project coverage is not yet verified. | Coverage check is required before inclusion. |
 | Years | To verify after download. | Cannot assume annual coverage. |
-| Lag structure | Not specified for patent prediction. | Use `t-1` or longer lags only after data timing is confirmed. |
+| Lag structure | Not specified for patent prediction. | If RISE is used, align it with the project main rule where feasible: three-year lagged moving averages before target year `t`. |
 | Data sources | RISE methodology and dataset. | Optional source pending coverage review. |
 | Transformations | Index scores or sub-index scores. | Keep scale intact or standardize after documenting units. |
 
@@ -133,7 +133,7 @@ RISE 记录 sustainable energy 的监管指标，包括与 energy access、renew
 | 分析单位 | Country 和 period indicators，取决于 RISE release。 | 用于 country-year panel 前必须检查。 |
 | 国家 / 地区 | 可能有较广泛的国家覆盖，但具体项目覆盖尚未核实。 | 纳入前需要 coverage check。 |
 | 年份 | 下载后核实。 | 不能假定 annual coverage。 |
-| 滞后结构 | 未针对 patent prediction 指定。 | 只有在确认数据时间后才使用 `t-1` 或更长滞后。 |
+| 滞后结构 | 未针对 patent prediction 指定。 | 如果使用 RISE，应在可行时与项目主规则对齐：使用目标年份 `t` 之前的三年滞后移动平均。 |
 | 数据来源 | RISE methodology 和 dataset。 | 覆盖复核前属于 optional source。 |
 | 变换 | Index scores 或 sub-index scores。 | 保持量表不变，或在记录单位后标准化。 |
 

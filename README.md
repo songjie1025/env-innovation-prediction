@@ -9,12 +9,12 @@ This project predicts country-level environment-related innovation using publicl
 
 The core task is to:
 
-1. Identify a suitable target variable from OECD patent data.
-2. Select a small, literature-based set of predictors.
+1. Use the selected OECD patent-based target variable.
+2. Evaluate the literature-based predictor consideration pool and select a compact main specification.
 3. Build an interpretable machine learning model.
 4. Assess which predictors are most strongly associated with future environment-related innovation.
 
-The exact target variable, predictor list, country-year coverage, and final model strategy will be confirmed after literature review and data inspection.
+The main target variable is fixed as `PT_INV.DEV.ENV_PAT._Z` / `env_patent_share_inventions`. The final predictor subset, country-year coverage, evaluation metrics, and final model comparison strategy will be confirmed after literature review, coverage checks, and initial modeling.
 
 ## Source of Truth
 
@@ -45,10 +45,11 @@ Candidate data sources include:
 
 | Source | Intended role |
 |---|---|
-| OECD patents on environment technologies | Candidate target variable |
+| OECD patents on environment technologies | Main target variable and robustness target source |
 | World Bank World Development Indicators | Candidate macroeconomic, R&D, energy, and emissions predictors |
 | OECD Environmental Policy Stringency index | Candidate environmental policy predictor |
 | RISE | Optional sustainable energy policy predictor |
+| `1_literature_review/Managerial AI- literature review - List 1.csv` | Manual literature-based predictor consideration pool |
 
 Candidate predictor groups:
 
@@ -58,6 +59,7 @@ Candidate predictor groups:
 4. Environmental policy.
 
 Predictors should normally be lagged so that earlier country conditions are used to predict future innovation.
+The main timing specification uses three-year lagged moving averages: for each selected predictor `x`, use `x_lag1_3_mean`, the mean of years `t-1`, `t-2`, and `t-3`, to predict the target in year `t`.
 
 ## Modeling Principle
 
@@ -70,7 +72,7 @@ Planned approach:
 3. Use clear interpretation methods such as coefficients, permutation importance, SHAP, or partial dependence.
 4. Report both predictive performance and substantive interpretation.
 
-The final model family and evaluation metrics are deferred decisions and should be recorded in `0_organization/decision_log.md`.
+The final model family and evaluation metrics are deferred decisions and should be recorded in `0_organization/decision_log.md`. Predictor screening should avoid premature exclusion: variables from the literature CSV and candidate catalog stay in consideration until they are assigned to the main model, robustness checks, exploratory analysis, or documented data-coverage limitations.
 
 ## Repository Structure
 

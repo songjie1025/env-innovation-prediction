@@ -84,7 +84,7 @@ Range checks do not automatically prove a value is wrong, but they tell collabor
 
 Merging means combining datasets using shared identifiers. For this project, the usual merge keys are `country_code` and `year`.
 
-For example, the project may merge OECD patent candidate targets with World Bank predictors such as `gdp_per_capita`, `population`, `renewable_energy_share`, and `co2_per_capita`. It may also merge policy variables such as `eps_index`, while noting that policy coverage may cover fewer countries.
+For example, the project may merge the selected OECD patent target `env_patent_share_inventions` with World Bank predictors such as `gdp_per_capita`, `population`, `renewable_energy_share`, and `co2_per_capita`. It may also merge policy variables such as `eps_index`, while noting that policy coverage may cover fewer countries.
 
 After merging, the project should check that country names and codes still match and that the number of rows makes sense.
 
@@ -110,7 +110,13 @@ A lagged predictor uses a value from an earlier year. For a one-year lag:
 
 In words, the predictor for a country in one year comes from that same country in the previous year.
 
-For example, if the target is an environment-related patent measure in 2015, a lagged predictor might use `rd_expenditure_gdp` from 2014. The project should create lagged variables explicitly, such as `rd_expenditure_gdp_lag1` or `gdp_per_capita_lag1`.
+For example, if the target is an environment-related patent measure in 2015, a one-year lagged predictor might use `rd_expenditure_gdp` from 2014. The project should create lagged variables explicitly.
+
+For this project's main specification, the decision log uses a three-year lagged moving average:
+
+`x_lag1_3_mean(country, year) = mean(x(country, year - 1), x(country, year - 2), x(country, year - 3))`
+
+In words, the predictor for target year `t` summarizes the previous three years of country conditions.
 
 ## Why Panel Data Needs One Row Per Country-Year
 
@@ -131,7 +137,7 @@ Time leakage happens when information from the future enters a prediction task.
 
 This project wants to predict future environment-related innovation using earlier country conditions. If we use 2020 policy, income, or R&D information to predict 2019 innovation, the model has seen information that would not have been available at the time.
 
-Lagging predictors reduces this risk. It tells the model: use earlier values, such as `gdp_per_capita_lag1`, `renewable_energy_share_lag1`, or `eps_index_lag1`, to predict a later innovation outcome.
+Lagging predictors reduces this risk. In this project, the main model should use earlier values summarized as variables such as `gdp_per_capita_lag1_3_mean`, `renewable_energy_share_lag1_3_mean`, or `eps_index_lag1_3_mean` to predict a later innovation outcome.
 
 Lagging does not solve every timing problem, but it makes the intended time order visible and easier to check.
 

@@ -4,7 +4,7 @@
 
 | Field | Value |
 |---|---|
-| Review ID | L012 |
+| Review ID | L016 |
 | Full citation | Ley, M., Stucki, T., & Woerter, M. (2016). The impact of energy prices on green innovation. The Energy Journal, 37(1), 41-75. |
 | Authors / organization | Marius Ley, Tobias Stucki, Martin Woerter (ETH Zurich / KOF) |
 | Year | 2016 |
@@ -104,7 +104,7 @@ Ley et al. (2016) investigate whether energy prices drive green innovation using
 
 | 字段 | 值 |
 |---|---|
-| 审查编号 | L012 |
+| 审查编号 | L016 |
 | 完整引用 | Ley, M., Stucki, T., & Woerter, M. (2016). The impact of energy prices on green innovation. The Energy Journal, 37(1), 41-75. |
 | 作者/机构 | Marius Ley, Tobias Stucki, Martin Woerter (ETH Zurich / KOF) |
 | 年份 | 2016 |

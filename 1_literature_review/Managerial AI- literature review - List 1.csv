@@ -1,0 +1,73 @@
+paper name ,predictors used,Indicator Data Code,comments,
+R&D,,,,
+"Renewable Energy Policies and Technological Innovation: Evidence Based on Patent Counts
+Measuring Environmental Innovation Using Patent Data
+(x) Environmental Regulation and Innovation: A Panel Data Study(lagged compliance cost, regulation → R&D)",R&D expenditure / GDP,(WDI) GB.XPD.RSDV.GD.ZS,related with Environmental policy stringency ( ! unequal EPS),
+"The determinants of regional innovation in Europe
+https://doi.org/10.1016/j.respol.2018.03.005 (knowledge networks+human capital -> green innovation)",Researchers / human capital,(WDI) SP.POP.SCIE.RD.P6,,
+"Determinants of green growth in developed and developing countries
+The determinants of regional innovation in Europe:
+A combined factorial and regression knowledge production function approach (not specific for green innovation)",Tertiary enrollment,(WDI) SE.TER.ENRR,"WGI - Source, recovery?",
+Environmental policy and innovation: a decade of research,Scientific journal articles,(WDI) IP.JRN.ARTC.SC,,
+On the green and innovative side of trade competitiveness? The impact of environmental policies and innovation on EU exports,High-tech exports,(WDI) TX.VAL.TECH.MF.ZS,,
+Measuring Environmental Innovation Using Patent Data,Patent applications (total) - output,(WDI) IP.PAT.RESD,,
+Measuring Environmental Innovation Using Patent Data,Lagged Env Tech RTA,(OECD) calculate through ENV_TECH,past specialization predicts future innovation. A country that already leads in wind patents is structurally positioned to keep leading. H&M (2015) Tables 6-7 show this is one of the strongest single predictors. It captures path dependency that no other variable in your current list measures.,
+Measuring Environmental Innovation Using Patent Data,Co-invention Rate -> International Collaboration,(OECD),Because domestic innovation capacity alone misses how countries access foreign knowledge. A country with few domestic researchers can still innovate green if it co-invents with foreign partners. This is H&M's second core indicator and the primary channel for technology transfer to developing countries.,
+Energy,,,,
+"
+Renewable Energy Policies and Technological Innovation: Evidence Based on Patent Counts
+Environmental policies, competition and innovation in renewable energy",Renewable energy share,(WDI) EG.FEC.RNEW.ZS,,
+"Carbon Taxes, Path Dependency, and Directed Technical Change (environmental degradation → green innovation)
+Environmental Policy and Directed Technological Change: Evidence from the European Carbon Market
+Impact of population, age structure, and urbanization on carbon emissions/energy consumption",CO2 emission per capital,(WDI) EN.GHG.CO2.PC.CE.AR5, EN.ATM.CO2E.PC is no longer available,
+Induced Innovation and Energy Prices,energy_intensity,(WDI) EG.EGY.PRIM.PP.KD,mix effect,
+"Green innovation and the transition toward a clean economy
+(Key Finding: For every 10% increase in the fuel prices faced by a firm,
+its green patent applications increase by 10%, while fossil fuel patents decrease by 5%.)",Fossil fuel energy share,(WDI) EG.USE.COMM.FO.ZS,,
+,Carbon / Energy Prices,no WDI-Data,Poor data coverage and high collection costs,
+Induced Innovation and Energy Prices,Energy imports (net),(WDI) EG.IMP.CONS.ZS,,
+Environmental Policy,,,,
+"A theoretical foundation of the Porter hypothesis
+The Impacts of Environmental Regulations on Competitiveness",EPS,https://data-explorer.oecd.org/vis?tm=environmental%20policy%20stringency&pg=0&snb=2&vw=tb&df[ds]=dsDisseminateFinalDMZ&df[id]=DSD_EPS%40DF_EPS&df[ag]=OECD.ECO.MAD&df[vs]=1.0&dq=.A.POL_STRINGENCY.EPS&lom=LASTNPERIODS&lo=5&to[TIME_PERIOD]=false,Data only in 40 countries available,
+"Regulatory Indicators for Sustainable Energy  (!)
+Renewable Energy Policies and Technological Innovation: Evidence Based on Patent Counts
+Policy mixes for sustainability transitions: An extended concept and framework for analysis",RISE_Score,https://data360.worldbank.org/en/dataset/WB_RISE,"-> Policy-related, 157 countries",Additional academic references are required; it is not sufficient to cite data sources alone.
+A theoretical foundation of the Porter hypothesis,carbon tax,https://www.oecd.org/en/data/datasets/carbon-pricing-and-energy-taxation-database.html,,
+A theoretical foundation of the Porter hypothesis,Environmental tax revenue,https://www.oecd.org/en/data/indicators/environmental-tax.html,"Quantifying the economic intensity of the ""polluter pays"" principle",
+"Directing technical change from fossil-fuel to renewable energy innovation: An application using firm-level patent data
+Fuel prices and the invention crowding out effect: Releasing the automotive industry from its dependence on fossil fuel",Fossil fuel subsidies(OECD)/consumption(WDI),https://data.worldbank.org/indicator/EG.USE.COMM.FO.ZS,"Inverse indicator: the higher the subsidies, the lower the green innovation.",Additional academic references are required; it is not sufficient to cite data sources alone.
+"Measuring economic policy uncertainty
+Economic policy uncertainty (EPU) and firm carbon emissions",Economic Policy Uncertainty Index,https://www.policyuncertainty.com/index.html,,
+Measuring Environmental Innovation Using Patent Data,Policy Stability,"Policy_Stability_i = 1 / (Rolling_5yr_SD of EPS_i)
+calculate through EPS","Because the predictability of policy matters independently from its strictness. A country with moderate but stable environmental regulation can outperform a country with strict but erratic regulation, firms won't commit to 10-year green R&D if the rules might reverse next year. Kalamova et al. (2012) proved this effect is statistically independent of policy level.",
+Macroeconomic,,,,
+"Determinants of green growth in developed and developing countries
+Do trade openness and institutional quality contribute to carbon emission reduction?",Trade openess,https://data.worldbank.org/indicator/NE.TRD.GNFS.ZS,,
+"Credit Constraints and the Cyclicality of R&D Investment: Evidence from France
+On the Cyclicality of Research and Development
+Determinants of green growth in developed and developing countries",Inflation,https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG,,
+Determinants of green growth in developed and developing countries,GDP,https://data.worldbank.org/indicator/NY.GDP.PCAP.CD,is not a strong predictor according to the paper,
+Market Size in Innovation: Theory and Evidence from the Pharmaceutical Industry,Population,https://data.worldbank.org/indicator/SP.POP.TOTL,,
+"Greenfield foreign direct investments and regional environmental technologies
+Energy savings via FDI? Empirical evidence from developing countries
+Searching for carbon leaks in multinational companies",FDI (Foreign direct investment),https://data.worldbank.org/indicator/BX.KLT.DINV.CD.WD,,
+"Institutional quality, financial development, and economic growth:
+drivers of environmental innovation across emerging and advanced markets",country policy and institutional assessment(WGI),,uses only one governance indicator - regulatory quality,
+"The determinants of regional innovation in Europe:
+A combined factorial and regression knowledge production function approach",Institutional quality - R&D (WGI),WGI,,
+,,,,
+,,,,
+,,,,
+,,,,
+,https://www.oecd.org/en/publications/measuring-environmental-innovation-using-patent-data_5js009kf48xw-en.html?utm_source=chatgpt.com,,good because it uses patents to evaluate innovation,
+,https://www.researchgate.net/publication/350288360_Determinants_of_green_growth_in_developed_and_developing_countries,,"support that economic development(GDP) tend to achieve high green growth, but this paper doesnt directly say it affects environmental related innovation",
+,,,"GDP per capita and trade openness were included as predictors because prior cross-country studies identify them as important determinants of environmentally sustainable outcomes. For example, Tawiah et al. (2021) find that economic development and trade openness significantly influence green growth across 123 developed and developing countries. These factors may also affect environmental-related innovation through resource availability, technology diffusion, and economic structure.",
+,https://www.sciencedirect.com/science/article/pii/S2590051X26000158,,firm size as relevant predictor but no data,
+,,,look for paper with firm goegraphical location - significant predictor,
+,,,,
+target : envriomental patent share,,,,
+,,,,
+excluded date based on literatur reviews - Phase 1,,,,
+"excluded data based on EDA (quality, coverage, missing values) - Phase 2",,,,
+excluded data based on statistical screening - Phase 3,,,,
+excluded data based on statistical screening - Phase 3,,,,
