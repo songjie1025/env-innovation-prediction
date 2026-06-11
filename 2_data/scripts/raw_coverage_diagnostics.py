@@ -485,45 +485,7 @@ def make_coverage_figures(
 
     country_png = figures_dir / "raw_country_coverage_rank.png"
     country_pdf = figures_dir / "raw_country_coverage_rank.pdf"
-    country_plot = country_summary.sort_values(
-        ["coverage_share", "non_missing_variable_years", "country_code"],
-        ascending=[True, True, False],
-    ).copy()
-    fig_height = max(10, 0.16 * len(country_plot) + 2.4)
-    fig, ax = plt.subplots(figsize=(11.5, fig_height), constrained_layout=True)
-    y_positions = range(len(country_plot))
-    colors = sns.color_palette("crest", n_colors=max(len(country_plot), 1))
-    ax.barh(
-        y_positions,
-        country_plot["coverage_share"] * 100,
-        color=colors,
-        edgecolor="none",
-        height=0.72,
-    )
-    country_labels = [
-        f"{row.country_code} - {row.country_name}" if row.country_name else row.country_code
-        for row in country_plot.itertuples(index=False)
-    ]
-    ax.set_yticks(list(y_positions))
-    ax.set_yticklabels(country_labels, fontsize=5.6)
-    ax.set_xlabel("Coverage share of ISO-coded variable-year opportunities (%)")
-    ax.set_ylabel("")
-    ax.set_xlim(0, 100)
-    ax.set_title("Country Coverage Ranking Across Raw Variables", loc="left", fontsize=14, fontweight="bold", pad=14)
-    ax.grid(axis="x", color="#E5E5E5", linewidth=0.7)
-    ax.grid(axis="y", visible=False)
-    ax.spines[["top", "right", "left"]].set_visible(False)
-    ax.tick_params(axis="y", length=0)
-    for index, row in enumerate(country_plot.itertuples(index=False)):
-        ax.text(
-            min(row.coverage_share * 100 + 0.8, 99.2),
-            index,
-            f"{row.coverage_share * 100:.1f}",
-            va="center",
-            ha="left" if row.coverage_share < 0.985 else "right",
-            fontsize=5.3,
-            color="#333333",
-        )
+    fig, _ = make_country_coverage_rank_figure(country_summary)
     _save_figure(fig, country_png, country_pdf)
 
     return {
@@ -648,12 +610,65 @@ def make_variable_country_rank_figure(
     fig.legend(handles=handles, loc="center left", ncol=1, frameon=False, bbox_to_anchor=(1.01, 0.5))
     fig.suptitle(
         "Variable Ranking by Country Coverage and Year Span",
-        x=0.01,
-        ha="left",
+        x=0.5,
+        ha="center",
         fontsize=14,
         fontweight="bold",
     )
     return fig, (ax_count, ax_year)
+
+
+def make_country_coverage_rank_figure(country_summary: pd.DataFrame):
+    _configure_matplotlib()
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    country_plot = country_summary.sort_values(
+        ["coverage_share", "non_missing_variable_years", "country_code"],
+        ascending=[True, True, False],
+    ).copy()
+    fig_height = max(10, 0.16 * len(country_plot) + 2.4)
+    fig, ax = plt.subplots(figsize=(11.5, fig_height), constrained_layout=True)
+    y_positions = range(len(country_plot))
+    colors = sns.color_palette("crest", n_colors=max(len(country_plot), 1))
+    ax.barh(
+        y_positions,
+        country_plot["coverage_share"] * 100,
+        color=colors,
+        edgecolor="none",
+        height=0.72,
+    )
+    country_labels = [
+        f"{row.country_code} - {row.country_name}" if row.country_name else row.country_code
+        for row in country_plot.itertuples(index=False)
+    ]
+    ax.set_yticks(list(y_positions))
+    ax.set_yticklabels(country_labels, fontsize=5.6)
+    ax.set_xlabel("Coverage share of ISO-coded variable-year opportunities (%)")
+    ax.set_ylabel("")
+    ax.set_xlim(0, 100)
+    ax.grid(axis="x", color="#E5E5E5", linewidth=0.7)
+    ax.grid(axis="y", visible=False)
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    ax.tick_params(axis="y", length=0)
+    for index, row in enumerate(country_plot.itertuples(index=False)):
+        ax.text(
+            min(row.coverage_share * 100 + 0.8, 99.2),
+            index,
+            f"{row.coverage_share * 100:.1f}",
+            va="center",
+            ha="left" if row.coverage_share < 0.985 else "right",
+            fontsize=5.3,
+            color="#333333",
+        )
+    fig.suptitle(
+        "Country Coverage Ranking Across Raw Variables",
+        x=0.5,
+        ha="center",
+        fontsize=14,
+        fontweight="bold",
+    )
+    return fig, ax
 
 
 def _standardize_world_bank(raw: pd.DataFrame, entry: pd.Series) -> pd.DataFrame:
