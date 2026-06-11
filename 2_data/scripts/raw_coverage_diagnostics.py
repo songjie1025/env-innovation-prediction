@@ -28,6 +28,16 @@ STALE_ROOT_FIGURES = [
     "raw_coverage_heatmap.pdf",
     "raw_coverage_summary.png",
     "raw_coverage_summary.pdf",
+    "raw_country_coverage_rank.png",
+    "raw_country_coverage_rank.pdf",
+    "raw_variable_country_rank.png",
+    "raw_variable_country_rank.pdf",
+]
+STALE_PREDICTOR_FIGURES = [
+    "raw_coverage_heatmap.png",
+    "raw_coverage_heatmap.pdf",
+    "raw_coverage_summary.png",
+    "raw_coverage_summary.pdf",
 ]
 
 EPU_NON_COUNTRY_SERIES = {"GEPU_current", "GEPU_ppp"}
@@ -243,6 +253,116 @@ def build_variable_year_coverage(panel: pd.DataFrame) -> pd.DataFrame:
     )
 
 
+def build_country_coverage_summary(panel: pd.DataFrame) -> pd.DataFrame:
+    country_panel = panel.loc[panel["country_code"].astype(str).str.strip().ne("")].copy()
+    country_panel["country_code"] = country_panel["country_code"].astype(str).str.strip()
+    country_panel = country_panel.loc[
+        country_panel["country_code"].str.fullmatch(r"[A-Z]{3}")
+        & ~country_panel["country_code"].isin(AGGREGATE_AREA_CODES)
+    ].copy()
+    if country_panel.empty:
+        return pd.DataFrame(
+            columns=[
+                "country_code",
+                "country_name",
+                "non_missing_variable_years",
+                "total_variable_years",
+                "coverage_share",
+                "variables_with_data",
+                "years_with_any_data",
+                "first_year",
+                "last_year",
+            ]
+        )
+
+    country_panel["country_name"] = country_panel["country_name"].astype(str).str.strip()
+    country_panel["has_value"] = country_panel["has_value"].astype(bool)
+
+    country_names = (
+        country_panel.sort_values(["country_code", "country_name"])
+        .drop_duplicates("country_code")
+        .loc[:, ["country_code", "country_name"]]
+    )
+    countries = country_names.loc[:, ["country_code"]].drop_duplicates()
+    variable_years = country_panel.loc[:, ["variable", "year"]].drop_duplicates()
+    grid = countries.merge(variable_years, how="cross")
+
+    availability = (
+        country_panel.groupby(["country_code", "variable", "year"], dropna=False)["has_value"]
+        .max()
+        .reset_index()
+    )
+    grid = grid.merge(availability, on=["country_code", "variable", "year"], how="left")
+    grid["has_value"] = grid["has_value"].where(grid["has_value"].notna(), False).astype(bool)
+
+    observed = grid.loc[grid["has_value"]]
+    summary = (
+        grid.groupby("country_code", dropna=False)
+        .agg(
+            non_missing_variable_years=("has_value", "sum"),
+            total_variable_years=("has_value", "size"),
+        )
+        .reset_index()
+    )
+    summary["coverage_share"] = summary["non_missing_variable_years"] / summary["total_variable_years"]
+
+    detail = (
+        observed.groupby("country_code", dropna=False)
+        .agg(
+            variables_with_data=("variable", "nunique"),
+            years_with_any_data=("year", "nunique"),
+            first_year=("year", "min"),
+            last_year=("year", "max"),
+        )
+        .reset_index()
+    )
+    summary = summary.merge(country_names, on="country_code", how="left")
+    summary = summary.merge(detail, on="country_code", how="left")
+    for column in ["variables_with_data", "years_with_any_data", "first_year", "last_year"]:
+        summary[column] = summary[column].fillna(0).astype(int)
+
+    return summary.sort_values(
+        ["coverage_share", "non_missing_variable_years", "country_code"],
+        ascending=[False, False, True],
+    ).reset_index(drop=True)
+
+
+def build_variable_country_rank(summary: pd.DataFrame) -> pd.DataFrame:
+    if summary.empty:
+        return pd.DataFrame(
+            columns=[
+                "variable",
+                "variable_group",
+                "entities_with_data",
+                "entities_total",
+                "country_coverage_share",
+                "years_with_data",
+                "first_year",
+                "last_year",
+                "coverage_year_label",
+            ]
+        )
+
+    rank = summary.copy()
+    rank["entities_with_data"] = pd.to_numeric(rank["entities_with_data"], errors="coerce").fillna(0).astype(int)
+    rank["entities_total"] = pd.to_numeric(rank["entities_total"], errors="coerce").fillna(0).astype(int)
+    rank["years_with_data"] = pd.to_numeric(rank["years_with_data"], errors="coerce").fillna(0).astype(int)
+    if "first_year" not in rank.columns:
+        rank["first_year"] = pd.NA
+    if "last_year" not in rank.columns:
+        rank["last_year"] = pd.NA
+    rank["first_year"] = pd.to_numeric(rank["first_year"], errors="coerce")
+    rank["last_year"] = pd.to_numeric(rank["last_year"], errors="coerce")
+    rank["coverage_year_label"] = rank.apply(_coverage_year_label, axis=1)
+    rank["country_coverage_share"] = rank["entities_with_data"] / rank["entities_total"].where(
+        rank["entities_total"].ne(0)
+    )
+    return rank.sort_values(
+        ["entities_with_data", "years_with_data", "variable"],
+        ascending=[False, False, True],
+    ).reset_index(drop=True)
+
+
 def build_predictor_audit(reliability_audit: pd.DataFrame, coverage_summary: pd.DataFrame) -> pd.DataFrame:
     if reliability_audit.empty:
         return reliability_audit.copy()
@@ -288,22 +408,27 @@ def run_coverage_diagnostics(
     panel = build_coverage_panel(manifest)
     summary = summarize_coverage(panel)
     by_year = build_variable_year_coverage(panel)
+    country_summary = build_country_coverage_summary(panel)
+    variable_rank = build_variable_country_rank(summary)
     predictor_audit = build_predictor_audit(audit, summary)
 
     processed_dir.mkdir(parents=True, exist_ok=True)
     figures_dir.mkdir(parents=True, exist_ok=True)
     _remove_stale_intermediate_csvs(processed_dir)
     _remove_stale_root_figures(figures_dir)
+    _remove_stale_predictor_figures(figures_dir)
     predictor_audit_path = processed_dir / PREDICTOR_AUDIT_FILE_NAME
     predictor_audit.to_csv(predictor_audit_path, index=False)
 
-    figure_paths = make_coverage_figures(summary, by_year, figures_dir)
+    figure_paths = make_coverage_figures(summary, by_year, country_summary, variable_rank, figures_dir)
     return {
         "manifest": manifest,
         "reliability_audit": audit,
         "coverage_panel": panel,
         "coverage_summary": summary,
         "coverage_by_year": by_year,
+        "country_coverage_summary": country_summary,
+        "variable_country_rank": variable_rank,
         "predictor_audit": predictor_audit,
         "predictor_audit_path": str(predictor_audit_path),
         "figure_paths": figure_paths,
@@ -326,9 +451,18 @@ def _remove_stale_root_figures(figures_dir: Path) -> None:
             path.unlink()
 
 
+def _remove_stale_predictor_figures(figures_dir: Path) -> None:
+    for file_name in STALE_PREDICTOR_FIGURES:
+        path = figures_dir / file_name
+        if path.exists():
+            path.unlink()
+
+
 def make_coverage_figures(
     summary: pd.DataFrame,
     by_year: pd.DataFrame,
+    country_summary: pd.DataFrame,
+    variable_rank: pd.DataFrame,
     figures_dir: Path = FIGURES_DIR,
 ) -> dict[str, str]:
     _configure_matplotlib()
@@ -344,86 +478,182 @@ def make_coverage_figures(
         "Policy and macro conditions": "#4D4D4D",
     }
 
-    ordered_summary = summary.copy()
-    ordered_summary["variable_group"] = ordered_summary["variable_group"].astype(str)
-    group_rank = {group: index for index, group in enumerate(GROUP_ORDER)}
-    ordered_summary["group_rank"] = ordered_summary["variable_group"].map(group_rank).fillna(len(GROUP_ORDER))
-    ordered_summary = ordered_summary.sort_values(
-        ["group_rank", "entities_with_data", "years_with_data", "variable"],
-        ascending=[True, False, False, True],
-    )
-    variable_order = list(ordered_summary["variable"])
+    variable_rank_png = figures_dir / "raw_variable_country_rank.png"
+    variable_rank_pdf = figures_dir / "raw_variable_country_rank.pdf"
+    fig, _ = make_variable_country_rank_figure(variable_rank, palette)
+    _save_figure(fig, variable_rank_png, variable_rank_pdf)
 
-    heatmap_data = (
-        by_year.pivot_table(index="variable", columns="year", values="entities_with_data", aggfunc="max")
-        .reindex(variable_order)
-        .fillna(0)
+    country_png = figures_dir / "raw_country_coverage_rank.png"
+    country_pdf = figures_dir / "raw_country_coverage_rank.pdf"
+    country_plot = country_summary.sort_values(
+        ["coverage_share", "non_missing_variable_years", "country_code"],
+        ascending=[True, True, False],
+    ).copy()
+    fig_height = max(10, 0.16 * len(country_plot) + 2.4)
+    fig, ax = plt.subplots(figsize=(11.5, fig_height), constrained_layout=True)
+    y_positions = range(len(country_plot))
+    colors = sns.color_palette("crest", n_colors=max(len(country_plot), 1))
+    ax.barh(
+        y_positions,
+        country_plot["coverage_share"] * 100,
+        color=colors,
+        edgecolor="none",
+        height=0.72,
     )
-
-    heatmap_png = figures_dir / "raw_coverage_heatmap.png"
-    heatmap_pdf = figures_dir / "raw_coverage_heatmap.pdf"
-    fig_height = max(8, 0.34 * len(variable_order) + 2.2)
-    fig, ax = plt.subplots(figsize=(15, fig_height), constrained_layout=True)
-    sns.heatmap(
-        heatmap_data,
-        ax=ax,
-        cmap="viridis",
-        linewidths=0.12,
-        linecolor="white",
-        cbar_kws={"label": "Entities with non-missing observations"},
-    )
-    ax.set_title("Raw Predictor Coverage by Variable and Year", loc="left", fontsize=14, fontweight="bold", pad=14)
-    ax.set_xlabel("Year")
+    country_labels = [
+        f"{row.country_code} - {row.country_name}" if row.country_name else row.country_code
+        for row in country_plot.itertuples(index=False)
+    ]
+    ax.set_yticks(list(y_positions))
+    ax.set_yticklabels(country_labels, fontsize=5.6)
+    ax.set_xlabel("Coverage share of ISO-coded variable-year opportunities (%)")
     ax.set_ylabel("")
-    ax.set_yticklabels([_labelize(v) for v in heatmap_data.index], rotation=0, fontsize=8)
-    years = list(heatmap_data.columns)
-    tick_positions = [i + 0.5 for i, year in enumerate(years) if year % 5 == 0 or year in {min(years), max(years)}]
-    tick_labels = [str(year) for year in years if year % 5 == 0 or year in {min(years), max(years)}]
-    ax.set_xticks(tick_positions)
-    ax.set_xticklabels(tick_labels, rotation=0, fontsize=8)
-    _save_figure(fig, heatmap_png, heatmap_pdf)
+    ax.set_xlim(0, 100)
+    ax.set_title("Country Coverage Ranking Across Raw Variables", loc="left", fontsize=14, fontweight="bold", pad=14)
+    ax.grid(axis="x", color="#E5E5E5", linewidth=0.7)
+    ax.grid(axis="y", visible=False)
+    ax.spines[["top", "right", "left"]].set_visible(False)
+    ax.tick_params(axis="y", length=0)
+    for index, row in enumerate(country_plot.itertuples(index=False)):
+        ax.text(
+            min(row.coverage_share * 100 + 0.8, 99.2),
+            index,
+            f"{row.coverage_share * 100:.1f}",
+            va="center",
+            ha="left" if row.coverage_share < 0.985 else "right",
+            fontsize=5.3,
+            color="#333333",
+        )
+    _save_figure(fig, country_png, country_pdf)
 
-    summary_png = figures_dir / "raw_coverage_summary.png"
-    summary_pdf = figures_dir / "raw_coverage_summary.pdf"
-    plot_data = ordered_summary.iloc[::-1].copy()
-    colors = [palette.get(group, "#777777") for group in plot_data["variable_group"]]
-    fig_height = max(8, 0.36 * len(plot_data) + 2.0)
-    fig, axes = plt.subplots(1, 2, figsize=(16.5, fig_height), sharey=True, constrained_layout=True)
+    return {
+        "variable_country_rank_png": str(variable_rank_png),
+        "variable_country_rank_pdf": str(variable_rank_pdf),
+        "country_coverage_rank_png": str(country_png),
+        "country_coverage_rank_pdf": str(country_pdf),
+    }
 
-    y_positions = range(len(plot_data))
-    axes[0].barh(y_positions, plot_data["entities_with_data"], color=colors, edgecolor="none", height=0.72)
-    axes[0].set_xlabel("Entities with data")
-    axes[0].set_title("Cross-sectional coverage", loc="left", fontsize=12, fontweight="bold")
-    axes[0].set_yticks(list(y_positions))
-    axes[0].set_yticklabels([_labelize(v) for v in plot_data["variable"]], fontsize=8)
-    axes[0].grid(axis="x", color="#E5E5E5", linewidth=0.7)
-    axes[0].grid(axis="y", visible=False)
 
-    axes[1].barh(y_positions, plot_data["years_with_data"], color=colors, edgecolor="none", height=0.72)
-    axes[1].set_xlabel("Years with data")
-    axes[1].set_title("Temporal coverage", loc="left", fontsize=12, fontweight="bold")
-    axes[1].grid(axis="x", color="#E5E5E5", linewidth=0.7)
-    axes[1].grid(axis="y", visible=False)
+def make_variable_country_rank_figure(
+    variable_rank: pd.DataFrame,
+    palette: dict[str, str],
+):
+    _configure_matplotlib()
+    import matplotlib.patheffects as path_effects
+    import matplotlib.pyplot as plt
 
-    for ax in axes:
-        ax.spines[["top", "right", "left"]].set_visible(False)
-        ax.tick_params(axis="y", length=0)
+    variable_plot = variable_rank.sort_values(
+        ["entities_with_data", "years_with_data", "variable"],
+        ascending=[True, True, False],
+    ).copy()
+    variable_plot["variable_group"] = variable_plot["variable_group"].astype(str)
+    colors = [palette.get(group, "#777777") for group in variable_plot["variable_group"]]
+    fig_height = max(8, 0.36 * len(variable_plot) + 2.2)
+    fig, ax_count = plt.subplots(figsize=(14.8, fig_height), constrained_layout=True)
+    ax_year = ax_count.twiny()
+    ax_year.patch.set_visible(False)
+    ax_year.set_zorder(ax_count.get_zorder() + 1)
+
+    y_positions = list(range(len(variable_plot)))
+    bar_y = [position - 0.11 for position in y_positions]
+    line_y = [position + 0.25 for position in y_positions]
+    ax_count.barh(bar_y, variable_plot["entities_with_data"], color=colors, edgecolor="none", height=0.52, alpha=0.92)
+    ax_count.set_yticks(y_positions)
+    ax_count.set_yticklabels([_labelize(v) for v in variable_plot["variable"]], fontsize=8)
+    ax_count.set_xlabel("Countries/entities with non-missing data")
+    ax_count.set_ylabel("")
+    ax_count.grid(axis="x", color="#E5E5E5", linewidth=0.7)
+    ax_count.grid(axis="y", visible=False)
+    ax_count.spines[["top", "right", "left"]].set_visible(False)
+    ax_count.tick_params(axis="y", length=0)
+    ax_count.set_ylim(-0.6, len(variable_plot) - 0.35)
+    x_max = max(float(variable_plot["entities_with_data"].max()) if not variable_plot.empty else 0.0, 1.0)
+    ax_count.set_xlim(0, x_max * 1.22)
+
+    for index, row in enumerate(variable_plot.itertuples(index=False)):
+        label_inside = row.entities_with_data > x_max * 0.18
+        ax_count.text(
+            row.entities_with_data - x_max * 0.018 if label_inside else row.entities_with_data + x_max * 0.014,
+            bar_y[index],
+            f"{row.entities_with_data}",
+            va="center",
+            ha="right" if label_inside else "left",
+            fontsize=7.6,
+            color="white" if label_inside else "#333333",
+            fontweight="bold" if label_inside else "normal",
+        )
+
+    year_rows = variable_plot.dropna(subset=["first_year", "last_year"]).copy()
+    if not year_rows.empty:
+        min_year = int(year_rows["first_year"].min())
+        max_year = int(year_rows["last_year"].max())
+        axis_min = min_year - 1
+        axis_max = max_year + 5
+        ax_year.set_xlim(axis_min, axis_max)
+        ax_year.set_ylim(ax_count.get_ylim())
+        for index, row in enumerate(variable_plot.itertuples(index=False)):
+            if pd.isna(row.first_year) or pd.isna(row.last_year):
+                continue
+            color = palette.get(row.variable_group, "#333333")
+            line = ax_year.hlines(
+                y=line_y[index],
+                xmin=row.first_year,
+                xmax=row.last_year,
+                color=color,
+                linewidth=2.0,
+                linestyle=(0, (3.0, 2.0)),
+                alpha=0.96,
+                zorder=4,
+            )
+            line.set_path_effects([path_effects.Stroke(linewidth=3.8, foreground="white"), path_effects.Normal()])
+            points = ax_year.scatter(
+                [row.first_year, row.last_year],
+                [line_y[index], line_y[index]],
+                s=17,
+                color=color,
+                edgecolor="white",
+                linewidth=0.45,
+                zorder=5,
+            )
+            points.set_path_effects([path_effects.Stroke(linewidth=1.5, foreground="white"), path_effects.Normal()])
+            ax_year.text(
+                row.last_year + 0.45,
+                line_y[index],
+                row.coverage_year_label,
+                va="center",
+                ha="left",
+                fontsize=6.7,
+                color="#333333",
+                zorder=6,
+            )
+        tick_start = min_year if min_year % 5 == 0 else min_year + (5 - min_year % 5)
+        ticks = [min_year] + list(range(tick_start, max_year + 1, 5))
+        if max_year not in ticks:
+            ticks.append(max_year)
+        ax_year.set_xticks(sorted(set(ticks)))
+    ax_year.set_xlabel("Coverage years")
+    ax_year.xaxis.set_label_position("top")
+    ax_year.xaxis.tick_top()
+    ax_year.grid(axis="x", color="#E9E9E9", linewidth=0.7)
+    ax_year.grid(axis="y", visible=False)
+    ax_year.spines[["right", "left", "bottom"]].set_visible(False)
+    ax_year.tick_params(axis="y", length=0, labelleft=False)
+    ax_year.tick_params(axis="x", labelsize=8)
 
     handles = [
         plt.Line2D([0], [0], marker="s", linestyle="", color=color, label=group, markersize=8)
         for group, color in palette.items()
-        if group in set(ordered_summary["variable_group"])
+        if group in set(variable_plot["variable_group"])
     ]
     fig.legend(handles=handles, loc="center left", ncol=1, frameon=False, bbox_to_anchor=(1.01, 0.5))
-    fig.suptitle("Raw Predictor Coverage Summary", x=0.01, ha="left", fontsize=14, fontweight="bold")
-    _save_figure(fig, summary_png, summary_pdf)
-
-    return {
-        "coverage_heatmap_png": str(heatmap_png),
-        "coverage_heatmap_pdf": str(heatmap_pdf),
-        "coverage_summary_png": str(summary_png),
-        "coverage_summary_pdf": str(summary_pdf),
-    }
+    fig.suptitle(
+        "Variable Ranking by Country Coverage and Year Span",
+        x=0.01,
+        ha="left",
+        fontsize=14,
+        fontweight="bold",
+    )
+    return fig, (ax_count, ax_year)
 
 
 def _standardize_world_bank(raw: pd.DataFrame, entry: pd.Series) -> pd.DataFrame:
@@ -559,6 +789,12 @@ def _complete_share(values: pd.Series) -> float:
     if len(values) == 0:
         return 0.0
     return float(values.mean())
+
+
+def _coverage_year_label(row: pd.Series) -> str:
+    if pd.isna(row.get("first_year")) or pd.isna(row.get("last_year")):
+        return ""
+    return f"{int(row['first_year'])}-{int(row['last_year'])}"
 
 
 def _variable_group(variable: str) -> str:

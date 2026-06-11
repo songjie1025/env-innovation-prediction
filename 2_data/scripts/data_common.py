@@ -31,7 +31,9 @@ AGGREGATE_AREA_CODES = {
     "EU27",
     "EU27_2020",
     "EUU",
+    "E_O",
     "FCS",
+    "G20",
     "HIC",
     "HPC",
     "IBD",
@@ -56,6 +58,7 @@ AGGREGATE_AREA_CODES = {
     "OECDA",
     "OECDE",
     "OECDSO",
+    "ODA",
     "OSS",
     "PRE",
     "PSS",
@@ -72,6 +75,7 @@ AGGREGATE_AREA_CODES = {
     "TSS",
     "UMC",
     "W",
+    "W_X",
     "WLD",
 }
 
