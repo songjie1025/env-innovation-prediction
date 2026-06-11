@@ -12,7 +12,7 @@ from typing import Any
 import pandas as pd
 import requests
 
-from data_common import RAW_PREDICTORS_V1_DIR, ROOT_DIR
+from data_common import RAW_PREDICTORS_V1_DIR, ROOT_DIR, read_xlsx_sheet
 from data_exploration import (
     OECD_EPS_URL,
     OECD_PAT_IND_BASE_URL,
@@ -32,6 +32,11 @@ OECD_REQUEST_BACKOFF_SECONDS = 5
 OECD_SUCCESS_PAUSE_SECONDS = 2
 
 WORLD_BANK_CODE_PATTERN = re.compile(r"(?:\(WDI\)\s*|data\.worldbank\.org/indicator/)([A-Z0-9][A-Z0-9.]+)")
+EXCLUDED_WORLD_BANK_CODES = {
+    "IP.PAT.RESD",
+    "EG.EGY.PRIM.PP.KD",
+    "SP.POP.TOTL",
+}
 
 WORLD_BANK_LITERATURE_INDICATORS = {
     "GB.XPD.RSDV.GD.ZS": {
@@ -54,10 +59,6 @@ WORLD_BANK_LITERATURE_INDICATORS = {
         "variable": "high_tech_exports",
         "description": "High-technology exports as percent of manufactured exports.",
     },
-    "IP.PAT.RESD": {
-        "variable": "resident_patent_applications",
-        "description": "Patent applications by residents.",
-    },
     "EG.FEC.RNEW.ZS": {
         "variable": "renewable_energy_share",
         "description": "Renewable energy consumption as percent of final energy consumption.",
@@ -65,10 +66,6 @@ WORLD_BANK_LITERATURE_INDICATORS = {
     "EN.GHG.CO2.PC.CE.AR5": {
         "variable": "co2_per_capita_ar5",
         "description": "CO2 emissions per capita using AR5 climate source.",
-    },
-    "EG.EGY.PRIM.PP.KD": {
-        "variable": "energy_intensity",
-        "description": "Energy intensity level of primary energy.",
     },
     "EG.USE.COMM.FO.ZS": {
         "variable": "fossil_energy_share",
@@ -90,10 +87,6 @@ WORLD_BANK_LITERATURE_INDICATORS = {
         "variable": "gdp_per_capita_current_usd",
         "description": "GDP per capita in current US dollars.",
     },
-    "SP.POP.TOTL": {
-        "variable": "population",
-        "description": "Total population.",
-    },
     "BX.KLT.DINV.CD.WD": {
         "variable": "fdi_net_inflows",
         "description": "Foreign direct investment, net inflows, current US dollars.",
@@ -108,8 +101,25 @@ WGI_REGULATORY_QUALITY = {
     "source_id": WORLD_BANK_WGI_SOURCE_ID,
     "role": "literature_predictor",
     "description": "Regulatory Quality governance estimate, approximately -2.5 to 2.5.",
-    "notes": "Mapped from literature CSV rows that mention WGI institutional or regulatory quality.",
+    "notes": "Selected WGI Regulatory Quality predictor.",
 }
+
+RISE_SELECTED_INDICATOR_GROUPS = [
+    {
+        "variable": "rise_renewable_energy",
+        "source_variable": "WB_RISE_RE_*",
+        "indicator_prefix": "WB_RISE_RE_",
+        "description": "RISE renewable energy score and sub-indicators.",
+        "file_name": "world_bank_data360_rise_renewable_energy_WB_RISE_RE_2010_2023.csv",
+    },
+    {
+        "variable": "rise_energy_efficiency",
+        "source_variable": "WB_RISE_EE_*",
+        "indicator_prefix": "WB_RISE_EE_",
+        "description": "RISE energy efficiency score and sub-indicators.",
+        "file_name": "world_bank_data360_rise_energy_efficiency_WB_RISE_EE_2010_2023.csv",
+    },
+]
 
 RAW_TARGETS = [
     {
@@ -220,6 +230,8 @@ def build_literature_predictor_download_plan(
 
         world_bank_codes = _extract_world_bank_codes(combined_text)
         for source_variable in world_bank_codes:
+            if source_variable in EXCLUDED_WORLD_BANK_CODES:
+                continue
             entries.append(
                 _world_bank_literature_entry(
                     source_variable,
@@ -253,11 +265,9 @@ def build_literature_predictor_download_plan(
                 )
             )
         if "rise" in lower_text:
-            entries.append(_rise_entry(predictor_text or "RISE score", row_number, comments))
+            entries.extend(_rise_entries(predictor_text or "RISE score", row_number, comments))
         if "economic policy uncertainty" in predictor_code_text:
             entries.append(_epu_entry(predictor_text or "Economic Policy Uncertainty Index", row_number, comments))
-        if _mentions_wgi_in_predictor(predictor_text, code_text):
-            entries.append(_wgi_entry(predictor_text or "Institutional quality", row_number, start_year, end_year, comments))
         if "env tech rta" in lower_text or "env_tech" in lower_text:
             entries.append(
                 _oecd_patent_literature_entry(
@@ -278,25 +288,6 @@ def build_literature_predictor_download_plan(
                     source_variable="PT_TECH_COL.COL.ENV_PAT._Z",
                     description="OECD environment-related international collaboration share used as raw support for co-invention rates.",
                     predictor_text=predictor_text or "Co-invention rate",
-                    row_number=row_number,
-                    start_year=start_year,
-                    end_year=end_year,
-                    comments=comments,
-                )
-            )
-        if "carbon / energy prices" in predictor_code_text:
-            entries.append(
-                _oecd_sdmx_literature_entry(
-                    dataset_id="oecd_carbon_pricing",
-                    variable="carbon_energy_prices",
-                    source_variable="OECD.CTP.TPS,DSD_NECR@DF_NECRS,1.1/.ENE.FFUEL.NETECR._Z.EUR_TCO2.MEANW.V.A",
-                    source="OECD Net Effective Carbon Rates",
-                    role="literature_predictor",
-                    description=(
-                        "Net effective carbon rate for energy-use sectors and fossil fuels, "
-                        "weighted mean in EUR per tonne of CO2."
-                    ),
-                    predictor_text=predictor_text,
                     row_number=row_number,
                     start_year=start_year,
                     end_year=end_year,
@@ -341,6 +332,7 @@ def build_literature_predictor_download_plan(
         if _requires_unsupported_manifest_row(lower_text, world_bank_codes):
             entries.append(_unsupported_literature_entry(predictor_text, code_text, row_number, comments))
 
+    entries.append(_wgi_entry("Regulatory Quality", "", start_year, end_year, ""))
     return _deduplicate_plan_entries(entries)
 
 
@@ -372,15 +364,13 @@ def run_raw_download(
             elif output_path is not None and output_path.exists() and not refresh:
                 file_path = str(output_path)
                 file_size = output_path.stat().st_size
-                if entry.get("file_format") == "csv":
-                    data = pd.read_csv(output_path, low_memory=False)
-                    row_count = int(len(data))
-                    column_count = int(len(data.columns))
+                row_count, column_count = _read_file_shape(output_path, entry.get("file_format", "csv"))
                 status = "downloaded"
             elif entry.get("download_method") == "binary":
                 if output_path is None:
                     raise ValueError(f"Binary entry missing file_name: {entry}")
                 content_type, file_size = download_binary_entry(entry, output_path)
+                row_count, column_count = _read_file_shape(output_path, entry.get("file_format", ""))
                 file_path = str(output_path)
                 status = "downloaded"
             else:
@@ -421,6 +411,7 @@ def run_raw_download(
                 "file_format": entry.get("file_format", "csv"),
                 "file_size_bytes": file_size,
                 "content_type": content_type,
+                "indicator_prefix": entry.get("indicator_prefix", ""),
                 "literature_rows": entry.get("literature_rows", ""),
                 "literature_predictors": entry.get("literature_predictors", ""),
                 "notes": entry.get("notes", ""),
@@ -451,7 +442,11 @@ def fetch_raw_entry(entry: dict[str, Any]) -> pd.DataFrame:
         data["dataset_id"] = entry["dataset_id"]
         return data
     if entry["dataset_id"] == "world_bank_data360":
-        return pd.read_csv(entry["url"], low_memory=False)
+        data = pd.read_csv(entry["url"], low_memory=False)
+        indicator_prefix = entry.get("indicator_prefix", "")
+        if indicator_prefix:
+            data = data[data["INDICATOR"].astype(str).str.startswith(indicator_prefix)].reset_index(drop=True)
+        return data
     raise ValueError(f"Unsupported dataset_id: {entry['dataset_id']}")
 
 
@@ -509,6 +504,16 @@ def download_binary_entry(entry: dict[str, Any], output_path: Path) -> tuple[str
     response.raise_for_status()
     output_path.write_bytes(response.content)
     return response.headers.get("content-type", ""), len(response.content)
+
+
+def _read_file_shape(path: Path, file_format: str) -> tuple[int, int]:
+    if file_format == "csv":
+        data = pd.read_csv(path, low_memory=False)
+        return int(len(data)), int(len(data.columns))
+    if file_format == "xlsx":
+        data = read_xlsx_sheet(path)
+        return int(len(data)), int(len(data.columns))
+    return 0, 0
 
 
 def _retry_delay_seconds(
@@ -673,25 +678,31 @@ def _oecd_eps_entry(
     return entry
 
 
-def _rise_entry(predictor_text: str, row_number: int, comments: str) -> dict[str, Any]:
-    return {
-        "dataset_id": "world_bank_data360",
-        "variable": "rise_indicators",
-        "source_variable": "WB_RISE",
-        "source": "World Bank Data360 Regulatory Indicators for Sustainable Energy",
-        "role": "literature_predictor_raw_source",
-        "description": "Full RISE long-form indicator dataset from World Bank Data360.",
-        "start_year": 2010,
-        "end_year": 2023,
-        "url": RISE_DATA360_CSV_URL,
-        "file_name": "world_bank_data360_rise_indicators_WB_RISE_2010_2023.csv",
-        "status": "planned",
-        "download_method": "tabular",
-        "file_format": "csv",
-        "literature_rows": str(row_number),
-        "literature_predictors": predictor_text,
-        "notes": comments,
-    }
+def _rise_entries(predictor_text: str, row_number: int, comments: str) -> list[dict[str, Any]]:
+    entries = []
+    for group in RISE_SELECTED_INDICATOR_GROUPS:
+        entries.append(
+            {
+                "dataset_id": "world_bank_data360",
+                "variable": group["variable"],
+                "source_variable": group["source_variable"],
+                "source": "World Bank Data360 Regulatory Indicators for Sustainable Energy",
+                "role": "literature_predictor_raw_source",
+                "description": group["description"],
+                "start_year": 2010,
+                "end_year": 2023,
+                "url": RISE_DATA360_CSV_URL,
+                "file_name": group["file_name"],
+                "indicator_prefix": group["indicator_prefix"],
+                "status": "planned",
+                "download_method": "tabular",
+                "file_format": "csv",
+                "literature_rows": str(row_number),
+                "literature_predictors": predictor_text,
+                "notes": comments,
+            }
+        )
+    return entries
 
 
 def _epu_entry(predictor_text: str, row_number: int, comments: str) -> dict[str, Any]:
@@ -817,17 +828,6 @@ def _unsupported_literature_entry(
 
 def _mentions_eps(lower_text: str) -> bool:
     return "pol_stringency.eps" in lower_text or "environmental policy stringency" in lower_text
-
-
-def _mentions_wgi_in_predictor(predictor_text: str, code_text: str) -> bool:
-    predictor_lower = predictor_text.lower()
-    code_lower = code_text.lower()
-    return (
-        "wgi" in code_lower
-        or "institutional quality" in predictor_lower
-        or "regulatory quality" in predictor_lower
-        or "country policy" in predictor_lower
-    )
 
 
 def _first_url(text: str) -> str:
