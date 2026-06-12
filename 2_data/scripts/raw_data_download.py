@@ -83,9 +83,9 @@ WORLD_BANK_LITERATURE_INDICATORS = {
         "variable": "inflation",
         "description": "Inflation, consumer prices, annual percent.",
     },
-    "NY.GDP.PCAP.CD": {
-        "variable": "gdp_per_capita_current_usd",
-        "description": "GDP per capita in current US dollars.",
+    "NY.GDP.MKTP.KD": {
+        "variable": "gdp_constant_2015_usd",
+        "description": "GDP, constant 2015 US dollars.",
     },
     "BX.KLT.DINV.CD.WD": {
         "variable": "fdi_net_inflows",
@@ -145,11 +145,11 @@ RAW_TARGETS = [
 SELECTED_PREDICTORS = [
     {
         "dataset_id": "world_bank_wdi",
-        "variable": "gdp_per_capita",
-        "source_variable": "NY.GDP.PCAP.KD",
+        "variable": "gdp_constant_2015_usd",
+        "source_variable": "NY.GDP.MKTP.KD",
         "source": "World Bank WDI",
         "role": "main_predictor",
-        "description": "GDP per capita, constant 2015 US dollars.",
+        "description": "GDP, constant 2015 US dollars.",
     },
     {
         "dataset_id": "world_bank_wdi",
@@ -271,9 +271,12 @@ def build_literature_predictor_download_plan(
         if "env tech rta" in lower_text or "env_tech" in lower_text:
             entries.append(
                 _oecd_patent_literature_entry(
-                    variable="env_technology_share_for_rta",
-                    source_variable="PT_TECH.DEV.ENV_PAT._Z",
-                    description="OECD environment-related technology share used as raw support for lagged RTA construction.",
+                    variable="env_technology_rta",
+                    source_variable="IX.DEV.ENV_PAT._Z",
+                    description=(
+                        "OECD environment-related technology specialization index used as "
+                        "the lagged environmental-technology RTA predictor."
+                    ),
                     predictor_text=predictor_text or "Lagged Env Tech RTA",
                     row_number=row_number,
                     start_year=start_year,

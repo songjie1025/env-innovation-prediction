@@ -48,8 +48,8 @@ Candidate variables:
 
 | Variable concept | Possible measure | Possible source | Expected relationship | Status |
 |---|---|---|---|---|
-| Economic development | GDP per capita | World Bank WDI | Positive | Candidate |
-| Market size | GDP or population | World Bank WDI | Positive, but may require normalization | Candidate |
+| Market size / economic scale | GDP, constant 2015 US dollars | World Bank WDI | Positive | Candidate for raw predictorsv1 |
+| Economic development | GDP per capita | World Bank WDI | Positive | Replaced by total GDP for the main raw predictor set |
 | Industrial structure | Manufacturing value added share | World Bank WDI | Ambiguous | Candidate |
 | Trade exposure | Trade openness | World Bank WDI | Ambiguous / positive | Candidate from CSV; data source to verify. |
 | Macroeconomic stability | Inflation | World Bank WDI | Ambiguous | Candidate from CSV; data source to verify. |
@@ -59,7 +59,7 @@ Candidate variables:
 Research notes to collect:
 
 1. Does the literature model green patenting as a function of income level or market size?
-2. Should GDP per capita be log-transformed?
+2. Should total GDP be log-transformed?
 3. Is country size already handled by the target variable?
 
 ### 2. Research and Development Capacity

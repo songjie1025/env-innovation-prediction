@@ -32,7 +32,7 @@ Required identifiers:
 
 | Variable name | Description | Type | Required | Notes |
 |---|---|---|---|---|
-| `country_code` | ISO 3-letter country code | String | Yes | Preferred country identifier for merging datasets. |
+| `country_code` | World Bank/OECD-style 3-letter country code | String | Yes | Preferred country identifier for merging datasets. Most values are ISO alpha-3; source-specific codes such as `XKX` are retained when used by the source data. |
 | `country_name` | Country name | String | Yes | Use a consistent naming convention after merging. |
 | `year` | Calendar year | Integer | Yes | Used for panel structure and lag creation. |
 
@@ -55,12 +55,12 @@ The final predictor list should be selected through literature review, data cove
 
 | Final variable name | Source variable name | Dataset ID | Description | Unit | Expected transform | Status | Notes |
 |---|---|---|---|---|---|---|---|
-| `gdp_per_capita` | `NY.GDP.PCAP.KD` | `world_bank_wdi` | GDP per capita | Constant 2015 US dollars | Log transform likely | Candidate | 7,096 observations, 213 countries, 1990-2024. |
-| `gdp` | `NY.GDP.MKTP.KD` | `world_bank_wdi` | Gross domestic product | Constant 2015 US dollars | Log transform likely | Candidate | 7,096 observations, 213 countries, 1990-2024; may be unnecessary if target is normalized. |
+| `gdp_per_capita` | `NY.GDP.PCAP.KD` | `world_bank_wdi` | GDP per capita | Constant 2015 US dollars | Log transform likely if used | Replaced | Replaced in the predictorsv1 raw download by total GDP because the selected target is a country-level innovation share and total economic scale is the intended market-size predictor. |
+| `gdp_constant_2015_usd` | `NY.GDP.MKTP.KD` | `world_bank_wdi` | Gross domestic product | Constant 2015 US dollars | Log transform likely | Candidate | Raw predictorsv1 download confirmed: 7,236 non-missing observations, 217 countries, 1990-2024. |
 | `manufacturing_share` | `NV.IND.MANF.ZS` | `world_bank_wdi` | Manufacturing value added share | Percent of GDP | None or standardized | Candidate | 6,000 observations, 203 countries, 1990-2024. |
-| `trade_openness` | `NE.TRD.GNFS.ZS` | `world_bank_wdi` | Trade as percent of GDP | Percent of GDP | None or standardized | Consideration | From literature CSV; download and coverage check needed. |
-| `inflation` | `FP.CPI.TOTL.ZG` | `world_bank_wdi` | Inflation, consumer prices | Annual percent | Winsorization or standardization may be needed | Consideration | From literature CSV; download and coverage check needed. |
-| `fdi` | `BX.KLT.DINV.CD.WD` | `world_bank_wdi` | Foreign direct investment, net inflows | Current US dollars | Log or percent-of-GDP alternative likely preferable | Consideration | From literature CSV; source-variable choice should be checked before use. |
+| `trade_openness` | `NE.TRD.GNFS.ZS` | `world_bank_wdi` | Trade as percent of GDP | Percent of GDP | None or standardized | Candidate | Included in the main model panel from predictorsv1. |
+| `inflation` | `FP.CPI.TOTL.ZG` | `world_bank_wdi` | Inflation, consumer prices | Annual percent | Winsorization or standardization may be needed | Candidate | Included in the main model panel from predictorsv1. |
+| `fdi_net_inflows` | `BX.KLT.DINV.CD.WD` | `world_bank_wdi` | Foreign direct investment, net inflows | Current US dollars | Log, percent-of-GDP alternative, or robust scaling likely needed before modeling | Candidate | Included in the main model panel from predictorsv1. |
 | `wgi_regulatory_quality` | `GOV_WGI_RQ.EST` | `world_bank_wgi` | Regulatory Quality estimate from Worldwide Governance Indicators | Index | None or standardized | Consideration | Explicitly retained WGI predictor; generic institutional-quality rows are not downloaded automatically. |
 
 ### Research and Development Capacity
@@ -69,11 +69,11 @@ The final predictor list should be selected through literature review, data cove
 |---|---|---|---|---|---|---|---|
 | `rd_expenditure_gdp` | `GB.XPD.RSDV.GD.ZS` | `world_bank_wdi` | R&D expenditure | Percent of GDP | None or standardized | Candidate | 2,467 observations, 156 countries, 1996-2024; coverage is much thinner than macro variables. |
 | `researchers_per_million` | `SP.POP.SCIE.RD.P6` | `world_bank_wdi` | Researchers in R&D | Per million people | Log transform or standardization possible | Candidate | 1,973 observations, 145 countries, 1996-2024; coverage may constrain the sample. |
-| `tertiary_enrollment` | To verify | `world_bank_wdi` | Tertiary school enrollment | Percent | None or standardized | Optional | Human-capital proxy if coverage is acceptable. |
+| `tertiary_enrollment` | `SE.TER.ENRR` | `world_bank_wdi` | Tertiary school enrollment, gross ratio | Percent | None or standardized | Candidate | Included in the main model panel from predictorsv1. |
 | `scientific_journal_articles` | `IP.JRN.ARTC.SC` | `world_bank_wdi` | Scientific and technical journal articles | Count | Log transform likely | Consideration | From literature CSV; may proxy scientific output but overlaps with innovation capacity. |
 | `high_tech_exports` | `TX.VAL.TECH.MF.ZS` | `world_bank_wdi` | High-technology exports | Percent of manufactured exports | None or standardized | Consideration | From literature CSV; may proxy technological structure. |
-| `env_tech_rta_lagged` | To calculate | OECD patent data | Lagged revealed technological advantage in environmental technologies | Index | Lagged moving average or prior-year value | Consideration | From literature CSV; useful for path-dependence checks. |
-| `co_invention_rate` | To calculate | OECD patent data | International co-invention rate | Share or percent | None or standardized | Consideration | From literature CSV; useful for knowledge diffusion mechanisms. |
+| `env_technology_rta` | `IX.DEV.ENV_PAT._Z` | `oecd_patents_environment` | OECD environmental-technology specialization index used as the RTA-style path-dependence predictor | Index, world benchmark = 1 | Lagged prior-year value and lagged three-year mean in model panels | Candidate | Replaces the earlier PT_TECH share support series. The OECD `IX` series equals the country's environmental technology share divided by the corresponding annual benchmark, so values above 1 indicate relative specialization. |
+| `env_co_invention_share` | OECD patent data | `oecd_patents_co_invention` | International environmental co-invention share | Share | Lagged prior-year value and lagged three-year mean in model panels | Candidate | predictorsv1 variable name retained as the source of truth for submodel B. |
 
 ### Energy System
 
@@ -128,16 +128,27 @@ These files are generated by `2_data/scripts/raw_coverage_diagnostics.py` and ex
 | `2_data/processed/raw_predictor_audit.csv` | Consolidated source reliability and variable-level country/entity-year coverage audit with source URL domain, actual shape, checksum, reliability status, and coverage statistics | Created 2026-06-11 |
 | `4_analysis/figures/predictorsv1/raw_variable_country_rank.png` | High-resolution composite variable-level ranking by covered country/entity count and first-to-last covered year span | Created 2026-06-11 |
 | `4_analysis/figures/predictorsv1/raw_variable_country_rank.pdf` | Vector composite variable-level ranking by covered country/entity count and first-to-last covered year span | Created 2026-06-11 |
-| `4_analysis/figures/predictorsv1/raw_country_coverage_rank.png` | High-resolution country-level coverage ranking across ISO-coded raw variable-year opportunities, sorted from high to low coverage | Created 2026-06-11 |
-| `4_analysis/figures/predictorsv1/raw_country_coverage_rank.pdf` | Vector country-level coverage ranking across ISO-coded raw variable-year opportunities, sorted from high to low coverage | Created 2026-06-11 |
+| `4_analysis/figures/predictorsv1/raw_country_coverage_rank.png` | High-resolution country-level coverage ranking across 3-letter source-code raw variable-year opportunities, sorted from high to low coverage | Created 2026-06-11 |
+| `4_analysis/figures/predictorsv1/raw_country_coverage_rank.pdf` | Vector country-level coverage ranking across 3-letter source-code raw variable-year opportunities, sorted from high to low coverage | Created 2026-06-11 |
 
 ## Processed Modeling Dataset
 
-Planned processed file:
+The current cleaning pipeline writes lagged analysis-base panel candidates rather than a single final `model_panel.csv`. The no-imputation panels are the primary prediction-safe inputs. The linear-interpolated panels are retained only as retrospective sensitivity outputs because full-series interpolation can use future endpoints and is therefore not appropriate for the main forecasting or pseudo-out-of-sample design.
 
 | File | Description | Status |
 |---|---|---|
-| `2_data/processed/model_panel.csv` | Final country-year panel used for modeling | Not created yet |
+| `2_data/processed/model_panel_main_no_imputation.csv` | Main 11-predictor lagged panel using source missing values only | Created 2026-06-12 |
+| `2_data/processed/model_panel_main_linear_interpolated.csv` | Main 11-predictor lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panel_suba_no_imputation.csv` | Submodel A lagged panel for RISE Energy Efficiency, RISE Renewable Energy, and high-tech exports | Created 2026-06-12 |
+| `2_data/processed/model_panel_suba_linear_interpolated.csv` | Submodel A lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panel_subb_no_imputation.csv` | Submodel B lagged panel for R&D, co-invention, energy imports, researchers, and environmental tax revenue | Created 2026-06-12 |
+| `2_data/processed/model_panel_subb_linear_interpolated.csv` | Submodel B lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panel_subc_no_imputation.csv` | Submodel C lagged panel for OECD EPS | Created 2026-06-12 |
+| `2_data/processed/model_panel_subc_linear_interpolated.csv` | Submodel C lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panel_coverage_summary.csv` | Panel-level coverage summary with anchor variable, predictor window, target years, row counts, complete-lag rows, target-plus-complete-feature rows, and imputed value counts | Created 2026-06-12 |
+| `2_data/processed/model_panel_imputation_summary.csv` | Panel-variable-level count of values filled by the retrospective linear-interpolation sensitivity treatment | Created 2026-06-12 |
+| `2_data/processed/model_panel_variable_map.csv` | Mapping from each panel variable to raw file, source variable, source, anchor status, and RISE selection rule | Created 2026-06-12 |
+| `2_data/processed/model_panel.csv` | Final single modeling panel, if later selected from one of the generated candidates | Not created yet |
 
 Expected columns:
 
@@ -145,17 +156,25 @@ Expected columns:
 2. `country_name`
 3. `year`
 4. `env_patent_share_inventions` target variable for year `t`
-5. Main predictor variables as three-year lagged moving averages, named like `rd_expenditure_gdp_lag1_3_mean`
-6. Optional metadata columns for sample filters or source coverage
+5. Predictor variables as one-year lags, named like `rd_expenditure_gdp_lag1`
+6. Predictor variables as three-year lagged moving averages, named like `rd_expenditure_gdp_lag1_3_mean`
+
+The main panel uses raw predictor years 1996-2022 and target years 1999-2023. Its anchor variable is `fossil_energy_share`; current `predictorsv1` files produce 178 World Bank/OECD-style 3-letter-code anchor countries after excluding aggregate entities. Submodel windows and anchors are selected by `2_data/scripts/model_panel_cleaning.py` from the common raw predictor window and the least-covered predictor in each group.
+
+Rows in the panel files are an anchor-country by target-year grid, not automatically the final supervised-learning sample. For modeling-sample reporting, prefer `target_lag1_complete_rows` or `target_lag1_3_mean_complete_rows` in `model_panel_coverage_summary.csv`. For example, `lag1_3_mean_complete_rows` counts rows with complete features regardless of target availability, while `target_lag1_3_mean_complete_rows` counts only rows where the target and all three-year lagged-mean predictors are present.
 
 ## Transformation Rules
 
 1. Preserve raw downloaded files unchanged in their versioned subfolder under `2_data/raw/`, for example `2_data/raw/predictorsv1/`.
 2. Cleaned variables should use lowercase `snake_case` names.
-3. Use ISO 3-letter country codes for merges.
+3. Use World Bank/OECD-style 3-letter country codes for merges, while documenting source-specific non-ISO codes when present.
 4. Record all unit changes and transformations in this file.
 5. Create lagged predictors explicitly. The main specification should use names like `rd_expenditure_gdp_lag1_3_mean` for the mean of `t-1`, `t-2`, and `t-3`.
 6. Do not overwrite raw values when creating transformed variables.
+7. For every selected predictor `x`, the cleaning pipeline creates both `x_lag1` and `x_lag1_3_mean`.
+8. `x_lag1_3_mean` is calculated only when all three lag years are available after the chosen missing-data treatment; partial-window averages are not used.
+9. RISE submodel variables use the broad `WB_RISE_RE_ALL` and `WB_RISE_EE_ALL` scores when present. If a future RISE raw file lacks an `*_ALL` score, the script falls back to a country-year mean across the selected indicator prefix and records that rule in `model_panel_variable_map.csv`.
+10. `env_technology_rta` uses the OECD `IX.DEV.ENV_PAT._Z` index, not the `PT_TECH.DEV.ENV_PAT._Z` technology-share support series.
 
 ## Missing Data Rules
 
@@ -163,6 +182,11 @@ Expected columns:
 2. Avoid silently dropping countries or years.
 3. If imputation is used, document the method and affected variables.
 4. Prefer transparent handling over complex imputation unless missingness threatens the core analysis.
+5. The no-imputation model panels keep predictor and target source missing values unchanged.
+6. The no-imputation panels are the primary prediction-safe analysis-base panels.
+7. The linear-interpolated panels impute predictor gaps only within the same country and variable series. They do not extrapolate outside each observed country-variable range, do not borrow information across countries, and do not impute `env_patent_share_inventions`.
+8. Because the current linear-interpolation sensitivity version is applied to full country-variable series before lag construction, it can use future endpoints. It must not be used as the main predictive-modeling input.
+9. Imputed predictor counts are recorded in `model_panel_coverage_summary.csv` and by panel-variable in `model_panel_imputation_summary.csv`.
 
 ## Data Quality Checks
 
@@ -189,3 +213,5 @@ Run and document these checks after creating the processed panel:
 | 2026-06-11 | Refined predictor v1 selection | Remove population, resident patent applications, energy intensity, carbon/energy prices, and generic WGI institutional-quality rows; split RISE into Renewable Energy and Energy Efficiency groups; explicitly retain WGI Regulatory Quality. |
 | 2026-06-11 | Consolidated raw diagnostics CSV outputs | Replace separate reliability, summary, by-year, and panel CSV outputs with one reproducible `raw_predictor_audit.csv`; keep detailed panel and by-year coverage in memory for figures. |
 | 2026-06-11 | Versioned predictor diagnostics figures | Write notebook-generated coverage figures under `4_analysis/figures/predictorsv1/` to match the predictor v1 raw-data folder. |
+| 2026-06-12 | Revised lagged model-panel cleaning outputs | Generate main, subA, subB, and subC analysis-base panels with `lag1` and `lag1_3_mean` features; mark no-imputation panels as the primary prediction-safe inputs and linear-interpolated panels as retrospective sensitivity outputs only. |
+| 2026-06-12 | Corrected environmental-technology RTA source | Replaced the PT_TECH share support series with OECD `IX.DEV.ENV_PAT._Z` for `env_technology_rta`; added target-plus-complete-feature sample counts and panel-variable imputation counts. |
