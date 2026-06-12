@@ -137,18 +137,23 @@ The current cleaning pipeline writes lagged analysis-base panel candidates rathe
 
 | File | Description | Status |
 |---|---|---|
-| `2_data/processed/model_panel_main_no_imputation.csv` | Main 11-predictor lagged panel using source missing values only | Created 2026-06-12 |
-| `2_data/processed/model_panel_main_linear_interpolated.csv` | Main 11-predictor lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
-| `2_data/processed/model_panel_suba_no_imputation.csv` | Submodel A lagged panel for RISE Energy Efficiency, RISE Renewable Energy, and high-tech exports | Created 2026-06-12 |
-| `2_data/processed/model_panel_suba_linear_interpolated.csv` | Submodel A lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
-| `2_data/processed/model_panel_subb_no_imputation.csv` | Submodel B lagged panel for R&D, co-invention, energy imports, researchers, and environmental tax revenue | Created 2026-06-12 |
-| `2_data/processed/model_panel_subb_linear_interpolated.csv` | Submodel B lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
-| `2_data/processed/model_panel_subc_no_imputation.csv` | Submodel C lagged panel for OECD EPS | Created 2026-06-12 |
-| `2_data/processed/model_panel_subc_linear_interpolated.csv` | Submodel C lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
-| `2_data/processed/model_panel_coverage_summary.csv` | Panel-level coverage summary with anchor variable, predictor window, target years, row counts, complete-lag rows, target-plus-complete-feature rows, and imputed value counts | Created 2026-06-12 |
-| `2_data/processed/model_panel_imputation_summary.csv` | Panel-variable-level count of values filled by the retrospective linear-interpolation sensitivity treatment | Created 2026-06-12 |
-| `2_data/processed/model_panel_variable_map.csv` | Mapping from each panel variable to raw file, source variable, source, anchor status, and RISE selection rule | Created 2026-06-12 |
-| `2_data/processed/model_panel.csv` | Final single modeling panel, if later selected from one of the generated candidates | Not created yet |
+| `2_data/processed/model_panels/model_panel_main_no_imputation.csv` | Main 11-predictor lagged panel using source missing values only | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_main_linear_interpolated.csv` | Main 11-predictor lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_suba_no_imputation.csv` | Submodel A lagged panel for RISE Energy Efficiency, RISE Renewable Energy, and high-tech exports | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_suba_linear_interpolated.csv` | Submodel A lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_subb_no_imputation.csv` | Submodel B lagged panel for R&D, co-invention, energy imports, researchers, and environmental tax revenue | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_subb_linear_interpolated.csv` | Submodel B lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_subc_no_imputation.csv` | Submodel C lagged panel for OECD EPS | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_subc_linear_interpolated.csv` | Submodel C lagged panel after internal country-level linear interpolation of predictors | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_coverage_summary.csv` | Panel-level coverage summary with anchor variable, predictor window, target years, row counts, complete-lag rows, target-plus-complete-feature rows, and imputed value counts | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_imputation_summary.csv` | Panel-variable-level count of values filled by the retrospective linear-interpolation sensitivity treatment | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel_variable_map.csv` | Mapping from each panel variable to raw file, source variable, source, anchor status, and RISE selection rule | Created 2026-06-12 |
+| `2_data/processed/model_panels/model_panel.csv` | Final single modeling panel, if later selected from one of the generated candidates | Not created yet |
+| `4_analysis/figures/model_panels/model_panel_sample_funnel.png` / `.pdf` | Sample-construction funnel for no-imputation panels | Created 2026-06-12 |
+| `4_analysis/figures/model_panels/model_panel_prediction_safe_comparison.png` / `.pdf` | Effective modeling-sample comparison between prediction-safe and retrospective sensitivity panels | Created 2026-06-12 |
+| `4_analysis/figures/model_panels/model_panel_main_missingness_heatmap.png` / `.pdf` | Main-panel feature availability heatmap by target year | Created 2026-06-12 |
+| `4_analysis/figures/model_panels/model_panel_rta_distribution.png` / `.pdf` | Distribution diagnostic for the corrected lagged environmental-technology RTA predictor | Created 2026-06-12 |
+| `4_analysis/figures/model_panels/model_panel_imputation_audit.png` / `.pdf` | Predictor-level audit of values filled in retrospective linear-interpolation sensitivity panels | Created 2026-06-12 |
 
 Expected columns:
 
@@ -215,3 +220,4 @@ Run and document these checks after creating the processed panel:
 | 2026-06-11 | Versioned predictor diagnostics figures | Write notebook-generated coverage figures under `4_analysis/figures/predictorsv1/` to match the predictor v1 raw-data folder. |
 | 2026-06-12 | Revised lagged model-panel cleaning outputs | Generate main, subA, subB, and subC analysis-base panels with `lag1` and `lag1_3_mean` features; mark no-imputation panels as the primary prediction-safe inputs and linear-interpolated panels as retrospective sensitivity outputs only. |
 | 2026-06-12 | Corrected environmental-technology RTA source | Replaced the PT_TECH share support series with OECD `IX.DEV.ENV_PAT._Z` for `env_technology_rta`; added target-plus-complete-feature sample counts and panel-variable imputation counts. |
+| 2026-06-12 | Moved model panels into a processed subfolder and added readiness figures | Keep generated panel CSVs and panel metadata under `2_data/processed/model_panels/`; add notebook-generated sample, missingness, RTA, and imputation-audit figures under `4_analysis/figures/model_panels/`. |

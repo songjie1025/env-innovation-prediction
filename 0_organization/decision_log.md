@@ -22,6 +22,20 @@ Status options:
 
 ## Decisions
 
+### 2026-06-12: Store model-panel outputs in a dedicated subfolder and add readiness figures
+
+Decision:
+Write generated model-panel CSVs and panel metadata to `2_data/processed/model_panels/`, not directly to `2_data/processed/`. Add data-cleaning-stage readiness figures under `4_analysis/figures/model_panels/`: sample construction, prediction-safe versus retrospective sensitivity coverage, main-panel missingness, corrected RTA distribution, and interpolation audit.
+
+Reason:
+The processed root already contains raw audits and candidate-discovery artifacts. A dedicated model-panel subfolder keeps deliverables scannable and makes it clear which files are generated panel inputs. The figures are diagnostic rather than model-result visuals; they help defend sample construction, missingness, RTA measurement, and the decision not to use full-series interpolation as the primary prediction input.
+
+Alternatives considered:
+Keeping panel CSVs in the processed root was rejected because it mixes final panel candidates with upstream audit artifacts. Model-performance plots were rejected for this notebook stage because the modeling pipeline and validation design are not yet built.
+
+Status:
+Active
+
 ### 2026-06-12: Correct RTA source and mark no-imputation panels as primary
 
 Decision:

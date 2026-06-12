@@ -334,12 +334,15 @@ class ModelPanelCleaningTests(unittest.TestCase):
                 ],
             )
 
-            self.assertTrue((processed_dir / "model_panel_main_no_imputation.csv").exists())
-            self.assertTrue((processed_dir / "model_panel_main_linear_interpolated.csv").exists())
-            self.assertTrue((processed_dir / "model_panel_coverage_summary.csv").exists())
-            self.assertTrue((processed_dir / "model_panel_imputation_summary.csv").exists())
-            self.assertTrue((processed_dir / "model_panel_variable_map.csv").exists())
-            self.assertIn("model_panel_main_no_imputation.csv", outputs["panel_paths"])
+            panel_dir = processed_dir / "model_panels"
+            self.assertTrue((panel_dir / "model_panel_main_no_imputation.csv").exists())
+            self.assertTrue((panel_dir / "model_panel_main_linear_interpolated.csv").exists())
+            self.assertTrue((panel_dir / "model_panel_coverage_summary.csv").exists())
+            self.assertTrue((panel_dir / "model_panel_imputation_summary.csv").exists())
+            self.assertTrue((panel_dir / "model_panel_variable_map.csv").exists())
+            self.assertFalse((processed_dir / "model_panel_main_no_imputation.csv").exists())
+            self.assertEqual(outputs["panel_dir_path"], str(panel_dir))
+            self.assertIn("model_panels/model_panel_main_no_imputation.csv", outputs["panel_paths"])
             self.assertIn("target_lag1_3_mean_complete_rows", outputs["coverage_summary"].columns)
             self.assertIn("imputation_summary", outputs)
 

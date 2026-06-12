@@ -12,6 +12,7 @@ from data_common import PROCESSED_DIR, RAW_PREDICTORS_V1_DIR, filter_country_row
 
 TARGET_VARIABLE = "env_patent_share_inventions"
 MANIFEST_FILE_NAME = "raw_download_manifest.csv"
+MODEL_PANEL_SUBDIR_NAME = "model_panels"
 IMPUTATION_MODES = ["none", "linear_interpolated"]
 OUTPUT_FILE_NAMES = {
     "none": "model_panel_{panel_id}_no_imputation.csv",
@@ -92,7 +93,7 @@ def run_model_panel_cleaning(
     processed_dir: Path = PROCESSED_DIR,
     panel_definitions: list[PanelDefinition] | None = None,
 ) -> dict[str, object]:
-    """Build all requested lagged model panels and write them to processed_dir."""
+    """Build all requested lagged model panels under processed_dir/model_panels."""
     panel_definitions = panel_definitions or default_panel_definitions()
     manifest = load_manifest(raw_dir)
     all_predictors = sorted({spec.variable for definition in panel_definitions for spec in definition.predictors})
@@ -100,7 +101,8 @@ def run_model_panel_cleaning(
     predictor_long, base_variable_map = load_selected_raw_series(raw_dir, manifest, all_predictors)
     target_wide, target_first_year, target_last_year, target_map = load_target_series(raw_dir, manifest)
 
-    processed_dir.mkdir(parents=True, exist_ok=True)
+    panel_dir = processed_dir / MODEL_PANEL_SUBDIR_NAME
+    panel_dir.mkdir(parents=True, exist_ok=True)
     panel_paths: list[str] = []
     summary_rows: list[dict[str, object]] = []
     imputation_rows: list[dict[str, object]] = []
@@ -121,9 +123,9 @@ def run_model_panel_cleaning(
                 target_last_year=target_last_year,
             )
             file_name = OUTPUT_FILE_NAMES[imputation].format(panel_id=resolved.panel_id)
-            output_path = processed_dir / file_name
+            output_path = panel_dir / file_name
             panel.to_csv(output_path, index=False)
-            panel_paths.append(file_name)
+            panel_paths.append(str(output_path.relative_to(processed_dir)))
             imputation_counts = metadata.pop("_imputation_counts_by_variable")
             for _, imputation_row in imputation_counts.iterrows():
                 imputation_rows.append(
@@ -140,9 +142,9 @@ def run_model_panel_cleaning(
     coverage_summary = pd.DataFrame(summary_rows)
     imputation_summary = pd.DataFrame(imputation_rows)
     variable_map = pd.DataFrame(panel_variable_rows).drop_duplicates().reset_index(drop=True)
-    coverage_summary_path = processed_dir / "model_panel_coverage_summary.csv"
-    imputation_summary_path = processed_dir / "model_panel_imputation_summary.csv"
-    variable_map_path = processed_dir / "model_panel_variable_map.csv"
+    coverage_summary_path = panel_dir / "model_panel_coverage_summary.csv"
+    imputation_summary_path = panel_dir / "model_panel_imputation_summary.csv"
+    variable_map_path = panel_dir / "model_panel_variable_map.csv"
     coverage_summary.to_csv(coverage_summary_path, index=False)
     imputation_summary.to_csv(imputation_summary_path, index=False)
     variable_map.to_csv(variable_map_path, index=False)
@@ -152,6 +154,7 @@ def run_model_panel_cleaning(
         "coverage_summary": coverage_summary,
         "imputation_summary": imputation_summary,
         "variable_map": variable_map,
+        "panel_dir_path": str(panel_dir),
         "coverage_summary_path": str(coverage_summary_path),
         "imputation_summary_path": str(imputation_summary_path),
         "variable_map_path": str(variable_map_path),
@@ -651,7 +654,9 @@ def main() -> None:
     print("Wrote model panel files:")
     for file_name in outputs["panel_paths"]:
         print(f"- {file_name}")
+    print(f"Panel directory: {outputs['panel_dir_path']}")
     print(f"Coverage summary: {outputs['coverage_summary_path']}")
+    print(f"Imputation summary: {outputs['imputation_summary_path']}")
     print(f"Variable map: {outputs['variable_map_path']}")
 
 
