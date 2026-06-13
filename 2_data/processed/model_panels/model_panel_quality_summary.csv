@@ -1,0 +1,3 @@
+rule_id,variable,values_set_to_nan,affected_countries,first_year,last_year,reason
+fossil_energy_share_negative,fossil_energy_share,6,6,2015,2015,Fossil energy share is a percentage-style variable and cannot be negative.
+fossil_energy_share_exact_zero,fossil_energy_share,1580,178,1990,2024,World Bank WDI EG.USE.COMM.FO.ZS contains exact country-year zeros that are implausible for fossil fuel energy consumption as a share of total energy use; these are treated as source-data anomalies rather than observed zero fossil-energy use.

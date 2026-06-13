@@ -31,6 +31,7 @@ class ModelPanelVisualizationTests(unittest.TestCase):
                             "panel_id": panel_id,
                             "imputation": imputation,
                             "prediction_safe": prediction_safe,
+                            "anchor_year_grid_rows": rows + 2,
                             "rows": rows,
                             "target_non_missing": rows - 1,
                             "target_lag1_complete_rows": rows - 2,
@@ -68,6 +69,21 @@ class ModelPanelVisualizationTests(unittest.TestCase):
                     "gdp_constant_2015_usd_lag1_3_mean": [99.0, 100.0, 79.0, None],
                 }
             ).to_csv(panel_dir / "model_panel_main_no_imputation.csv", index=False)
+            for panel_id, variable in [
+                ("suba", "rise_energy_efficiency"),
+                ("subb", "rd_expenditure_gdp"),
+                ("subc", "eps_index"),
+            ]:
+                pd.DataFrame(
+                    {
+                        "country_code": ["USA", "USA", "CAN", "CAN"],
+                        "country_name": ["United States", "United States", "Canada", "Canada"],
+                        "year": [2000, 2001, 2000, 2001],
+                        "env_patent_share_inventions": [1.0, 1.1, 2.0, 2.1],
+                        f"{variable}_lag1": [1.0, 1.2, None, 1.5],
+                        f"{variable}_lag1_3_mean": [0.9, 1.1, None, None],
+                    }
+                ).to_csv(panel_dir / f"model_panel_{panel_id}_no_imputation.csv", index=False)
 
             figure_paths = make_model_panel_figures(panel_dir=panel_dir, figures_dir=figures_dir)
 
@@ -76,9 +92,8 @@ class ModelPanelVisualizationTests(unittest.TestCase):
                 {
                     "sample_funnel",
                     "prediction_safe_comparison",
-                    "main_missingness_heatmap",
-                    "rta_distribution",
-                    "imputation_audit",
+                    "feature_availability_heatmap",
+                    "missingness_burden",
                 },
             )
             for png_path in figure_paths.values():

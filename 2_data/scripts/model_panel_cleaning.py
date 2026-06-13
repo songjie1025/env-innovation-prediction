@@ -13,6 +13,9 @@ from data_common import PROCESSED_DIR, RAW_PREDICTORS_V1_DIR, filter_country_row
 TARGET_VARIABLE = "env_patent_share_inventions"
 MANIFEST_FILE_NAME = "raw_download_manifest.csv"
 MODEL_PANEL_SUBDIR_NAME = "model_panels"
+MODEL_PANEL_V2_SUBDIR_NAME = f"{MODEL_PANEL_SUBDIR_NAME}/v2"
+CSV_NA_REPRESENTATION = "NaN"
+PREDICTOR_REASSESSMENT_FILE_NAME = "model_panel_predictor_reassessment.csv"
 IMPUTATION_MODES = ["none", "linear_interpolated"]
 OUTPUT_FILE_NAMES = {
     "none": "model_panel_{panel_id}_no_imputation.csv",
@@ -26,6 +29,43 @@ IMPUTATION_RECOMMENDED_USE = {
     "none": "primary_prediction_analysis_base",
     "linear_interpolated": "retrospective_sensitivity_not_for_prediction",
 }
+MAIN_V2_EXCLUDED_PREDICTORS = {
+    "fossil_energy_share": {
+        "evidence_strength": "weak_to_cautionary",
+        "v2_decision": "move_to_robustness_exploratory",
+        "decision_reason": (
+            "Literature support is indirect and sign-ambiguous: fossil dependence can proxy transition "
+            "pressure or lock-in, while stronger papers use energy prices, fuel prices, carbon prices, "
+            "or policy incentives. The variable also creates the largest complete-case sample loss after "
+            "source-quality correction."
+        ),
+    },
+    "tertiary_enrollment": {
+        "evidence_strength": "moderate_to_weak",
+        "v2_decision": "move_to_robustness_exploratory",
+        "decision_reason": (
+            "Tertiary enrollment is a broad human-capital proxy. The direct green-patent literature is "
+            "stronger for R&D expenditure, researchers, knowledge stocks, scientific output, and university "
+            "quality, and this variable materially reduces complete-case coverage."
+        ),
+    },
+}
+MAIN_PREDICTOR_EVIDENCE_STRENGTH = {
+    "gdp_constant_2015_usd": "moderate",
+    "renewable_energy_share": "moderate",
+    "wgi_regulatory_quality": "moderate",
+    "co2_per_capita_ar5": "weak_to_cautionary",
+    "fdi_net_inflows": "moderate_to_weak",
+    "tertiary_enrollment": "moderate_to_weak",
+    "env_technology_rta": "strong_predictive_baseline",
+    "scientific_journal_articles": "moderate",
+    "trade_openness": "moderate",
+    "inflation": "moderate_to_weak_control",
+    "fossil_energy_share": "weak_to_cautionary",
+}
+MAIN_RETAINED_DECISION_REASON = (
+    "Retained in the v2 main model after the pre-modeling literature and coverage reassessment."
+)
 
 
 @dataclass(frozen=True)
@@ -45,7 +85,7 @@ class PanelDefinition:
 
 
 def default_panel_definitions() -> list[PanelDefinition]:
-    """Return the four agreed model panels in a readable, edit-friendly form."""
+    """Return the original four agreed v1 model panels in a readable, edit-friendly form."""
     main_predictors = [
         PredictorSpec("gdp_constant_2015_usd", "GDP, constant 2015 US dollars"),
         PredictorSpec("renewable_energy_share", "Renewable energy share"),
@@ -88,25 +128,66 @@ def default_panel_definitions() -> list[PanelDefinition]:
     ]
 
 
+def v2_panel_definitions() -> list[PanelDefinition]:
+    """Return the v2 panel package after the main-predictor reassessment."""
+    definitions: list[PanelDefinition] = []
+    for definition in default_panel_definitions():
+        if definition.panel_id != "main":
+            definitions.append(
+                PanelDefinition(
+                    panel_id=definition.panel_id,
+                    predictors=list(definition.predictors),
+                    anchor_variable=definition.anchor_variable,
+                    raw_start_year=definition.raw_start_year,
+                    raw_end_year=definition.raw_end_year,
+                )
+            )
+            continue
+
+        retained_predictors = [
+            spec
+            for spec in definition.predictors
+            if spec.variable not in MAIN_V2_EXCLUDED_PREDICTORS
+        ]
+        definitions.append(
+            PanelDefinition(
+                panel_id=definition.panel_id,
+                predictors=retained_predictors,
+                anchor_variable=None,
+                raw_start_year=definition.raw_start_year,
+                raw_end_year=definition.raw_end_year,
+            )
+        )
+    return definitions
+
+
 def run_model_panel_cleaning(
     raw_dir: Path = RAW_PREDICTORS_V1_DIR,
     processed_dir: Path = PROCESSED_DIR,
     panel_definitions: list[PanelDefinition] | None = None,
+    output_subdir_name: str = MODEL_PANEL_SUBDIR_NAME,
 ) -> dict[str, object]:
     """Build all requested lagged model panels under processed_dir/model_panels."""
     panel_definitions = panel_definitions or default_panel_definitions()
     manifest = load_manifest(raw_dir)
     all_predictors = sorted({spec.variable for definition in panel_definitions for spec in definition.predictors})
 
-    predictor_long, base_variable_map = load_selected_raw_series(raw_dir, manifest, all_predictors)
+    predictor_long, base_variable_map, quality_summary = load_selected_raw_series(
+        raw_dir,
+        manifest,
+        all_predictors,
+        return_quality_summary=True,
+    )
     target_wide, target_first_year, target_last_year, target_map = load_target_series(raw_dir, manifest)
 
-    panel_dir = processed_dir / MODEL_PANEL_SUBDIR_NAME
+    panel_dir = processed_dir / output_subdir_name
     panel_dir.mkdir(parents=True, exist_ok=True)
     panel_paths: list[str] = []
     summary_rows: list[dict[str, object]] = []
     imputation_rows: list[dict[str, object]] = []
     panel_variable_rows: list[dict[str, object]] = []
+    main_no_imputation_panel: pd.DataFrame | None = None
+    main_no_imputation_definition: PanelDefinition | None = None
 
     for definition in panel_definitions:
         resolved = resolve_panel_definition(definition, predictor_long)
@@ -122,9 +203,12 @@ def run_model_panel_cleaning(
                 target_first_year=target_first_year,
                 target_last_year=target_last_year,
             )
+            if resolved.panel_id == "main" and imputation == "none":
+                main_no_imputation_panel = panel.copy()
+                main_no_imputation_definition = resolved
             file_name = OUTPUT_FILE_NAMES[imputation].format(panel_id=resolved.panel_id)
             output_path = panel_dir / file_name
-            panel.to_csv(output_path, index=False)
+            _write_csv_with_explicit_nan(panel, output_path)
             panel_paths.append(str(output_path.relative_to(processed_dir)))
             imputation_counts = metadata.pop("_imputation_counts_by_variable")
             for _, imputation_row in imputation_counts.iterrows():
@@ -142,23 +226,148 @@ def run_model_panel_cleaning(
     coverage_summary = pd.DataFrame(summary_rows)
     imputation_summary = pd.DataFrame(imputation_rows)
     variable_map = pd.DataFrame(panel_variable_rows).drop_duplicates().reset_index(drop=True)
+    predictor_reassessment = (
+        build_main_predictor_reassessment(main_no_imputation_panel, main_no_imputation_definition)
+        if main_no_imputation_panel is not None and main_no_imputation_definition is not None
+        else _empty_predictor_reassessment()
+    )
     coverage_summary_path = panel_dir / "model_panel_coverage_summary.csv"
     imputation_summary_path = panel_dir / "model_panel_imputation_summary.csv"
     variable_map_path = panel_dir / "model_panel_variable_map.csv"
-    coverage_summary.to_csv(coverage_summary_path, index=False)
-    imputation_summary.to_csv(imputation_summary_path, index=False)
-    variable_map.to_csv(variable_map_path, index=False)
+    quality_summary_path = panel_dir / "model_panel_quality_summary.csv"
+    predictor_reassessment_path = panel_dir / PREDICTOR_REASSESSMENT_FILE_NAME
+    _write_csv_with_explicit_nan(coverage_summary, coverage_summary_path)
+    _write_csv_with_explicit_nan(imputation_summary, imputation_summary_path)
+    _write_csv_with_explicit_nan(variable_map, variable_map_path)
+    _write_csv_with_explicit_nan(quality_summary, quality_summary_path)
+    _write_csv_with_explicit_nan(predictor_reassessment, predictor_reassessment_path)
 
     return {
         "panel_paths": panel_paths,
         "coverage_summary": coverage_summary,
         "imputation_summary": imputation_summary,
         "variable_map": variable_map,
+        "quality_summary": quality_summary,
+        "predictor_reassessment": predictor_reassessment,
         "panel_dir_path": str(panel_dir),
         "coverage_summary_path": str(coverage_summary_path),
         "imputation_summary_path": str(imputation_summary_path),
         "variable_map_path": str(variable_map_path),
+        "quality_summary_path": str(quality_summary_path),
+        "predictor_reassessment_path": str(predictor_reassessment_path),
     }
+
+
+def run_model_panel_cleaning_versions(
+    raw_dir: Path = RAW_PREDICTORS_V1_DIR,
+    processed_dir: Path = PROCESSED_DIR,
+    versioned_panel_definitions: dict[str, list[PanelDefinition]] | None = None,
+) -> dict[str, object]:
+    """Build the original v1 panels and the revised v2 panel package."""
+    versioned_panel_definitions = versioned_panel_definitions or {
+        "v1": default_panel_definitions(),
+        "v2": v2_panel_definitions(),
+    }
+    outputs: dict[str, object] = {}
+    for version, definitions in versioned_panel_definitions.items():
+        output_subdir_name = MODEL_PANEL_SUBDIR_NAME if version == "v1" else f"{MODEL_PANEL_SUBDIR_NAME}/{version}"
+        outputs[version] = run_model_panel_cleaning(
+            raw_dir=raw_dir,
+            processed_dir=processed_dir,
+            panel_definitions=definitions,
+            output_subdir_name=output_subdir_name,
+        )
+
+    if "v1" in outputs and "v2" in outputs:
+        v1_outputs = outputs["v1"]
+        v2_outputs = outputs["v2"]
+        if isinstance(v1_outputs, dict) and isinstance(v2_outputs, dict):
+            reassessment = v1_outputs["predictor_reassessment"]
+            v2_reassessment_path = Path(str(v2_outputs["panel_dir_path"])) / PREDICTOR_REASSESSMENT_FILE_NAME
+            _write_csv_with_explicit_nan(reassessment, v2_reassessment_path)
+            v2_outputs["predictor_reassessment"] = reassessment
+            v2_outputs["predictor_reassessment_path"] = str(v2_reassessment_path)
+
+    outputs["active_version"] = "v2" if "v2" in outputs else next(iter(versioned_panel_definitions))
+    return outputs
+
+
+def build_main_predictor_reassessment(panel: pd.DataFrame, definition: PanelDefinition) -> pd.DataFrame:
+    """Summarize literature-and-coverage support for the v2 main-predictor reassessment."""
+    rows: list[dict[str, object]] = []
+    predictor_specs = list(definition.predictors)
+    for lag_scheme, suffix in [("lag1", "_lag1"), ("lag1_3_mean", "_lag1_3_mean")]:
+        columns = [f"{spec.variable}{suffix}" for spec in predictor_specs]
+        complete_all_mask = _complete_feature_mask(panel, columns)
+        complete_all_rows = int(complete_all_mask.sum())
+        for spec, column in zip(predictor_specs, columns, strict=False):
+            without_columns = [other for other in columns if other != column]
+            without_mask = _complete_feature_mask(panel, without_columns)
+            variable_mask = panel[column].notna() if column in panel.columns else pd.Series(False, index=panel.index)
+            decision = _main_v2_decision(spec.variable)
+            rows.append(
+                {
+                    "panel_id": definition.panel_id,
+                    "variable": spec.variable,
+                    "label": spec.label,
+                    "lag_scheme": lag_scheme,
+                    "evidence_strength": decision["evidence_strength"],
+                    "v2_decision": decision["v2_decision"],
+                    "decision_reason": decision["decision_reason"],
+                    "rows": int(len(panel)),
+                    "nonmissing_rows": int(variable_mask.sum()),
+                    "missing_rows": int((~variable_mask).sum()),
+                    "nonmissing_countries": _country_count(panel, variable_mask),
+                    "complete_all_rows": complete_all_rows,
+                    "complete_without_variable_rows": int(without_mask.sum()),
+                    "gain_if_removed": int(without_mask.sum() - complete_all_rows),
+                    "share_nonmissing": float(variable_mask.mean()) if len(panel) else 0.0,
+                }
+            )
+    return pd.DataFrame(rows, columns=_predictor_reassessment_columns())
+
+
+def _main_v2_decision(variable: str) -> dict[str, str]:
+    if variable in MAIN_V2_EXCLUDED_PREDICTORS:
+        return MAIN_V2_EXCLUDED_PREDICTORS[variable]
+    return {
+        "evidence_strength": MAIN_PREDICTOR_EVIDENCE_STRENGTH.get(variable, "not_classified"),
+        "v2_decision": "retain_main_v2",
+        "decision_reason": MAIN_RETAINED_DECISION_REASON,
+    }
+
+
+def _complete_feature_mask(panel: pd.DataFrame, columns: list[str]) -> pd.Series:
+    if not columns:
+        return pd.Series(True, index=panel.index)
+    present_columns = [column for column in columns if column in panel.columns]
+    if len(present_columns) != len(columns):
+        return pd.Series(False, index=panel.index)
+    return panel[present_columns].notna().all(axis=1)
+
+
+def _predictor_reassessment_columns() -> list[str]:
+    return [
+        "panel_id",
+        "variable",
+        "label",
+        "lag_scheme",
+        "evidence_strength",
+        "v2_decision",
+        "decision_reason",
+        "rows",
+        "nonmissing_rows",
+        "missing_rows",
+        "nonmissing_countries",
+        "complete_all_rows",
+        "complete_without_variable_rows",
+        "gain_if_removed",
+        "share_nonmissing",
+    ]
+
+
+def _empty_predictor_reassessment() -> pd.DataFrame:
+    return pd.DataFrame(columns=_predictor_reassessment_columns())
 
 
 def load_manifest(raw_dir: Path = RAW_PREDICTORS_V1_DIR) -> pd.DataFrame:
@@ -169,7 +378,8 @@ def load_selected_raw_series(
     raw_dir: Path,
     manifest: pd.DataFrame,
     variables: Iterable[str],
-) -> tuple[pd.DataFrame, pd.DataFrame]:
+    return_quality_summary: bool = False,
+) -> tuple[pd.DataFrame, pd.DataFrame] | tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Read selected raw files into one long country-year table."""
     requested = set(variables)
     frames: list[pd.DataFrame] = []
@@ -217,7 +427,11 @@ def load_selected_raw_series(
     long = long.dropna(subset=["year"]).copy()
     long["year"] = long["year"].astype(int)
     long = _deduplicate_long_series(long)
-    return long.reset_index(drop=True), pd.DataFrame(map_rows)
+    long, quality_summary = apply_variable_quality_rules(long)
+    long = long.reset_index(drop=True)
+    if return_quality_summary:
+        return long, pd.DataFrame(map_rows), quality_summary
+    return long, pd.DataFrame(map_rows)
 
 
 def load_target_series(raw_dir: Path, manifest: pd.DataFrame) -> tuple[pd.DataFrame, int, int, pd.DataFrame]:
@@ -345,6 +559,9 @@ def build_model_panel(
     panel = _target_grid(anchor_countries, country_names, target_year_start, target_year_end)
     target_values = target_wide.loc[:, ["country_code", "year", TARGET_VARIABLE]]
     panel = panel.merge(target_values, on=["country_code", "year"], how="left")
+    anchor_year_grid_rows = len(panel)
+    target_missing_rows_dropped = int(panel[TARGET_VARIABLE].isna().sum())
+    panel = panel.loc[panel[TARGET_VARIABLE].notna()].copy()
 
     for variable in predictor_names:
         panel = _add_lag_columns(panel, predictor_grid, variable)
@@ -359,6 +576,9 @@ def build_model_panel(
         imputation_counts,
         target_year_start,
         target_year_end,
+        len(anchor_countries),
+        anchor_year_grid_rows,
+        target_missing_rows_dropped,
     )
     return panel, metadata
 
@@ -446,6 +666,67 @@ def _deduplicate_long_series(long: pd.DataFrame) -> pd.DataFrame:
         .reset_index()
         .loc[:, ["variable", "country_code", "country_name", "year", "value"]]
     )
+
+
+def apply_variable_quality_rules(long: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Apply variable-specific source-data quality rules before panel construction."""
+    cleaned = long.copy()
+    summary_rows: list[dict[str, object]] = []
+    fossil_mask = cleaned["variable"].eq("fossil_energy_share")
+    rules = [
+        {
+            "rule_id": "fossil_energy_share_negative",
+            "mask": fossil_mask & cleaned["value"].lt(0),
+            "reason": "Fossil energy share is a percentage-style variable and cannot be negative.",
+        },
+        {
+            "rule_id": "fossil_energy_share_exact_zero",
+            "mask": fossil_mask & cleaned["value"].eq(0),
+            "reason": (
+                "World Bank WDI EG.USE.COMM.FO.ZS contains exact country-year zeros that are implausible "
+                "for fossil fuel energy consumption as a share of total energy use; these are treated as "
+                "source-data anomalies rather than observed zero fossil-energy use."
+            ),
+        },
+    ]
+    for rule in rules:
+        affected = cleaned.loc[rule["mask"] & cleaned["value"].notna()]
+        summary_rows.append(_quality_summary_row(rule["rule_id"], affected, rule["reason"]))
+        if not affected.empty:
+            cleaned.loc[affected.index, "value"] = pd.NA
+    return cleaned, pd.DataFrame(summary_rows, columns=_quality_summary_columns())
+
+
+def _quality_summary_row(rule_id: str, affected: pd.DataFrame, reason: str) -> dict[str, object]:
+    return {
+        "rule_id": rule_id,
+        "variable": "fossil_energy_share",
+        "values_set_to_nan": int(len(affected)),
+        "affected_countries": int(affected["country_code"].nunique()) if not affected.empty else 0,
+        "first_year": int(affected["year"].min()) if not affected.empty else pd.NA,
+        "last_year": int(affected["year"].max()) if not affected.empty else pd.NA,
+        "reason": reason,
+    }
+
+
+def _quality_summary_columns() -> list[str]:
+    return [
+        "rule_id",
+        "variable",
+        "values_set_to_nan",
+        "affected_countries",
+        "first_year",
+        "last_year",
+        "reason",
+    ]
+
+
+def _empty_quality_summary() -> pd.DataFrame:
+    return pd.DataFrame(columns=_quality_summary_columns())
+
+
+def _write_csv_with_explicit_nan(data: pd.DataFrame, output_path: Path) -> None:
+    data.replace("", pd.NA).to_csv(output_path, index=False, na_rep=CSV_NA_REPRESENTATION)
 
 
 def _empty_long_frame() -> pd.DataFrame:
@@ -560,6 +841,9 @@ def _panel_metadata(
     imputation_counts: pd.DataFrame,
     target_year_start: int,
     target_year_end: int,
+    anchor_country_count: int,
+    anchor_year_grid_rows: int,
+    target_missing_rows_dropped: int,
 ) -> dict[str, object]:
     lag1_columns = [column for column in feature_columns if column.endswith("_lag1")]
     lag_mean_columns = [column for column in feature_columns if column.endswith("_lag1_3_mean")]
@@ -580,6 +864,9 @@ def _panel_metadata(
         "predictor_window_end": definition.raw_end_year,
         "target_year_start": target_year_start,
         "target_year_end": target_year_end,
+        "anchor_countries": int(anchor_country_count),
+        "anchor_year_grid_rows": int(anchor_year_grid_rows),
+        "target_missing_rows_dropped": int(target_missing_rows_dropped),
         "countries": int(panel["country_code"].nunique()),
         "rows": int(len(panel)),
         "target_non_missing": int(panel[TARGET_VARIABLE].notna().sum()),
@@ -650,14 +937,22 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    outputs = run_model_panel_cleaning(args.raw_dir, args.processed_dir)
+    outputs = run_model_panel_cleaning_versions(args.raw_dir, args.processed_dir)
     print("Wrote model panel files:")
-    for file_name in outputs["panel_paths"]:
-        print(f"- {file_name}")
-    print(f"Panel directory: {outputs['panel_dir_path']}")
-    print(f"Coverage summary: {outputs['coverage_summary_path']}")
-    print(f"Imputation summary: {outputs['imputation_summary_path']}")
-    print(f"Variable map: {outputs['variable_map_path']}")
+    for version in ["v1", "v2"]:
+        if version not in outputs or not isinstance(outputs[version], dict):
+            continue
+        version_outputs = outputs[version]
+        print(f"{version}:")
+        for file_name in version_outputs["panel_paths"]:
+            print(f"- {file_name}")
+        print(f"  Panel directory: {version_outputs['panel_dir_path']}")
+        print(f"  Coverage summary: {version_outputs['coverage_summary_path']}")
+        print(f"  Imputation summary: {version_outputs['imputation_summary_path']}")
+        print(f"  Variable map: {version_outputs['variable_map_path']}")
+        print(f"  Quality summary: {version_outputs['quality_summary_path']}")
+        print(f"  Predictor reassessment: {version_outputs['predictor_reassessment_path']}")
+    print(f"Active panel version: {outputs['active_version']}")
 
 
 if __name__ == "__main__":

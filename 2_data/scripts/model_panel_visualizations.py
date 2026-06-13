@@ -18,8 +18,8 @@ PANEL_FAMILY_LABELS = {
     "subc": "Sub C",
 }
 SAMPLE_STAGE_LABELS = {
-    "rows": "Anchor-year grid",
-    "target_non_missing": "Target observed",
+    "anchor_year_grid_rows": "Anchor-year grid",
+    "rows": "Target-observed panel",
     "target_lag1_complete_rows": "Target + lag1 complete",
     "target_lag1_3_mean_complete_rows": "Target + lag1-3 mean complete",
 }
@@ -37,7 +37,7 @@ def make_model_panel_figures(
 
     coverage = pd.read_csv(panel_dir / "model_panel_coverage_summary.csv")
     imputation = pd.read_csv(panel_dir / "model_panel_imputation_summary.csv")
-    main_panel = pd.read_csv(panel_dir / "model_panel_main_no_imputation.csv")
+    no_imputation_panels = _load_no_imputation_panels(panel_dir, coverage)
 
     paths: dict[str, str] = {}
     paths["sample_funnel"] = _save_figure(
@@ -50,20 +50,15 @@ def make_model_panel_figures(
         figures_dir / "model_panel_prediction_safe_comparison.png",
         figures_dir / "model_panel_prediction_safe_comparison.pdf",
     )
-    paths["main_missingness_heatmap"] = _save_figure(
-        _make_main_missingness_heatmap(main_panel),
-        figures_dir / "model_panel_main_missingness_heatmap.png",
-        figures_dir / "model_panel_main_missingness_heatmap.pdf",
+    paths["feature_availability_heatmap"] = _save_figure(
+        _make_feature_availability_heatmap(no_imputation_panels),
+        figures_dir / "model_panel_feature_availability_heatmap.png",
+        figures_dir / "model_panel_feature_availability_heatmap.pdf",
     )
-    paths["rta_distribution"] = _save_figure(
-        _make_rta_distribution(main_panel),
-        figures_dir / "model_panel_rta_distribution.png",
-        figures_dir / "model_panel_rta_distribution.pdf",
-    )
-    paths["imputation_audit"] = _save_figure(
-        _make_imputation_audit_figure(imputation),
-        figures_dir / "model_panel_imputation_audit.png",
-        figures_dir / "model_panel_imputation_audit.pdf",
+    paths["missingness_burden"] = _save_figure(
+        _make_missingness_burden_figure(coverage, imputation),
+        figures_dir / "model_panel_missingness_burden.png",
+        figures_dir / "model_panel_missingness_burden.pdf",
     )
     return paths
 
@@ -126,15 +121,15 @@ def _make_prediction_safe_comparison_figure(coverage: pd.DataFrame):
     return fig
 
 
-def _make_main_missingness_heatmap(main_panel: pd.DataFrame):
+def _make_feature_availability_heatmap(no_imputation_panels: dict[str, pd.DataFrame]):
     import matplotlib.pyplot as plt
     import seaborn as sns
 
-    availability = _main_panel_availability_by_year(main_panel)
+    availability = _panel_feature_availability_by_year(no_imputation_panels)
     plot_data = availability.pivot(index="feature", columns="year", values="available_share")
 
     sns.set_theme(style="white", context="paper")
-    fig_height = max(5.5, 0.34 * len(plot_data))
+    fig_height = max(6.4, 0.28 * len(plot_data))
     fig, ax = plt.subplots(figsize=(13.8, fig_height), constrained_layout=True)
     sns.heatmap(
         plot_data,
@@ -146,70 +141,73 @@ def _make_main_missingness_heatmap(main_panel: pd.DataFrame):
         cbar_kws={"label": "Non-missing share"},
         ax=ax,
     )
-    ax.set_title("Main Panel Feature Availability by Target Year", loc="left", fontweight="bold")
+    _draw_panel_group_separators(ax, availability)
+    ax.set_title("Feature Availability by Target Year, All No-Imputation Panels", loc="left", fontweight="bold")
     ax.set_xlabel("Target year")
     ax.set_ylabel("")
     return fig
 
 
-def _make_rta_distribution(main_panel: pd.DataFrame):
+def _make_missingness_burden_figure(coverage: pd.DataFrame, imputation: pd.DataFrame):
     import matplotlib.pyplot as plt
     import seaborn as sns
 
-    column = "env_technology_rta_lag1"
-    values = main_panel[column].dropna()
-    values = values[values > 0]
-    if values.empty:
-        raise ValueError(f"{column} has no positive values to plot.")
-    bins = np.geomspace(values.min(), values.max(), 42)
+    no_imputation = _ordered_coverage(coverage, "no_imputation")
+    retention_rows: list[dict[str, object]] = []
+    for _, row in no_imputation.iterrows():
+        denominator = row["rows"] if row["rows"] else np.nan
+        for column, label in [
+            ("target_lag1_complete_rows", "Lag1 complete"),
+            ("target_lag1_3_mean_complete_rows", "Lag1-3 mean complete"),
+        ]:
+            retention_rows.append(
+                {
+                    "panel_id": row["panel_id"],
+                    "panel": PANEL_FAMILY_LABELS.get(row["panel_id"], row["panel_id"]),
+                    "lag_scheme": label,
+                    "retained_share": row[column] / denominator,
+                }
+            )
+    retention = pd.DataFrame(retention_rows)
 
-    sns.set_theme(style="whitegrid", context="paper")
-    fig, ax = plt.subplots(figsize=(9.5, 5.2), constrained_layout=True)
-    ax.hist(values, bins=bins, color="#405C82", alpha=0.86, edgecolor="white", linewidth=0.5)
-    ax.axvline(1, color="#A33F2D", linewidth=2, linestyle="--", label="OECD RTA benchmark = 1")
-    ax.set_xscale("log")
-    ax.set_title("Environmental-Technology RTA Distribution, Main Panel", loc="left", fontweight="bold")
-    ax.set_xlabel("Lagged RTA index, log scale")
-    ax.set_ylabel("Observed country-year cells")
-    ax.legend(frameon=False, loc="upper right")
-    annotation = f"n={len(values):,}; median={values.median():.2f}; max={values.max():.2f}"
-    ax.text(0.01, 0.96, annotation, transform=ax.transAxes, va="top", ha="left")
-    _despine(ax)
-    return fig
-
-
-def _make_imputation_audit_figure(imputation: pd.DataFrame):
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-
-    plot_data = imputation.loc[
-        imputation["imputation"].eq("linear_interpolated") & imputation["imputed_values"].gt(0)
-    ].copy()
-    if plot_data.empty:
-        raise ValueError("No imputed values found for the retrospective sensitivity panels.")
-    plot_data["panel"] = plot_data["panel_id"].map(PANEL_FAMILY_LABELS)
-    plot_data["variable_label"] = plot_data["variable"].str.replace("_", " ", regex=False)
-    plot_data = plot_data.sort_values(["panel_id", "imputed_values", "variable_label"], ascending=[True, False, True])
-
-    sns.set_theme(style="whitegrid", context="paper")
-    panels = list(plot_data["panel"].drop_duplicates())
-    fig, axes = plt.subplots(
-        nrows=len(panels),
-        ncols=1,
-        figsize=(10.8, max(5.0, 2.1 * len(panels))),
-        constrained_layout=True,
-        sharex=False,
+    fill = (
+        imputation.loc[imputation["imputation"].eq("linear_interpolated")]
+        .groupby("panel_id", as_index=False)["imputed_values"]
+        .sum()
     )
-    axes = np.atleast_1d(axes)
-    for ax, panel in zip(axes, panels, strict=False):
-        panel_data = plot_data.loc[plot_data["panel"].eq(panel)]
-        sns.barplot(data=panel_data, y="variable_label", x="imputed_values", color="#C77C5A", ax=ax)
-        ax.set_title(panel, loc="left", fontweight="bold")
-        ax.set_xlabel("Values filled by linear interpolation")
-        ax.set_ylabel("")
-        _label_horizontal_bars(ax)
-        _despine(ax)
-    fig.suptitle("Retrospective Interpolation Audit by Predictor", x=0.02, ha="left", fontweight="bold")
+    fill = no_imputation[["panel_id"]].merge(fill, on="panel_id", how="left").fillna({"imputed_values": 0})
+    fill["panel"] = fill["panel_id"].map(PANEL_FAMILY_LABELS)
+
+    sns.set_theme(style="whitegrid", context="paper")
+    fig, axes = plt.subplots(
+        nrows=2,
+        ncols=1,
+        figsize=(10.8, 7.6),
+        constrained_layout=True,
+    )
+    sns.barplot(
+        data=retention,
+        x="panel",
+        y="retained_share",
+        hue="lag_scheme",
+        palette=["#405C82", "#D99B52"],
+        ax=axes[0],
+    )
+    axes[0].set_title("No-Imputation Complete-Feature Retention", loc="left", fontweight="bold")
+    axes[0].set_xlabel("")
+    axes[0].set_ylabel("Share of target-observed rows")
+    axes[0].set_ylim(0, 1)
+    axes[0].legend(title="", frameon=False, loc="upper right")
+    _label_percentage_bars(axes[0])
+    _despine(axes[0])
+
+    sns.barplot(data=fill, x="panel", y="imputed_values", color="#C77C5A", ax=axes[1])
+    axes[1].set_title("Retrospective Linear-Interpolation Fill Scale", loc="left", fontweight="bold")
+    axes[1].set_xlabel("")
+    axes[1].set_ylabel("Predictor cells filled")
+    _label_grouped_bars(axes[1])
+    _despine(axes[1])
+    fig.suptitle("Global Missingness Burden by Model Panel", x=0.02, ha="left", fontweight="bold")
     return fig
 
 
@@ -219,21 +217,58 @@ def _ordered_coverage(coverage: pd.DataFrame, imputation: str) -> pd.DataFrame:
     return ordered.sort_values("panel_order")
 
 
-def _main_panel_availability_by_year(main_panel: pd.DataFrame) -> pd.DataFrame:
-    feature_columns = [
-        column
-        for column in main_panel.columns
-        if column not in {"country_code", "country_name", "year", TARGET_VARIABLE}
-    ]
+def _load_no_imputation_panels(panel_dir: Path, coverage: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    panel_ids = _ordered_coverage(coverage, "no_imputation")["panel_id"].drop_duplicates()
+    panels: dict[str, pd.DataFrame] = {}
+    for panel_id in panel_ids:
+        panel_path = panel_dir / f"model_panel_{panel_id}_no_imputation.csv"
+        if panel_path.exists():
+            panels[str(panel_id)] = pd.read_csv(panel_path)
+    if not panels:
+        raise FileNotFoundError(f"No no-imputation panel CSVs found in {panel_dir}.")
+    return panels
+
+
+def _panel_feature_availability_by_year(no_imputation_panels: dict[str, pd.DataFrame]) -> pd.DataFrame:
     rows: list[dict[str, object]] = []
-    for column in feature_columns:
-        variable = column.removesuffix("_lag1_3_mean").removesuffix("_lag1")
-        suffix = "lag1-3 mean" if column.endswith("_lag1_3_mean") else "lag1"
-        feature_label = f"{variable.replace('_', ' ')} ({suffix})"
-        by_year = main_panel.groupby("year")[column].apply(lambda values: values.notna().mean())
-        for year, share in by_year.items():
-            rows.append({"feature": feature_label, "year": int(year), "available_share": float(share)})
-    return pd.DataFrame(rows)
+    excluded = {"country_code", "country_name", "year", TARGET_VARIABLE}
+    for panel_order, (panel_id, panel) in enumerate(no_imputation_panels.items()):
+        panel_label = PANEL_FAMILY_LABELS.get(panel_id, panel_id)
+        feature_columns = [column for column in panel.columns if column not in excluded]
+        for feature_order, column in enumerate(feature_columns):
+            feature_label = f"{panel_label} | {_feature_label(column)}"
+            by_year = panel.groupby("year")[column].apply(lambda values: values.notna().mean())
+            for year, share in by_year.items():
+                rows.append(
+                    {
+                        "panel_id": panel_id,
+                        "panel_order": panel_order,
+                        "feature_order": feature_order,
+                        "feature": feature_label,
+                        "year": int(year),
+                        "available_share": float(share),
+                    }
+                )
+    availability = pd.DataFrame(rows)
+    if availability.empty:
+        raise ValueError("No feature columns found in no-imputation panels.")
+    availability = availability.sort_values(["panel_order", "feature_order", "year"])
+    return availability
+
+
+def _feature_label(column: str) -> str:
+    variable = column.removesuffix("_lag1_3_mean").removesuffix("_lag1")
+    suffix = "lag1-3 mean" if column.endswith("_lag1_3_mean") else "lag1"
+    return f"{variable.replace('_', ' ')} ({suffix})"
+
+
+def _draw_panel_group_separators(ax, availability: pd.DataFrame) -> None:
+    ordered_features = availability[["feature", "panel_id", "panel_order", "feature_order"]].drop_duplicates()
+    ordered_features = ordered_features.sort_values(["panel_order", "feature_order"]).reset_index(drop=True)
+    panel_changes = ordered_features["panel_id"].ne(ordered_features["panel_id"].shift()).to_numpy()
+    for index, is_change in enumerate(panel_changes):
+        if is_change and index > 0:
+            ax.axhline(index, color="#2F3A45", linewidth=0.8)
 
 
 def _configure_matplotlib() -> None:
@@ -258,6 +293,12 @@ def _save_figure(fig, png_path: Path, pdf_path: Path) -> str:
 def _label_grouped_bars(ax) -> None:
     for container in ax.containers:
         labels = [f"{bar.get_height():,.0f}" if bar.get_height() > 0 else "" for bar in container]
+        ax.bar_label(container, labels=labels, fontsize=7, padding=2)
+
+
+def _label_percentage_bars(ax) -> None:
+    for container in ax.containers:
+        labels = [f"{bar.get_height():.0%}" if bar.get_height() > 0 else "" for bar in container]
         ax.bar_label(container, labels=labels, fontsize=7, padding=2)
 
 

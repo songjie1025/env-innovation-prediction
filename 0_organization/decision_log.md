@@ -22,13 +22,55 @@ Status options:
 
 ## Decisions
 
+### 2026-06-13: Move weak main predictors to robustness and create model-panel v2
+
+Decision:
+Create an active `v2` model-panel package under `2_data/processed/model_panels/v2/`. The v2 main model removes `fossil_energy_share` and `tertiary_enrollment` from the active main predictor set and keeps them available for robustness or exploratory analysis through the original v1 package. The v2 main model keeps the 1996-2022 raw predictor window and automatically reselects the main anchor from retained predictors. Record the reassessment in `model_panel_predictor_reassessment.csv`.
+
+Reason:
+The reassessment combines literature defensibility and panel usability before modeling. The strongest energy-innovation evidence concerns energy prices, fuel prices, carbon prices, and policy incentives rather than fossil-consumption share itself; `fossil_energy_share` is a sign-ambiguous proxy for both transition pressure and lock-in, and it creates the largest complete-case loss after source-quality corrections. `tertiary_enrollment` is a broad human-capital proxy, while the more direct innovation-capacity literature emphasizes R&D expenditure, researchers, knowledge stocks, scientific output, and university quality; it also materially reduces complete-case coverage. In the current no-imputation main panel, v2 changes the anchor from `fossil_energy_share` to `trade_openness`, expands anchor countries from 141 to 191, and raises target-plus-complete-feature rows from 944 to 1,832 for `lag1` and from 670 to 1,391 for `lag1_3_mean`.
+
+Alternatives considered:
+Keeping both variables in the active main model was rejected because it would make the main specification harder to defend while substantially reducing complete-case diagnostics. Dropping the variables entirely was rejected because they remain useful for robustness, sensitivity, or exploratory comparisons. Keeping `fossil_energy_share` as the v2 anchor was rejected because a removed predictor should not define the active main country pool. Describing the change only as a missingness-driven deletion was rejected because the decision depends on both theory and data coverage.
+
+Status:
+Active
+
+### 2026-06-12: Mark invalid fossil-energy source values as missing and serialize panel missingness as NaN
+
+Decision:
+Before lag construction, convert invalid `fossil_energy_share` source values to missing: negative values and country-level exact zeros in World Bank WDI `EG.USE.COMM.FO.ZS`. Write generated model-panel CSV missing values as the literal string `NaN` instead of blank cells. Record affected source values in `2_data/processed/model_panels/model_panel_quality_summary.csv`.
+
+Reason:
+The World Bank API and CSV download report exact zeros for country-level `EG.USE.COMM.FO.ZS`, including countries where zero fossil-fuel energy consumption is not substantively credible. The indicator is a percentage-style fossil-energy share, so negative values are also invalid. Treating these values as missing is more defensible than modeling them as observed zeros. Serializing missing values as `NaN` makes missingness visible in the delivered CSVs while preserving true missing values when read by pandas or downstream modeling code.
+
+Alternatives considered:
+Keeping the zeros as observed values was rejected because it would encode a source-data artifact as real fossil-energy structure. Dropping all rows affected by missing fossil predictors was rejected because predictor missingness should be handled later by missing-aware models or train-only imputation. Replacing missing values with numeric sentinels such as `0` or `-999` was rejected because those values could be misread as data.
+
+Status:
+Active
+
+### 2026-06-12: Drop missing-target rows from generated model panels
+
+Decision:
+Generated model-panel CSVs keep only rows where the main target `env_patent_share_inventions` is observed. Predictor missing values remain as missing values and should be handled later by missing-aware models or train-only imputation inside the modeling pipeline. Coverage summaries keep `anchor_countries`, `anchor_year_grid_rows`, and `target_missing_rows_dropped` so the pre-filter country-year grid remains auditable.
+
+Reason:
+Rows without the target cannot train or evaluate a supervised prediction model. Dropping target-missing rows at the panel stage makes the displayed panel match the intended supervised-learning sample base while avoiding unnecessary complete-case deletion caused by missing predictors.
+
+Alternatives considered:
+Keeping target-missing rows in the panel was rejected because it made the deliverable look larger than the usable supervised-learning sample. Dropping rows with any missing predictor was rejected because it would make the sample unnecessarily small and would pre-empt later missing-data modeling choices.
+
+Status:
+Active
+
 ### 2026-06-12: Store model-panel outputs in a dedicated subfolder and add readiness figures
 
 Decision:
-Write generated model-panel CSVs and panel metadata to `2_data/processed/model_panels/`, not directly to `2_data/processed/`. Add data-cleaning-stage readiness figures under `4_analysis/figures/model_panels/`: sample construction, prediction-safe versus retrospective sensitivity coverage, main-panel missingness, corrected RTA distribution, and interpolation audit.
+Write generated model-panel CSVs and panel metadata to `2_data/processed/model_panels/`, not directly to `2_data/processed/`. Add data-cleaning-stage readiness figures under `4_analysis/figures/model_panels/`: sample construction, prediction-safe versus retrospective sensitivity coverage, all-panel feature availability, and global missingness/interpolation burden.
 
 Reason:
-The processed root already contains raw audits and candidate-discovery artifacts. A dedicated model-panel subfolder keeps deliverables scannable and makes it clear which files are generated panel inputs. The figures are diagnostic rather than model-result visuals; they help defend sample construction, missingness, RTA measurement, and the decision not to use full-series interpolation as the primary prediction input.
+The processed root already contains raw audits and candidate-discovery artifacts. A dedicated model-panel subfolder keeps deliverables scannable and makes it clear which files are generated panel inputs. The figures are diagnostic rather than model-result visuals; they help defend sample construction, panel-wide feature availability, missingness pressure, and the decision not to use full-series interpolation as the primary prediction input.
 
 Alternatives considered:
 Keeping panel CSVs in the processed root was rejected because it mixes final panel candidates with upstream audit artifacts. Model-performance plots were rejected for this notebook stage because the modeling pipeline and validation design are not yet built.
@@ -60,7 +102,7 @@ Split the 20 selected predictors into one main model group and three submodel gr
 For every predictor `x`, create `x_lag1` and `x_lag1_3_mean`. Produce a no-imputation primary version and a linear-interpolated retrospective sensitivity version of each panel. The no-imputation version keeps source missing values unchanged and requires all three lag years to compute `x_lag1_3_mean`. The linear-interpolated version fills only internal gaps within the same country-predictor series before lag construction; it does not extrapolate at country-series starts or ends, and it does not impute the target, but it is not prediction-safe because it can use future endpoints. The main model uses the raw predictor window 1996-2022 and `fossil_energy_share` as the anchor variable. Submodels automatically select the predictor with the fewest covered World Bank/OECD-style 3-letter-code countries in the common raw predictor window as the anchor.
 
 Reason:
-The project is now moving from broad candidate screening to reproducible data cleaning. Separate main and submodel panels preserve the agreed predictor grouping while avoiding premature complete-case dropping across all 20 predictors. Reporting both no-imputation and retrospective linear-interpolated panels makes the sample-size tradeoff visible without making interpolation the primary prediction design. Lagged features preserve temporal ordering, and anchoring each panel on its most restrictive predictor documents the effective country and year coverage. The current `predictorsv1` files and aggregate-entity filter produce 178 main-model anchor countries for 1996-2022.
+The project is now moving from broad candidate screening to reproducible data cleaning. Separate main and submodel panels preserve the agreed predictor grouping while avoiding premature complete-case dropping across all 20 predictors. Reporting both no-imputation and retrospective linear-interpolated panels makes the sample-size tradeoff visible without making interpolation the primary prediction design. Lagged features preserve temporal ordering, and anchoring each panel on its most restrictive predictor documents the effective country and year coverage. With current `predictorsv1` files, the aggregate-entity filter, and fossil source-quality rules, v1 produces 141 main-model anchor countries for 1996-2022; active v2 re-anchors the main model after removing fossil and tertiary enrollment.
 
 Alternatives considered:
 Using only a no-imputation panel for all reporting was considered but would hide the coverage sensitivity created by internal gaps. Using linear interpolation as the main dataset was rejected because it adds assumptions and can introduce look-ahead leakage in a prediction design. Building one combined 20-predictor table was rejected because the narrow policy and R&D variables would make the main sample unnecessarily small. Manually setting submodel anchors was rejected in favor of a reproducible coverage-based rule. Extrapolating missing values at the beginning or end of a country series was rejected because it would add stronger assumptions and potential timing risk.
