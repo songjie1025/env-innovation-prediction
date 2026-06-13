@@ -11,9 +11,15 @@ from data_common import PROCESSED_DIR, RAW_PREDICTORS_V1_DIR, filter_country_row
 
 
 TARGET_VARIABLE = "env_patent_share_inventions"
+ROBUSTNESS_TARGET_VARIABLE = "env_patents_per_million"
+TARGET_LABELS = {
+    "env_patent_share_inventions": "Environment-related patent share of inventions",
+    "env_patents_per_million": "Environment-related patents per million people",
+}
 MANIFEST_FILE_NAME = "raw_download_manifest.csv"
 MODEL_PANEL_SUBDIR_NAME = "model_panels"
 MODEL_PANEL_V2_SUBDIR_NAME = f"{MODEL_PANEL_SUBDIR_NAME}/v2"
+MODEL_PANEL_ROBUSTNESS_SUBDIR_NAME = f"{MODEL_PANEL_SUBDIR_NAME}/robustness"
 CSV_NA_REPRESENTATION = "NaN"
 PREDICTOR_REASSESSMENT_FILE_NAME = "model_panel_predictor_reassessment.csv"
 IMPUTATION_MODES = ["none", "linear_interpolated"]
@@ -166,6 +172,7 @@ def run_model_panel_cleaning(
     processed_dir: Path = PROCESSED_DIR,
     panel_definitions: list[PanelDefinition] | None = None,
     output_subdir_name: str = MODEL_PANEL_SUBDIR_NAME,
+    target_variable: str = TARGET_VARIABLE,
 ) -> dict[str, object]:
     """Build all requested lagged model panels under processed_dir/model_panels."""
     panel_definitions = panel_definitions or default_panel_definitions()
@@ -178,7 +185,7 @@ def run_model_panel_cleaning(
         all_predictors,
         return_quality_summary=True,
     )
-    target_wide, target_first_year, target_last_year, target_map = load_target_series(raw_dir, manifest)
+    target_wide, target_first_year, target_last_year, target_map = load_target_series(raw_dir, manifest, target_variable)
 
     panel_dir = processed_dir / output_subdir_name
     panel_dir.mkdir(parents=True, exist_ok=True)
@@ -192,7 +199,7 @@ def run_model_panel_cleaning(
     for definition in panel_definitions:
         resolved = resolve_panel_definition(definition, predictor_long)
         predictor_names = [spec.variable for spec in resolved.predictors]
-        panel_variable_rows.extend(_panel_variable_map_rows(resolved, base_variable_map, target_map))
+        panel_variable_rows.extend(_panel_variable_map_rows(resolved, base_variable_map, target_map, target_variable))
 
         for imputation in IMPUTATION_MODES:
             panel, metadata = build_model_panel(
@@ -202,6 +209,7 @@ def run_model_panel_cleaning(
                 imputation=imputation,
                 target_first_year=target_first_year,
                 target_last_year=target_last_year,
+                target_variable=target_variable,
             )
             if resolved.panel_id == "main" and imputation == "none":
                 main_no_imputation_panel = panel.copy()
@@ -243,6 +251,8 @@ def run_model_panel_cleaning(
     _write_csv_with_explicit_nan(predictor_reassessment, predictor_reassessment_path)
 
     return {
+        "target_variable": target_variable,
+        "target_label": _target_label(target_variable),
         "panel_paths": panel_paths,
         "coverage_summary": coverage_summary,
         "imputation_summary": imputation_summary,
@@ -290,6 +300,24 @@ def run_model_panel_cleaning_versions(
 
     outputs["active_version"] = "v2" if "v2" in outputs else next(iter(versioned_panel_definitions))
     return outputs
+
+
+def run_robustness_target_panel_cleaning(
+    raw_dir: Path = RAW_PREDICTORS_V1_DIR,
+    processed_dir: Path = PROCESSED_DIR,
+    target_variable: str = ROBUSTNESS_TARGET_VARIABLE,
+    panel_definitions: list[PanelDefinition] | None = None,
+    version: str = "v2",
+) -> dict[str, object]:
+    """Build robustness target panels using the active v2 predictor specification."""
+    output_subdir_name = f"{MODEL_PANEL_ROBUSTNESS_SUBDIR_NAME}/{target_variable}/{version}"
+    return run_model_panel_cleaning(
+        raw_dir=raw_dir,
+        processed_dir=processed_dir,
+        panel_definitions=panel_definitions or v2_panel_definitions(),
+        output_subdir_name=output_subdir_name,
+        target_variable=target_variable,
+    )
 
 
 def build_main_predictor_reassessment(panel: pd.DataFrame, definition: PanelDefinition) -> pd.DataFrame:
@@ -434,13 +462,17 @@ def load_selected_raw_series(
     return long, pd.DataFrame(map_rows)
 
 
-def load_target_series(raw_dir: Path, manifest: pd.DataFrame) -> tuple[pd.DataFrame, int, int, pd.DataFrame]:
-    target_long, target_map = load_selected_raw_series(raw_dir, manifest, [TARGET_VARIABLE])
-    target_wide = target_long.rename(columns={"value": TARGET_VARIABLE})
-    target_wide = target_wide.loc[:, ["country_code", "country_name", "year", TARGET_VARIABLE]]
-    non_missing = target_wide.dropna(subset=[TARGET_VARIABLE])
+def load_target_series(
+    raw_dir: Path,
+    manifest: pd.DataFrame,
+    target_variable: str = TARGET_VARIABLE,
+) -> tuple[pd.DataFrame, int, int, pd.DataFrame]:
+    target_long, target_map = load_selected_raw_series(raw_dir, manifest, [target_variable])
+    target_wide = target_long.rename(columns={"value": target_variable})
+    target_wide = target_wide.loc[:, ["country_code", "country_name", "year", target_variable]]
+    non_missing = target_wide.dropna(subset=[target_variable])
     if non_missing.empty:
-        raise ValueError(f"Target variable {TARGET_VARIABLE} has no non-missing observations.")
+        raise ValueError(f"Target variable {target_variable} has no non-missing observations.")
     return target_wide, int(non_missing["year"].min()), int(non_missing["year"].max()), target_map
 
 
@@ -527,6 +559,7 @@ def build_model_panel(
     imputation: str,
     target_first_year: int,
     target_last_year: int,
+    target_variable: str = TARGET_VARIABLE,
 ) -> tuple[pd.DataFrame, dict[str, object]]:
     """Create one lagged panel for one panel definition and imputation mode."""
     if imputation not in IMPUTATION_MODES:
@@ -557,17 +590,17 @@ def build_model_panel(
     )
     predictor_grid, imputation_counts = _apply_imputation(predictor_grid, imputation)
     panel = _target_grid(anchor_countries, country_names, target_year_start, target_year_end)
-    target_values = target_wide.loc[:, ["country_code", "year", TARGET_VARIABLE]]
+    target_values = target_wide.loc[:, ["country_code", "year", target_variable]]
     panel = panel.merge(target_values, on=["country_code", "year"], how="left")
     anchor_year_grid_rows = len(panel)
-    target_missing_rows_dropped = int(panel[TARGET_VARIABLE].isna().sum())
-    panel = panel.loc[panel[TARGET_VARIABLE].notna()].copy()
+    target_missing_rows_dropped = int(panel[target_variable].isna().sum())
+    panel = panel.loc[panel[target_variable].notna()].copy()
 
     for variable in predictor_names:
         panel = _add_lag_columns(panel, predictor_grid, variable)
 
     feature_columns = [f"{variable}_{suffix}" for variable in predictor_names for suffix in ["lag1", "lag1_3_mean"]]
-    panel = panel.loc[:, ["country_code", "country_name", "year", TARGET_VARIABLE, *feature_columns]]
+    panel = panel.loc[:, ["country_code", "country_name", "year", target_variable, *feature_columns]]
     metadata = _panel_metadata(
         panel,
         definition,
@@ -579,6 +612,7 @@ def build_model_panel(
         len(anchor_countries),
         anchor_year_grid_rows,
         target_missing_rows_dropped,
+        target_variable,
     )
     return panel, metadata
 
@@ -844,10 +878,11 @@ def _panel_metadata(
     anchor_country_count: int,
     anchor_year_grid_rows: int,
     target_missing_rows_dropped: int,
+    target_variable: str = TARGET_VARIABLE,
 ) -> dict[str, object]:
     lag1_columns = [column for column in feature_columns if column.endswith("_lag1")]
     lag_mean_columns = [column for column in feature_columns if column.endswith("_lag1_3_mean")]
-    target_mask = panel[TARGET_VARIABLE].notna()
+    target_mask = panel[target_variable].notna()
     lag1_complete_mask = panel[lag1_columns].notna().all(axis=1) if lag1_columns else pd.Series(False, index=panel.index)
     lag_mean_complete_mask = (
         panel[lag_mean_columns].notna().all(axis=1) if lag_mean_columns else pd.Series(False, index=panel.index)
@@ -856,6 +891,7 @@ def _panel_metadata(
     target_lag_mean_complete_mask = target_mask & lag_mean_complete_mask
     return {
         "panel_id": definition.panel_id,
+        "target_variable": target_variable,
         "imputation": _imputation_output_label(imputation),
         "recommended_use": IMPUTATION_RECOMMENDED_USE[imputation],
         "prediction_safe": bool(imputation == "none"),
@@ -869,7 +905,7 @@ def _panel_metadata(
         "target_missing_rows_dropped": int(target_missing_rows_dropped),
         "countries": int(panel["country_code"].nunique()),
         "rows": int(len(panel)),
-        "target_non_missing": int(panel[TARGET_VARIABLE].notna().sum()),
+        "target_non_missing": int(panel[target_variable].notna().sum()),
         "lag1_complete_rows": int(lag1_complete_mask.sum()) if lag1_columns else 0,
         "lag1_3_mean_complete_rows": int(lag_mean_complete_mask.sum()) if lag_mean_columns else 0,
         "target_lag1_complete_rows": int(target_lag1_complete_mask.sum()),
@@ -891,6 +927,10 @@ def _imputation_output_label(imputation: str) -> str:
     return IMPUTATION_OUTPUT_LABELS[imputation]
 
 
+def _target_label(target_variable: str) -> str:
+    return TARGET_LABELS.get(target_variable, target_variable.replace("_", " "))
+
+
 def _country_count(panel: pd.DataFrame, mask: pd.Series) -> int:
     return int(panel.loc[mask, "country_code"].nunique())
 
@@ -899,12 +939,13 @@ def _panel_variable_map_rows(
     definition: PanelDefinition,
     base_variable_map: pd.DataFrame,
     target_map: pd.DataFrame,
+    target_variable: str = TARGET_VARIABLE,
 ) -> list[dict[str, object]]:
     rows = []
     combined_map = pd.concat([target_map, base_variable_map], ignore_index=True)
-    variables = [TARGET_VARIABLE, *[spec.variable for spec in definition.predictors]]
+    variables = [target_variable, *[spec.variable for spec in definition.predictors]]
     labels = {spec.variable: spec.label for spec in definition.predictors}
-    labels[TARGET_VARIABLE] = "Environment-related patent share of inventions"
+    labels[target_variable] = _target_label(target_variable)
     for variable in variables:
         match = combined_map.loc[combined_map["variable"].eq(variable)]
         source_row = match.iloc[0].to_dict() if not match.empty else {}
@@ -912,7 +953,7 @@ def _panel_variable_map_rows(
             {
                 "panel_id": definition.panel_id,
                 "variable": variable,
-                "role": "target" if variable == TARGET_VARIABLE else "predictor",
+                "role": "target" if variable == target_variable else "predictor",
                 "label": labels.get(variable, variable),
                 "is_anchor": bool(variable == definition.anchor_variable),
                 "dataset_id": source_row.get("dataset_id", ""),

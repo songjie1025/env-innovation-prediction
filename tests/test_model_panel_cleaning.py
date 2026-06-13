@@ -18,6 +18,7 @@ from model_panel_cleaning import (  # noqa: E402
     default_panel_definitions,
     load_selected_raw_series,
     run_model_panel_cleaning,
+    run_robustness_target_panel_cleaning,
     run_model_panel_cleaning_versions,
     v2_panel_definitions,
 )
@@ -607,6 +608,101 @@ class ModelPanelCleaningTests(unittest.TestCase):
             self.assertNotIn("tertiary_enrollment", set(v2_variable_map["variable"]))
             self.assertIn("fossil_energy_share", set(v2_reassessment["variable"]))
             self.assertIn("tertiary_enrollment", set(v2_reassessment["variable"]))
+
+    def test_run_robustness_target_panel_cleaning_writes_second_target_v2_outputs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw_dir = Path(tmp) / "raw"
+            processed_dir = Path(tmp) / "processed"
+            raw_dir.mkdir()
+            main_target_path = raw_dir / "main_target.csv"
+            robustness_target_path = raw_dir / "robustness_target.csv"
+            gdp_path = raw_dir / "gdp.csv"
+            pd.DataFrame(
+                {
+                    "REF_AREA": ["USA", "CAN"],
+                    "Reference area": ["United States", "Canada"],
+                    "TIME_PERIOD": [1999, 1999],
+                    "OBS_VALUE": [1.0, 2.0],
+                }
+            ).to_csv(main_target_path, index=False)
+            pd.DataFrame(
+                {
+                    "REF_AREA": ["USA", "CAN"],
+                    "Reference area": ["United States", "Canada"],
+                    "TIME_PERIOD": [1999, 1999],
+                    "OBS_VALUE": [10.0, None],
+                }
+            ).to_csv(robustness_target_path, index=False)
+            pd.DataFrame(
+                {
+                    "dataset_id": ["world_bank_wdi"] * 6,
+                    "variable": ["gdp_constant_2015_usd"] * 6,
+                    "source_variable": ["NY.GDP.MKTP.KD"] * 6,
+                    "country_code": ["USA", "USA", "USA", "CAN", "CAN", "CAN"],
+                    "country_name": ["United States", "United States", "United States", "Canada", "Canada", "Canada"],
+                    "year": [1996, 1997, 1998, 1996, 1997, 1998],
+                    "value": [100.0, 110.0, 120.0, 200.0, 210.0, 220.0],
+                }
+            ).to_csv(gdp_path, index=False)
+            pd.DataFrame(
+                [
+                    {
+                        "dataset_id": "oecd_patents_environment",
+                        "variable": "env_patent_share_inventions",
+                        "source_variable": "PT_INV.DEV.ENV_PAT._Z",
+                        "source": "OECD Patents - indicators",
+                        "status": "downloaded",
+                        "file_path": str(main_target_path),
+                        "file_format": "csv",
+                    },
+                    {
+                        "dataset_id": "oecd_patents_environment",
+                        "variable": "env_patents_per_million",
+                        "source_variable": "INV_PS.DEV.ENV_PAT._Z",
+                        "source": "OECD Patents - indicators",
+                        "status": "downloaded",
+                        "file_path": str(robustness_target_path),
+                        "file_format": "csv",
+                    },
+                    {
+                        "dataset_id": "world_bank_wdi",
+                        "variable": "gdp_constant_2015_usd",
+                        "source_variable": "NY.GDP.MKTP.KD",
+                        "source": "World Bank WDI",
+                        "status": "downloaded",
+                        "file_path": str(gdp_path),
+                        "file_format": "csv",
+                    },
+                ]
+            ).to_csv(raw_dir / "raw_download_manifest.csv", index=False)
+
+            outputs = run_robustness_target_panel_cleaning(
+                raw_dir=raw_dir,
+                processed_dir=processed_dir,
+                panel_definitions=[
+                    PanelDefinition(
+                        panel_id="main",
+                        predictors=[PredictorSpec("gdp_constant_2015_usd", "GDP")],
+                        anchor_variable="gdp_constant_2015_usd",
+                        raw_start_year=1996,
+                        raw_end_year=1998,
+                    )
+                ],
+            )
+
+            panel_dir = processed_dir / "model_panels" / "robustness" / "env_patents_per_million" / "v2"
+            panel = pd.read_csv(panel_dir / "model_panel_main_no_imputation.csv")
+            variable_map = pd.read_csv(panel_dir / "model_panel_variable_map.csv")
+            coverage = pd.read_csv(panel_dir / "model_panel_coverage_summary.csv")
+
+        self.assertEqual(outputs["target_variable"], "env_patents_per_million")
+        self.assertEqual(outputs["panel_dir_path"], str(panel_dir))
+        self.assertIn("model_panels/robustness/env_patents_per_million/v2/model_panel_main_no_imputation.csv", outputs["panel_paths"])
+        self.assertIn("env_patents_per_million", panel.columns)
+        self.assertNotIn("env_patent_share_inventions", panel.columns)
+        self.assertEqual(list(panel["country_code"]), ["USA"])
+        self.assertEqual(variable_map.loc[variable_map["role"].eq("target"), "variable"].iloc[0], "env_patents_per_million")
+        self.assertEqual(int(coverage.loc[0, "target_missing_rows_dropped"]), 1)
 
     def test_run_model_panel_cleaning_writes_nan_literal_for_missing_predictors(self):
         with tempfile.TemporaryDirectory() as tmp:

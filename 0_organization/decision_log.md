@@ -22,6 +22,20 @@ Status options:
 
 ## Decisions
 
+### 2026-06-13: Generate robustness target panels for patent intensity
+
+Decision:
+Keep `env_patent_share_inventions` (`PT_INV.DEV.ENV_PAT._Z`) as the main target, and generate parallel robustness target panels for `env_patents_per_million` (`INV_PS.DEV.ENV_PAT._Z`). The robustness panels reuse the active v2 predictor specification, lag definitions, target-observed row filtering, and no-imputation versus retrospective linear-interpolation variants. Write them under `2_data/processed/model_panels/robustness/env_patents_per_million/v2/`.
+
+Reason:
+The main target measures the share of domestic inventions that are environment-related. `env_patents_per_million` is a size-normalized patent-intensity outcome, so it tests whether later model results are specific to an invention-share measure or also hold for patent intensity. Keeping the robustness target in a separate package preserves the main v2 deliverable while making the modeling stage able to loop over outcomes with the same feature design.
+
+Alternatives considered:
+Replacing the main target was rejected because the active target decision still favors `PT_INV.DEV.ENV_PAT._Z`. Using `PT_TECH.DEV.ENV_PAT._Z` as the second target was rejected because the percentage-of-technologies measure has interpretation risk and values above 100. Duplicating the whole panel-cleaning script was rejected in favor of parameterizing the target variable.
+
+Status:
+Active
+
 ### 2026-06-13: Move weak main predictors to robustness and create model-panel v2
 
 Decision:
