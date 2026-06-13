@@ -29,8 +29,8 @@ Reasons:
 |---|---|---|
 | R&D capacity | Strong | Repeatedly supported in renewable/environmental patent studies, although project WDI R&D is general R&D rather than green R&D. |
 | Environmental policy stringency | Strong | Supported by OECD EPS documentation and policy-patent studies; interpret as association/predictive signal, not causal proof. |
-| GDP per capita / development | Moderate | Useful as innovation capacity and development control, but may absorb many mechanisms and should not dominate the story. |
-| Market size / population / GDP | Moderate | Patent studies often control for total patenting, electricity demand, or market size; avoid redundant size controls if target is already normalized. |
+| GDP / market size | Moderate | Useful as an economic-scale and market-size predictor; total GDP is more aligned with the country-level innovation-share target than GDP per capita for the main raw predictor set. |
+| GDP per capita / development | Moderate | Useful as a development control, but replaced by total GDP in the main raw predictor set to avoid making income level the primary macro-size proxy. |
 | Manufacturing share | Moderate to weak | Industry-level evidence suggests sectoral structure matters, but country-level manufacturing share is only a rough proxy. |
 | Renewable energy share | Moderate | Related evidence uses renewable capacity, demand-pull policies, or market size more often than WDI renewable final-energy share. |
 | Fossil energy share | Weak to cautionary | Fossil dependence can reflect transition pressure or lock-in; sign is theoretically ambiguous. |
@@ -41,11 +41,11 @@ Reasons:
 
 ## Design Implications
 
-Use three-year lagged moving averages as the main predictor timing specification. For each selected predictor `x`, construct `x_lag1_3_mean` as the mean of years `t-1`, `t-2`, and `t-3` to predict the target in year `t`. Single-year `t-1`, `t-2`, and `t-3` lags can remain robustness checks.
+Compare one-year lagged predictors and three-year lagged moving-average predictors as pre-specified machine-learning timing specifications. For each selected predictor `x`, construct `x_lag1 = x_{t-1}` and `x_lag1_3_mean = mean(x_{t-1}, x_{t-2}, x_{t-3})` to predict the target in year `t`. Both specifications should use time-aware validation or pseudo-out-of-sample splits rather than random row-level splits.
 
 Avoid claiming causal effects from the final machine-learning model. The literature provides mechanisms and expected signs, but this project's goal is interpretable prediction. The report should say predictors are associated with future environment-related innovation in the model, not that they cause innovation.
 
-Keep the main model small. A reviewer will likely prefer fewer well-defended predictors in the main specification over a broad WDI variable grab. At the same time, the broader predictor pool from `Managerial AI- literature review - List 1.csv` and the candidate catalog should remain in consideration; variables should be assigned to main-model, robustness, exploratory, or data-limited roles after coverage and collinearity checks. A defensible first model would include the selected target, lagged R&D intensity, lagged GDP per capita or GDP, one policy variable, and one carefully interpreted energy-system variable.
+Keep the main model small. A reviewer will likely prefer fewer well-defended predictors in the main specification over a broad WDI variable grab. At the same time, the broader predictor pool from `Managerial AI- literature review - List 1.csv` and the candidate catalog should remain in consideration; variables should be assigned to main-model, robustness, exploratory, or data-limited roles after coverage and collinearity checks. A defensible first model would include the selected target, lagged R&D intensity, lagged total GDP, one policy variable, and one carefully interpreted energy-system variable.
 
 ## First-Pass Source Tiers
 

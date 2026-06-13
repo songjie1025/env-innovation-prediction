@@ -51,7 +51,7 @@ REQUIRED_COLUMNS = {
 VARIABLE_GROUPS = {
     "env_patent_share_inventions": "Target and patent dynamics",
     "env_patents_per_million": "Target and patent dynamics",
-    "env_technology_share_for_rta": "Target and patent dynamics",
+    "env_technology_rta": "Target and patent dynamics",
     "env_co_invention_share": "Target and patent dynamics",
     "rd_expenditure_gdp": "R&D and knowledge capacity",
     "researchers_per_million": "R&D and knowledge capacity",
@@ -70,7 +70,7 @@ VARIABLE_GROUPS = {
     "economic_policy_uncertainty": "Policy and macro conditions",
     "trade_openness": "Policy and macro conditions",
     "inflation": "Policy and macro conditions",
-    "gdp_per_capita_current_usd": "Policy and macro conditions",
+    "gdp_constant_2015_usd": "Policy and macro conditions",
     "fdi_net_inflows": "Policy and macro conditions",
     "wgi_regulatory_quality": "Policy and macro conditions",
 }

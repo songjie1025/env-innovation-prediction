@@ -46,7 +46,7 @@ Do trade openness and institutional quality contribute to carbon emission reduct
 "Credit Constraints and the Cyclicality of R&D Investment: Evidence from France
 On the Cyclicality of Research and Development
 Determinants of green growth in developed and developing countries",Inflation,https://data.worldbank.org/indicator/FP.CPI.TOTL.ZG,,
-Determinants of green growth in developed and developing countries,GDP,https://data.worldbank.org/indicator/NY.GDP.PCAP.CD,is not a strong predictor according to the paper,
+Determinants of green growth in developed and developing countries,GDP,https://data.worldbank.org/indicator/NY.GDP.MKTP.KD,"GDP total, constant 2015 US dollars; replaces GDP per capita because the selected target is a country-level innovation share and total economic scale is the intended market-size predictor.",
 Market Size in Innovation: Theory and Evidence from the Pharmaceutical Industry,Population,https://data.worldbank.org/indicator/SP.POP.TOTL,,
 "Greenfield foreign direct investments and regional environmental technologies
 Energy savings via FDI? Empirical evidence from developing countries
