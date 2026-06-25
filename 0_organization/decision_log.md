@@ -22,6 +22,118 @@ Status options:
 
 ## Decisions
 
+### 2026-06-25: Present the linear notebook as a first checkpoint with confirmatory diagnostics
+
+Decision:
+Keep the linear modeling notebook as a professor-style educational first checkpoint, but add script-generated confirmatory diagnostics before using it for report claims. The notebook now centers historical-baseline delta summaries, year-level and target-quantile error decomposition, missingness-indicator sensitivity, and a rolling-origin check with validation inside each pre-test window. The notebook remains a narrative runner and artifact viewer; model fitting, evaluation, and artifact verification stay in `3_models/scripts/`.
+
+Reason:
+The teacher-confirmed chronological 80/10/10 split is appropriate for the first runnable course checkpoint, but a single latest-period holdout is not enough for strong temporal-stability claims. The current feature-only linear model also does not beat the strongest prediction-safe country-history baseline, so final reporting must foreground historical inertia and avoid overclaiming external-predictor forecasting superiority. Moving artifact verification into a reusable script helper keeps the notebook educational while preserving reproducibility.
+
+Alternatives considered:
+Treating the 80/10/10 result as final forecasting evidence was rejected because it would over-read one late holdout. Replacing the notebook with a code-heavy analysis notebook was rejected because the project standard is scripts for logic and notebooks for explanation. Dropping test-set diagnostics was rejected because historical-baseline deltas, error concentration, and missingness sensitivity are necessary for reviewer-defensible interpretation.
+
+Status:
+Active
+
+### 2026-06-25: Test skew-transformed predictors before moving to nonlinear models
+
+Decision:
+Add a skew-transformed linear robustness setting before introducing nonlinear model families. The setting keeps the same main target, same v2 no-imputation main panel, same `lag1_3_mean` timing, same chronological 80/10/10 split, and same validation-MAE selection rule. It transforms highly right-skewed positive predictors with `log1p`, signed skewed predictors with `asinh`, keeps bounded or near-symmetric predictors on their original scale, then applies the existing train-fold median imputation and StandardScaler pipeline.
+
+Reason:
+Standard scaling makes predictors comparable in units but does not remove skewness or long-tailed leverage. Testing deterministic log/asinh transformations is a defensible intermediate step: it checks whether the weak feature-only linear performance is mainly a scale-shape problem before adding nonlinear models. The check uses no target labels and does not fit transformation parameters on validation or test rows.
+
+Alternatives considered:
+Replacing the primary feature-only model with transformed predictors was rejected because the primary specification should remain pre-specified and interpretable. Jumping directly to Random Forest or boosting was deferred because the linear model should first be tested under a simple skew-reduction sensitivity. Searching many transformations per variable was rejected because it would increase researcher degrees of freedom and risk post-test tuning.
+
+Status:
+Active
+
+### 2026-06-25: Keep target history outside the primary feature-only model
+
+Decision:
+Keep the primary linear model as a feature-only model using the pre-specified external predictors, and add past target information only as a separate persistence-augmented comparison model. The augmented comparison uses `target_history_preblock`, a block-safe target-history feature: validation rows use the latest training-period target observed for the same country, and test rows use the latest train+validation-period target observed for the same country. The feature must not use labels from inside the validation block to predict validation rows or labels from inside the test block to predict test rows.
+
+Reason:
+Country-level environmental patent shares are highly persistent. Adding past target values directly into the primary model would change the research question and could hide whether the external predictors provide useful signal on their own. A separate persistence-augmented comparison makes the historical-inertia issue explicit, keeps the feature-only baseline interpretable, and tests whether the same linear model family gains predictive accuracy after adding prediction-safe target history.
+
+Alternatives considered:
+Silently adding lagged target history to the primary model was rejected because it would blur feature-based interpretation with persistence forecasting. Ignoring target history was rejected because historical baselines already show that national inertia is the strongest benchmark. A rolling one-step target-lag design was considered but deferred because it belongs to a later backtesting stage, not the teacher-confirmed first contiguous 80/10/10 baseline.
+
+Status:
+Active
+
+### 2026-06-22: Add predictor missingness pattern diagnostics to the model notebook
+
+Decision:
+Add formal predictor missingness pattern diagnostics to the model-stage script pipeline and educational notebook. For each active main-model predictor, classify each country-feature series among target-observed rows in the no-imputation model panel as `complete`, `late_start`, `early_end`, `bounded_coverage_window`, `intermittent_gaps`, or `all_missing`. Write both a feature-level summary and a country-feature detail table, and add a stacked country-count figure to the modeling figure index.
+
+Reason:
+Overall missing-share diagnostics are not enough for a panel time-series setting. Missing values caused by a source beginning late, a source ending early, intermittent country-year gaps, or all-missing country histories imply different interpretation risks and different future robustness options. Keeping this as a diagnostic preserves the current baseline while making train-fold median imputation easier to defend and qualify.
+
+Alternatives considered:
+Changing the primary model to full-series linear interpolation was rejected because it is not prediction-safe. Treating the diagnostic as a post-test feature-deletion rule was rejected because it would increase researcher degrees of freedom after seeing model results. Replacing the primary model with complete-case estimation was rejected because it changes sample size, country coverage, and test composition; complete-case remains a sensitivity check.
+
+Status:
+Active
+
+### 2026-06-18: Add a limited linear robustness pack
+
+Decision:
+Extend the model-stage pipeline with a limited linear robustness pack before considering optional advanced models. The robustness pack uses the same chronological 80/10/10 split and validation-MAE selection rule as the primary model. It runs four main-panel sensitivity settings: `env_patent_share_inventions` with `lag1_3_mean`, `env_patent_share_inventions` with common-sample `lag1`, `env_patents_per_million` with `lag1_3_mean`, and `env_patents_per_million` with common-sample `lag1`. The linear candidate family now includes ordinary least squares, Ridge, Lasso, and ElasticNet. All candidate scores are reported on validation; each setting reports only the validation-selected model on the final test block and compares it with prediction-safe historical target baselines.
+
+Reason:
+The model stage is exploratory, but it should remain academically disciplined. Lag-1 timing and the alternative patent-intensity target were already planned robustness dimensions, and adding Lasso completes the standard sparse-linear model family without moving into non-linear model search. Reporting each selected linear model against its own strongest historical baseline prevents overclaiming.
+
+Alternatives considered:
+Immediately adding Random Forest or gradient boosting was rejected for this stage because the current priority is to establish whether the interpretable linear conclusions are robust. Searching many lag windows, targets, or model families was rejected because it would look like post-test model fishing. Dropping historical baselines from robustness reporting was rejected because country-level environmental patent outcomes are persistent and target-history baselines are necessary for a defensible forecasting claim.
+
+Status:
+Active
+
+### 2026-06-18: Add reviewer-driven baselines, failure modes, and missingness sensitivity
+
+Decision:
+After cross-review of the model-stage checkpoint, add prediction-safe historical target baselines, top absolute test-error diagnostics, and a complete-case missingness sensitivity run to the linear modeling notebook and script pipeline. The historical baseline table must include the selected ElasticNet model, the global train+validation target mean, the country train+validation target mean, and the country last-pretest target value held constant across the final test block. The notebook must state that the current ElasticNet model does not beat the strongest country persistence baseline on primary test MAE, and that none of the same-sample submodel augmentations improves primary test MAE in the current run.
+
+Reason:
+The first linear model has positive out-of-sample R-squared against a global training-period mean, but this is too weak for a panel forecasting claim because country-level environmental patent shares are persistent. A rigorous notebook needs to show whether feature-based models improve beyond target-history baselines, where the model fails, and whether heavy predictor missingness affects the result. Correlation diagnostics should be interpreted on the fitted imputed/scaled design matrix when possible, and coefficients shrunk to zero should not be treated as sign-aligned.
+
+Alternatives considered:
+Keeping only the ElasticNet-versus-linear-candidate validation table was rejected because it does not answer whether the model beats national historical inertia. Reporting only aggregate test metrics was rejected because large misses for high-innovation country-years materially affect interpretation. Treating the complete-case run as a replacement main result was rejected because it changes sample size, countries, and test coverage; it is a sensitivity check. Adding rolling-origin validation and bootstrap uncertainty was deferred to the next robustness stage because the immediate notebook fix focuses on reviewer-critical diagnostics that can be generated by the current pipeline.
+
+Status:
+Active
+
+### 2026-06-18: Add mechanism submodel comparisons and train-period correlation diagnostics
+
+Decision:
+Extend the first linear modeling checkpoint with mechanism submodel comparisons for the active v2 no-imputation Submodel A, Submodel B, and Submodel C panels. Each panel uses the same chronological 80/10/10 split rule, the same `*_lag1_3_mean` feature timing, the same linear candidate set, and validation MAE for model selection. Treat pure submodel results as own-sample diagnostics, not as a direct ranking against the main model, because the panels have different country coverage, target years, and test windows. For the comparable submodel test, run same-sample nested pairs: main predictors only on the submodel sample versus main predictors plus the submodel predictors on exactly the same country-year rows. Add main-model train+validation correlation diagnostics to explain ElasticNet coefficient interpretation under collinearity while keeping the held-out test labels unused for diagnostics.
+
+Reason:
+The course requirement asks for interpretable prediction and identification of predictors most strongly associated with future environment-related innovation. The main model remains the broad primary specification, while the submodels test narrower policy, R&D, collaboration, and sustainable-energy regulation mechanisms already built during the panel-cleaning stage. Same-sample nested pairs are needed because submodel-only panels are not comparable to the main model unless the main predictors are also present in the submodel sample. Correlation diagnostics are needed because the selected ElasticNet baseline is designed for correlated predictors, and coefficient interpretation should explicitly show where predictors overlap.
+
+Alternatives considered:
+Replacing the main model with the best-scoring pure submodel was rejected because submodel samples are not directly comparable. Reporting only pure submodel scores was rejected because it does not show whether submodel predictors add information beyond the main predictors. A single four-panel common test sample was considered but deferred because the current SubA and SubC test periods do not share a complete common final test window, and forcing a common sample would make the first modeling checkpoint less representative. Using correlations for post-test feature deletion was rejected because the diagnostics should explain the current model, not change the pre-specified v2 feature set after seeing test performance.
+
+Status:
+Active
+
+### 2026-06-17: Use a simple chronological 80/10/10 split for the first modeling stage
+
+Decision:
+After consulting the teacher, use the simplest traditional time split for the initial modeling stage: the earliest 80% of distinct target years form the training period, the next 10% form the validation period, and the latest 10% form the held-out test period. The test set stays at the end of the timeline, and the first runnable pipeline should focus on interpretable linear models before adding more complex model families.
+
+Reason:
+The teacher confirmed that a simple train/validation/test design is sufficient and easier to explain for the course project at this stage. A contiguous chronological split preserves temporal ordering, avoids random row-level leakage, keeps the latest years as a final stress test, and gives the project a reproducible baseline that can be extended later.
+
+Alternatives considered:
+Rolling-origin outer folds were considered in the earlier modeling-stage plan, but they add complexity before the first linear baseline is running. Random row-level splits were rejected because they can leak future panel information into earlier predictions. Interleaved or shuffled validation/test blocks were rejected because the teacher advised using one simple continuous time sequence.
+
+Status:
+Active
+
 ### 2026-06-13: Generate robustness target panels for patent intensity
 
 Decision:

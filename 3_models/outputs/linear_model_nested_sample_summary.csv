@@ -1,0 +1,25 @@
+panel_id,panel_label,panel_role,comparison_group,feature_set_role,target_column,lag_suffix,comparison_scope,split,year_start,year_end,years,rows,countries,target_non_missing,feature_columns,complete_feature_rows,any_feature_missing_rows
+main_on_suba,Main controls on SUBA sample,nested_baseline,suba,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,train,2013,2020,8,750,124,750,9,585,165
+main_on_suba,Main controls on SUBA sample,nested_baseline,suba,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,validation,2021,2021,1,91,91,91,9,74,17
+main_on_suba,Main controls on SUBA sample,nested_baseline,suba,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,test,2022,2023,2,171,95,171,9,71,100
+main_on_suba,Main controls on SUBA sample,nested_baseline,suba,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,all,2013,2023,11,1012,124,1012,9,730,282
+main_plus_suba,Main controls plus SUBA predictors,nested_augmented,suba,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,train,2013,2020,8,750,124,750,12,543,207
+main_plus_suba,Main controls plus SUBA predictors,nested_augmented,suba,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,validation,2021,2021,1,91,91,91,12,71,20
+main_plus_suba,Main controls plus SUBA predictors,nested_augmented,suba,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,test,2022,2023,2,171,95,171,12,69,102
+main_plus_suba,Main controls plus SUBA predictors,nested_augmented,suba,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,all,2013,2023,11,1012,124,1012,12,683,329
+main_on_subb,Main controls on SUBB sample,nested_baseline,subb,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,train,1999,2018,20,1741,109,1741,9,1016,725
+main_on_subb,Main controls on SUBB sample,nested_baseline,subb,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,validation,2019,2020,2,182,97,182,9,151,31
+main_on_subb,Main controls on SUBB sample,nested_baseline,subb,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,test,2021,2023,3,267,102,267,9,156,111
+main_on_subb,Main controls on SUBB sample,nested_baseline,subb,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,all,1999,2023,25,2190,109,2190,9,1323,867
+main_plus_subb,Main controls plus SUBB predictors,nested_augmented,subb,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,train,1999,2018,20,1741,109,1741,14,493,1248
+main_plus_subb,Main controls plus SUBB predictors,nested_augmented,subb,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,validation,2019,2020,2,182,97,182,14,73,109
+main_plus_subb,Main controls plus SUBB predictors,nested_augmented,subb,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,test,2021,2023,3,267,102,267,14,75,192
+main_plus_subb,Main controls plus SUBB predictors,nested_augmented,subb,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,all,1999,2023,25,2190,109,2190,14,641,1549
+main_on_subc,Main controls on SUBC sample,nested_baseline,subc,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,train,1999,2016,18,718,40,718,9,480,238
+main_on_subc,Main controls on SUBC sample,nested_baseline,subc,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,validation,2017,2018,2,80,40,80,9,80,0
+main_on_subc,Main controls on SUBC sample,nested_baseline,subc,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,test,2019,2021,3,120,40,120,9,120,0
+main_on_subc,Main controls on SUBC sample,nested_baseline,subc,main_controls,env_patent_share_inventions,lag1_3_mean,same_sample_nested,all,1999,2021,23,918,40,918,9,680,238
+main_plus_subc,Main controls plus SUBC predictors,nested_augmented,subc,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,train,1999,2016,18,718,40,718,10,480,238
+main_plus_subc,Main controls plus SUBC predictors,nested_augmented,subc,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,validation,2017,2018,2,80,40,80,10,80,0
+main_plus_subc,Main controls plus SUBC predictors,nested_augmented,subc,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,test,2019,2021,3,120,40,120,10,120,0
+main_plus_subc,Main controls plus SUBC predictors,nested_augmented,subc,main_plus_submodel,env_patent_share_inventions,lag1_3_mean,same_sample_nested,all,1999,2021,23,918,40,918,10,680,238

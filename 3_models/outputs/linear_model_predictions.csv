@@ -1,0 +1,313 @@
+panel_id,panel_label,panel_role,comparison_group,feature_set_role,target_column,lag_suffix,country_code,country_name,year,env_patent_share_inventions,model,observed,prediction,error,absolute_error
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ALB,Albania,2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.26449203920534115,-0.26352473410534116,0.26352473410534116
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARE,United Arab Emirates,2021,0.03864921,elastic_net_alpha_1_l1_0.2,0.03864921,0.826727614483127,-0.788078404483127,0.788078404483127
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARG,Argentina,2021,0.00838331,elastic_net_alpha_1_l1_0.2,0.00838331,0.8214055526545461,-0.813022242654546,0.813022242654546
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARM,Armenia,2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.3152284555882442,-0.3142611504882442,0.3142611504882442
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AUS,Australia,2021,0.6052428,elastic_net_alpha_1_l1_0.2,0.6052428,2.542738944538447,-1.9374961445384469,1.9374961445384469
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AUT,Austria,2021,0.600331,elastic_net_alpha_1_l1_0.2,0.600331,0.8233708571170175,-0.22303985711701757,0.22303985711701757
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AZE,Azerbaijan,2021,0.00451409,elastic_net_alpha_1_l1_0.2,0.00451409,0.34527100176575765,-0.3407569117657576,0.3407569117657576
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BEL,Belgium,2021,0.5078351,elastic_net_alpha_1_l1_0.2,0.5078351,0.8324085029510716,-0.3245734029510716,0.3245734029510716
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BFA,Burkina Faso,2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.15207916471147342,-0.15111185961147341,0.15111185961147341
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BGD,Bangladesh,2021,0.002321532,elastic_net_alpha_1_l1_0.2,0.002321532,0.44882786122064405,-0.44650632922064404,0.44650632922064404
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BGR,Bulgaria,2021,0.0156381,elastic_net_alpha_1_l1_0.2,0.0156381,0.40214850331854046,-0.3865104033185405,0.3865104033185405
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BHS,"Bahamas, The",2021,0.004836525,elastic_net_alpha_1_l1_0.2,0.004836525,0.35076572536827966,-0.3459292003682797,0.3459292003682797
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BLR,Belarus,2021,0.01176888,elastic_net_alpha_1_l1_0.2,0.01176888,0.25926921292977745,-0.24750033292977744,0.24750033292977744
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BRA,Brazil,2021,0.2022635,elastic_net_alpha_1_l1_0.2,0.2022635,2.4797437599127434,-2.2774802599127435,2.2774802599127435
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CAN,Canada,2021,1.406397,elastic_net_alpha_1_l1_0.2,1.406397,2.6677973414841247,-1.2614003414841248,1.2614003414841248
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHE,Switzerland,2021,0.5670665,elastic_net_alpha_1_l1_0.2,0.5670665,0.8915278654219514,-0.32446136542195136,0.32446136542195136
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHL,Chile,2021,0.04739795,elastic_net_alpha_1_l1_0.2,0.04739795,0.7271193222242294,-0.6797213722242293,0.6797213722242293
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHN,China,2021,27.46088,elastic_net_alpha_1_l1_0.2,27.46088,18.63765457529151,8.82322542470849,8.82322542470849
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CMR,Cameroon,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.17498600690207933,-0.17434113690207934,0.17434113690207934
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,COL,Colombia,2021,0.01708906,elastic_net_alpha_1_l1_0.2,0.01708906,0.6629955420022202,-0.6459064820022202,0.6459064820022202
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CPV,Cabo Verde,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.22316868278316304,-0.22252381278316305,0.22252381278316305
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CRI,Costa Rica,2021,0.00193461,elastic_net_alpha_1_l1_0.2,0.00193461,0.37216823393049514,-0.37023362393049514,0.37023362393049514
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CYP,Cyprus,2021,0.007416006,elastic_net_alpha_1_l1_0.2,0.007416006,0.42011898600226893,-0.41270298000226896,0.41270298000226896
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CZE,Czechia,2021,0.1125298,elastic_net_alpha_1_l1_0.2,0.1125298,0.787521481413717,-0.674991681413717,0.674991681413717
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DEU,Germany,2021,6.09054,elastic_net_alpha_1_l1_0.2,6.09054,4.605647398508562,1.4848926014914374,1.4848926014914374
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DNK,Denmark,2021,0.8738312,elastic_net_alpha_1_l1_0.2,0.8738312,0.8506491197954904,0.023182080204509625,0.023182080204509625
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DOM,Dominican Republic,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.37131128034359884,-0.3706664103435988,0.3706664103435988
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DZA,Algeria,2021,0.003288837,elastic_net_alpha_1_l1_0.2,0.003288837,0.4799331523415274,-0.4766443153415274,0.4766443153415274
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ECU,Ecuador,2021,0.001612175,elastic_net_alpha_1_l1_0.2,0.001612175,0.35110355109789393,-0.34949137609789394,0.34949137609789394
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,EGY,"Egypt, Arab Rep.",2021,0.01321984,elastic_net_alpha_1_l1_0.2,0.01321984,0.776187709905307,-0.7629678699053071,0.7629678699053071
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ESP,Spain,2021,0.6234819,elastic_net_alpha_1_l1_0.2,0.6234819,2.2099673621896487,-1.5864854621896487,1.5864854621896487
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,EST,Estonia,2021,0.01386471,elastic_net_alpha_1_l1_0.2,0.01386471,0.4845373563219731,-0.4706726463219731,0.4706726463219731
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ETH,Ethiopia,2021,0.002257045,elastic_net_alpha_1_l1_0.2,0.002257045,0.22820567464913621,-0.2259486296491362,0.2259486296491362
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,FIN,Finland,2021,0.4526021,elastic_net_alpha_1_l1_0.2,0.4526021,0.8182327841721293,-0.3656306841721293,0.3656306841721293
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,FRA,France,2021,2.559317,elastic_net_alpha_1_l1_0.2,2.559317,3.0516111660314458,-0.4922941660314457,0.4922941660314457
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GBR,United Kingdom,2021,1.863642,elastic_net_alpha_1_l1_0.2,1.863642,3.9764853764532218,-2.1128433764532217,2.1128433764532217
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GEO,Georgia,2021,0.007738441,elastic_net_alpha_1_l1_0.2,0.007738441,0.330946067656381,-0.32320762665638103,0.32320762665638103
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GRC,Greece,2021,0.04058382,elastic_net_alpha_1_l1_0.2,0.04058382,0.6715994392325246,-0.6310156192325246,0.6310156192325246
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HKG,"Hong Kong SAR, China",2021,0.09469917,elastic_net_alpha_1_l1_0.2,0.09469917,0.48770798155142164,-0.39300881155142164,0.39300881155142164
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HRV,Croatia,2021,0.02037789,elastic_net_alpha_1_l1_0.2,0.02037789,0.3980855278711418,-0.3777076378711418,0.3777076378711418
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HUN,Hungary,2021,0.04149739,elastic_net_alpha_1_l1_0.2,0.04149739,0.5781557685450434,-0.5366583785450434,0.5366583785450434
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IDN,Indonesia,2021,0.01360676,elastic_net_alpha_1_l1_0.2,0.01360676,1.4142261131666813,-1.4006193531666813,1.4006193531666813
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IND,India,2021,1.139217,elastic_net_alpha_1_l1_0.2,1.139217,4.056908997230275,-2.9176919972302753,2.9176919972302753
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRL,Ireland,2021,0.1236538,elastic_net_alpha_1_l1_0.2,0.1236538,0.6760829290212691,-0.5524291290212691,0.5524291290212691
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRN,"Iran, Islamic Rep.",2021,0.03633843,elastic_net_alpha_1_l1_0.2,0.03633843,1.4165028979949108,-1.3801644679949108,1.3801644679949108
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ISL,Iceland,2021,0.009673051,elastic_net_alpha_1_l1_0.2,0.009673051,0.4175682398083367,-0.4078951888083367,0.4078951888083367
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ISR,Israel,2021,0.4227123,elastic_net_alpha_1_l1_0.2,0.4227123,0.9636629244478035,-0.5409506244478035,0.5409506244478035
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ITA,Italy,2021,1.366383,elastic_net_alpha_1_l1_0.2,1.366383,2.758772848336497,-1.3923898483364971,1.3923898483364971
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,JOR,Jordan,2021,0.009565572,elastic_net_alpha_1_l1_0.2,0.009565572,0.3743503534777627,-0.36478478147776267,0.36478478147776267
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,JPN,Japan,2021,18.32637,elastic_net_alpha_1_l1_0.2,18.32637,4.798519838602164,13.527850161397836,13.527850161397836
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KAZ,Kazakhstan,2021,0.006771136,elastic_net_alpha_1_l1_0.2,0.006771136,0.6226091402457805,-0.6158380042457805,0.6158380042457805
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KEN,Kenya,2021,0.001450958,elastic_net_alpha_1_l1_0.2,0.001450958,0.2747170542230125,-0.2732660962230125,0.2732660962230125
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KGZ,Kyrgyz Republic,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.19685197754916983,-0.19620710754916984,0.19620710754916984
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KHM,Cambodia,2021,0.00128974,elastic_net_alpha_1_l1_0.2,0.00128974,0.09544825728130146,-0.09415851728130147,0.09415851728130147
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KOR,"Korea, Rep.",2021,13.81879,elastic_net_alpha_1_l1_0.2,13.81879,2.6408778440212646,11.177912155978735,11.177912155978735
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KWT,Kuwait,2021,0.00764171,elastic_net_alpha_1_l1_0.2,0.00764171,0.6365641328492182,-0.6289224228492182,0.6289224228492182
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LBN,Lebanon,2021,0.007158058,elastic_net_alpha_1_l1_0.2,0.007158058,0.3600333103116219,-0.35287525231162187,0.35287525231162187
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LBY,Libya,2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.23800363374446742,-0.23703632864446741,0.23703632864446741
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LKA,Sri Lanka,2021,0.01612175,elastic_net_alpha_1_l1_0.2,0.01612175,0.32738642629143333,-0.31126467629143334,0.31126467629143334
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LTU,Lithuania,2021,0.01064036,elastic_net_alpha_1_l1_0.2,0.01064036,0.3523988336321966,-0.3417584736321966,0.3417584736321966
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LUX,Luxembourg,2021,0.05029986,elastic_net_alpha_1_l1_0.2,0.05029986,0.241086451459397,-0.190786591459397,0.190786591459397
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LVA,Latvia,2021,0.02031341,elastic_net_alpha_1_l1_0.2,0.02031341,0.32209389939161115,-0.3017804893916112,0.3017804893916112
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MAC,"Macao SAR, China",2021,0.00386922,elastic_net_alpha_1_l1_0.2,0.00386922,0.4364506942376909,-0.4325814742376909,0.4325814742376909
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MAR,Morocco,2021,0.01747598,elastic_net_alpha_1_l1_0.2,0.01747598,0.4490449070021832,-0.4315689270021832,0.4315689270021832
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MDA,Moldova,2021,0.001128523,elastic_net_alpha_1_l1_0.2,0.001128523,0.266122264309,-0.264993741309,0.264993741309
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MEX,Mexico,2021,0.08141485,elastic_net_alpha_1_l1_0.2,0.08141485,1.3508743549284796,-1.2694595049284796,1.2694595049284796
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MLT,Malta,2021,0.007416006,elastic_net_alpha_1_l1_0.2,0.007416006,0.2687177801164631,-0.2613017741164631,0.2613017741164631
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MNE,Montenegro,2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.2682814389003464,-0.2673141338003464,0.2673141338003464
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MRT,Mauritania,2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.1615211572793256,-0.16055385217932558,0.16055385217932558
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MUS,Mauritius,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.3368649809037656,-0.3362201109037656,0.3362201109037656
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MYS,Malaysia,2021,0.08705746,elastic_net_alpha_1_l1_0.2,0.08705746,0.9178066234902688,-0.8307491634902687,0.8307491634902687
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NCL,New Caledonia,2021,0.002901915,elastic_net_alpha_1_l1_0.2,0.002901915,0.6906981956119074,-0.6877962806119073,0.6877962806119073
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NER,Niger,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.14905610811216485,-0.14841123811216486,0.14841123811216486
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NLD,Netherlands,2021,0.8459405,elastic_net_alpha_1_l1_0.2,0.8459405,0.9539960003808314,-0.10805550038083145,0.10805550038083145
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NOR,Norway,2021,0.2947056,elastic_net_alpha_1_l1_0.2,0.2947056,0.9116954527669542,-0.6169898527669542,0.6169898527669542
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NPL,Nepal,2021,0.00128974,elastic_net_alpha_1_l1_0.2,0.00128974,0.1832909599893109,-0.18200121998931088,0.18200121998931088
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NZL,New Zealand,2021,0.08180176,elastic_net_alpha_1_l1_0.2,0.08180176,0.8173765184538213,-0.7355747584538213,0.7355747584538213
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,OMN,Oman,2021,0.002418263,elastic_net_alpha_1_l1_0.2,0.002418263,0.6208607237533056,-0.6184424607533056,0.6184424607533056
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PAK,Pakistan,2021,0.00838331,elastic_net_alpha_1_l1_0.2,0.00838331,0.6733243155705075,-0.6649410055705075,0.6649410055705075
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PAN,Panama,2021,0.001450958,elastic_net_alpha_1_l1_0.2,0.001450958,0.3412084162213763,-0.3397574582213763,0.3397574582213763
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PER,Peru,2021,0.009028181,elastic_net_alpha_1_l1_0.2,0.009028181,0.4854272081875485,-0.47639902718754845,0.47639902718754845
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PHL,Philippines,2021,0.01666989,elastic_net_alpha_1_l1_0.2,0.01666989,0.5354581425506793,-0.5187882525506793,0.5187882525506793
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,POL,Poland,2021,0.1891726,elastic_net_alpha_1_l1_0.2,0.1891726,1.3488715752207534,-1.1596989752207534,1.1596989752207534
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PRI,Puerto Rico (US),2021,0.00193461,elastic_net_alpha_1_l1_0.2,0.00193461,0.4252393876475399,-0.4233047776475399,0.4233047776475399
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PRT,Portugal,2021,0.05997292,elastic_net_alpha_1_l1_0.2,0.05997292,0.7665127589531879,-0.706539838953188,0.706539838953188
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PRY,Paraguay,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.2172552990871648,-0.2166104290871648,0.2166104290871648
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PSE,West Bank and Gaza,2021,0.00193461,elastic_net_alpha_1_l1_0.2,0.00193461,0.33278280500366186,-0.33084819500366186,0.33084819500366186
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,QAT,Qatar,2021,0.01160766,elastic_net_alpha_1_l1_0.2,0.01160766,1.0299862444114414,-1.0183785844114415,1.0183785844114415
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ROU,Romania,2021,0.03520991,elastic_net_alpha_1_l1_0.2,0.03520991,0.6101176114472115,-0.5749077014472116,0.5749077014472116
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,RUS,Russian Federation,2021,0.2115711,elastic_net_alpha_1_l1_0.2,0.2115711,2.7006684333766064,-2.4890973333766064,2.4890973333766064
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SAU,Saudi Arabia,2021,0.1900755,elastic_net_alpha_1_l1_0.2,0.1900755,1.2128751339189652,-1.0227996339189651,1.0227996339189651
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SDN,Sudan,2021,0.0004836525,elastic_net_alpha_1_l1_0.2,0.0004836525,0.16461771640793033,-0.16413406390793034,0.16413406390793034
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SGP,Singapore,2021,0.2456955,elastic_net_alpha_1_l1_0.2,0.2456955,0.7886397500501406,-0.5429442500501407,0.5429442500501407
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SRB,Serbia,2021,0.009673051,elastic_net_alpha_1_l1_0.2,0.009673051,0.38010577109914834,-0.37043272009914835,0.37043272009914835
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SVK,Slovak Republic,2021,0.03756368,elastic_net_alpha_1_l1_0.2,0.03756368,0.38208524213255546,-0.34452156213255547,0.34452156213255547
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SVN,Slovenia,2021,0.03192107,elastic_net_alpha_1_l1_0.2,0.03192107,0.3728880254230058,-0.3409669554230058,0.3409669554230058
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SWE,Sweden,2021,0.9232927,elastic_net_alpha_1_l1_0.2,0.9232927,1.0542328483146555,-0.1309401483146555,0.1309401483146555
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SYC,Seychelles,2021,0.00193461,elastic_net_alpha_1_l1_0.2,0.00193461,0.276535980772897,-0.274601370772897,0.274601370772897
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,THA,Thailand,2021,0.03433933,elastic_net_alpha_1_l1_0.2,0.03433933,0.722044170631185,-0.687704840631185,0.687704840631185
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,TUN,Tunisia,2021,0.003546785,elastic_net_alpha_1_l1_0.2,0.003546785,0.3597748165886464,-0.3562280315886464,0.3562280315886464
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,TUR,Turkiye,2021,0.2938995,elastic_net_alpha_1_l1_0.2,0.2938995,1.527307024246918,-1.233407524246918,1.233407524246918
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,UKR,Ukraine,2021,0.03353324,elastic_net_alpha_1_l1_0.2,0.03353324,0.5427095593480383,-0.5091763193480383,0.5091763193480383
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,URY,Uruguay,2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.3631524528672301,-0.3621851477672301,0.3621851477672301
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,USA,United States,2021,14.33043,elastic_net_alpha_1_l1_0.2,14.33043,19.18039696529738,-4.84996696529738,4.84996696529738
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,VEN,"Venezuela, RB",2021,0.0009673051,elastic_net_alpha_1_l1_0.2,0.0009673051,0.17566298798140834,-0.17469568288140833,0.17469568288140833
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,VNM,Viet Nam,2021,0.03956278,elastic_net_alpha_1_l1_0.2,0.03956278,0.4218455299922417,-0.38228274999224165,0.38228274999224165
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ZAF,South Africa,2021,0.05207326,elastic_net_alpha_1_l1_0.2,0.05207326,0.8583033490600647,-0.8062300890600647,0.8062300890600647
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ZWE,Zimbabwe,2021,0.00064487,elastic_net_alpha_1_l1_0.2,0.00064487,0.08747029074547064,-0.08682542074547063,0.08682542074547063
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ALB,Albania,2022,0.0005390487,elastic_net_alpha_1_l1_0.2,0.0005390487,0.25898570302429913,-0.25844665432429914,0.25844665432429914
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARE,United Arab Emirates,2022,0.02228068,elastic_net_alpha_1_l1_0.2,0.02228068,0.8310539670514191,-0.808773287051419,0.808773287051419
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARG,Argentina,2022,0.01132002,elastic_net_alpha_1_l1_0.2,0.01132002,0.805228695461465,-0.793908675461465,0.793908675461465
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARM,Armenia,2022,0.00431239,elastic_net_alpha_1_l1_0.2,0.00431239,0.3234477597710135,-0.3191353697710135,0.3191353697710135
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ATG,Antigua and Barbuda,2022,0.0007187316,elastic_net_alpha_1_l1_0.2,0.0007187316,0.32704659976989725,-0.32632786816989723,0.32632786816989723
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AUS,Australia,2022,0.4013757,elastic_net_alpha_1_l1_0.2,0.4013757,2.5540065623924773,-2.1526308623924773,2.1526308623924773
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AUT,Austria,2022,0.5074065,elastic_net_alpha_1_l1_0.2,0.5074065,0.8613127344277582,-0.35390623442775826,0.35390623442775826
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BEL,Belgium,2022,0.4569935,elastic_net_alpha_1_l1_0.2,0.4569935,0.8964980284323749,-0.4395045284323749,0.4395045284323749
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BGD,Bangladesh,2022,0.006684204,elastic_net_alpha_1_l1_0.2,0.006684204,0.48175338498143416,-0.47506918098143414,0.47506918098143414
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BGR,Bulgaria,2022,0.01936982,elastic_net_alpha_1_l1_0.2,0.01936982,0.4107166558184101,-0.3913468358184101,0.3913468358184101
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BHR,Bahrain,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.5994847283072867,-0.5973285333072867,0.5973285333072867
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BIH,Bosnia and Herzegovina,2022,0.0005390487,elastic_net_alpha_1_l1_0.2,0.0005390487,0.2756364466212189,-0.2750973979212189,0.2750973979212189
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BLR,Belarus,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.26068460866358467,-0.25852841366358464,0.25852841366358464
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BOL,Bolivia,2022,0.0007187316,elastic_net_alpha_1_l1_0.2,0.0007187316,0.2502785576663922,-0.24955982606639218,0.24955982606639218
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BRA,Brazil,2022,0.1441057,elastic_net_alpha_1_l1_0.2,0.1441057,2.5221903197165516,-2.3780846197165517,2.3780846197165517
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BTN,Bhutan,2022,0.0007187316,elastic_net_alpha_1_l1_0.2,0.0007187316,0.16791420496068876,-0.16719547336068877,0.16719547336068877
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CAN,Canada,2022,1.151103,elastic_net_alpha_1_l1_0.2,1.151103,2.7141271726836105,-1.5630241726836105,1.5630241726836105
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHE,Switzerland,2022,0.4045081,elastic_net_alpha_1_l1_0.2,0.4045081,0.9325754170599613,-0.5280673170599612,0.5280673170599612
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHL,Chile,2022,0.03126482,elastic_net_alpha_1_l1_0.2,0.03126482,0.7345213789216128,-0.7032565589216129,0.7032565589216129
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHN,China,2022,36.75972,elastic_net_alpha_1_l1_0.2,36.75972,20.442228723850974,16.317491276149028,16.317491276149028
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CIV,Cote d'Ivoire,2022,0.001078097,elastic_net_alpha_1_l1_0.2,0.001078097,0.24572598707399496,-0.24464789007399496,0.24464789007399496
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CMR,Cameroon,2022,0.001796829,elastic_net_alpha_1_l1_0.2,0.001796829,0.1784077631487735,-0.1766109341487735,0.1766109341487735
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,COL,Colombia,2022,0.04995184,elastic_net_alpha_1_l1_0.2,0.04995184,0.6832205022284172,-0.6332686622284173,0.6332686622284173
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CPV,Cabo Verde,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.24576424877062564,-0.24360805377062564,0.24360805377062564
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CRI,Costa Rica,2022,0.00431239,elastic_net_alpha_1_l1_0.2,0.00431239,0.3682491553839702,-0.3639367653839702,0.3639367653839702
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CYP,Cyprus,2022,0.02443687,elastic_net_alpha_1_l1_0.2,0.02443687,0.3477584627855943,-0.3233215927855943,0.3233215927855943
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CZE,Czechia,2022,0.1217172,elastic_net_alpha_1_l1_0.2,0.1217172,0.7936995277236455,-0.6719823277236455,0.6719823277236455
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DEU,Germany,2022,5.048269,elastic_net_alpha_1_l1_0.2,5.048269,4.622152313093515,0.42611668690648496,0.42611668690648496
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DNK,Denmark,2022,0.756465,elastic_net_alpha_1_l1_0.2,0.756465,0.8652920054906608,-0.10882700549066071,0.10882700549066071
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DZA,Algeria,2022,0.002695243,elastic_net_alpha_1_l1_0.2,0.002695243,0.49284558600812944,-0.49015034300812943,0.49015034300812943
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ECU,Ecuador,2022,0.002695243,elastic_net_alpha_1_l1_0.2,0.002695243,0.3593430515160997,-0.3566478085160997,0.3566478085160997
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,EGY,"Egypt, Arab Rep.",2022,0.01635114,elastic_net_alpha_1_l1_0.2,0.01635114,0.840974274052863,-0.8246231340528629,0.8246231340528629
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ESP,Spain,2022,0.5145639,elastic_net_alpha_1_l1_0.2,0.5145639,2.2708192279283326,-1.7562553279283326,1.7562553279283326
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,EST,Estonia,2022,0.00431239,elastic_net_alpha_1_l1_0.2,0.00431239,0.44453985538230034,-0.44022746538230034,0.44022746538230034
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ETH,Ethiopia,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.2576516844686757,-0.2554954894686757,0.2554954894686757
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,FIN,Finland,2022,0.3148763,elastic_net_alpha_1_l1_0.2,0.3148763,0.8419067650444718,-0.5270304650444718,0.5270304650444718
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,FRA,France,2022,1.679969,elastic_net_alpha_1_l1_0.2,1.679969,3.07265673698394,-1.3926877369839399,1.3926877369839399
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,FRO,Faroe Islands,2022,0.001078097,elastic_net_alpha_1_l1_0.2,0.001078097,0.2864796453374603,-0.2854015483374603,0.2854015483374603
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GBR,United Kingdom,2022,1.691451,elastic_net_alpha_1_l1_0.2,1.691451,4.09899352768592,-2.40754252768592,2.40754252768592
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GHA,Ghana,2022,0.003593658,elastic_net_alpha_1_l1_0.2,0.003593658,0.2895440236373473,-0.2859503656373473,0.2859503656373473
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GRC,Greece,2022,0.0394943,elastic_net_alpha_1_l1_0.2,0.0394943,0.6845392187840196,-0.6450449187840196,0.6450449187840196
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GTM,Guatemala,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.243264757838479,-0.241108562838479,0.241108562838479
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HKG,"Hong Kong SAR, China",2022,0.07726365,elastic_net_alpha_1_l1_0.2,0.07726365,0.4806787173894297,-0.40341506738942967,0.40341506738942967
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HRV,Croatia,2022,0.00934351,elastic_net_alpha_1_l1_0.2,0.00934351,0.40277969364861776,-0.39343618364861777,0.39343618364861777
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HUN,Hungary,2022,0.0398896,elastic_net_alpha_1_l1_0.2,0.0398896,0.6591669765160189,-0.6192773765160189,0.6192773765160189
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IDN,Indonesia,2022,0.0166027,elastic_net_alpha_1_l1_0.2,0.0166027,1.5367454451291445,-1.5201427451291445,1.5201427451291445
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IND,India,2022,1.054487,elastic_net_alpha_1_l1_0.2,1.054487,4.362059999977362,-3.3075729999773618,3.3075729999773618
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRL,Ireland,2022,0.07543088,elastic_net_alpha_1_l1_0.2,0.07543088,0.6952943962808045,-0.6198635162808045,0.6198635162808045
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRN,"Iran, Islamic Rep.",2022,0.03047422,elastic_net_alpha_1_l1_0.2,0.03047422,1.4888776092083127,-1.4584033892083126,1.4584033892083126
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRQ,Iraq,2022,0.0004312389,elastic_net_alpha_1_l1_0.2,0.0004312389,0.47696845003819316,-0.47653721113819314,0.47653721113819314
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ISL,Iceland,2022,0.005031121,elastic_net_alpha_1_l1_0.2,0.005031121,0.42713959917852506,-0.42210847817852504,0.42210847817852504
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ISR,Israel,2022,0.3257651,elastic_net_alpha_1_l1_0.2,0.3257651,0.9799556610619146,-0.6541905610619145,0.6541905610619145
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ITA,Italy,2022,0.9751271,elastic_net_alpha_1_l1_0.2,0.9751271,2.849255936458473,-1.874128836458473,1.874128836458473
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,JOR,Jordan,2022,0.005031121,elastic_net_alpha_1_l1_0.2,0.005031121,0.3862043916879073,-0.3811732706879073,0.3811732706879073
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,JPN,Japan,2022,15.63018,elastic_net_alpha_1_l1_0.2,15.63018,4.814947343512092,10.815232656487908,10.815232656487908
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KAZ,Kazakhstan,2022,0.001617146,elastic_net_alpha_1_l1_0.2,0.001617146,0.6369997751229988,-0.6353826291229988,0.6353826291229988
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KOR,"Korea, Rep.",2022,13.91118,elastic_net_alpha_1_l1_0.2,13.91118,2.7222429383882933,11.188937061611707,11.188937061611707
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KWT,Kuwait,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.653476242853646,-0.6513200478536461,0.6513200478536461
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LBN,Lebanon,2022,0.007366999,elastic_net_alpha_1_l1_0.2,0.007366999,0.33149225079947386,-0.3241252517994739,0.3241252517994739
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LKA,Sri Lanka,2022,0.001796829,elastic_net_alpha_1_l1_0.2,0.001796829,0.33671686969797354,-0.33492004069797354,0.33492004069797354
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LTU,Lithuania,2022,0.003234292,elastic_net_alpha_1_l1_0.2,0.003234292,0.3585646476944847,-0.3553303556944847,0.3553303556944847
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LUX,Luxembourg,2022,0.03378038,elastic_net_alpha_1_l1_0.2,0.03378038,0.29182164580678793,-0.25804126580678793,0.25804126580678793
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LVA,Latvia,2022,0.01751908,elastic_net_alpha_1_l1_0.2,0.01751908,0.3226745434043933,-0.30515546340439326,0.30515546340439326
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MAC,"Macao SAR, China",2022,0.0007187316,elastic_net_alpha_1_l1_0.2,0.0007187316,0.39835661654231547,-0.39763788494231544,0.39763788494231544
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MAR,Morocco,2022,0.02048385,elastic_net_alpha_1_l1_0.2,0.02048385,0.4660452252439223,-0.44556137524392225,0.44556137524392225
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MEX,Mexico,2022,0.08678684,elastic_net_alpha_1_l1_0.2,0.08678684,1.3565207074991297,-1.2697338674991296,1.2697338674991296
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MKD,North Macedonia,2022,0.0005390487,elastic_net_alpha_1_l1_0.2,0.0005390487,0.24230232325932366,-0.24176327455932367,0.24176327455932367
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MLT,Malta,2022,0.003234292,elastic_net_alpha_1_l1_0.2,0.003234292,0.26481429849492466,-0.26158000649492463,0.26158000649492463
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MYS,Malaysia,2022,0.04416605,elastic_net_alpha_1_l1_0.2,0.04416605,0.9576018328092838,-0.9134357828092838,0.9134357828092838
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NER,Niger,2022,0.001078097,elastic_net_alpha_1_l1_0.2,0.001078097,0.15008143588214673,-0.14900333888214673,0.14900333888214673
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NLD,Netherlands,2022,0.6497334,elastic_net_alpha_1_l1_0.2,0.6497334,1.0877656261844555,-0.4380322261844555,0.4380322261844555
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NOR,Norway,2022,0.2596418,elastic_net_alpha_1_l1_0.2,0.2596418,0.9315261507472399,-0.6718843507472398,0.6718843507472398
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NPL,Nepal,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.1915231907393502,-0.1893669957393502,0.1893669957393502
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NZL,New Zealand,2022,0.07187316,elastic_net_alpha_1_l1_0.2,0.07187316,0.8240421821827039,-0.7521690221827039,0.7521690221827039
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,OMN,Oman,2022,0.00431239,elastic_net_alpha_1_l1_0.2,0.00431239,0.6239856647220338,-0.6196732747220337,0.6196732747220337
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PAK,Pakistan,2022,0.009882559,elastic_net_alpha_1_l1_0.2,0.009882559,0.7264228046968252,-0.7165402456968252,0.7165402456968252
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PAN,Panama,2022,0.0009702877,elastic_net_alpha_1_l1_0.2,0.0009702877,0.33829470332690026,-0.33732441562690024,0.33732441562690024
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PER,Peru,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.48868816570690604,-0.486531970706906,0.486531970706906
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PHL,Philippines,2022,0.01516524,elastic_net_alpha_1_l1_0.2,0.01516524,0.5536478657628923,-0.5384826257628923,0.5384826257628923
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,POL,Poland,2022,0.1628286,elastic_net_alpha_1_l1_0.2,0.1628286,1.39584869075863,-1.2330200907586302,1.2330200907586302
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PRI,Puerto Rico (US),2022,0.003234292,elastic_net_alpha_1_l1_0.2,0.003234292,0.42489057430865196,-0.42165628230865193,0.42165628230865193
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PRT,Portugal,2022,0.06576394,elastic_net_alpha_1_l1_0.2,0.06576394,0.7790648012348474,-0.7133008612348475,0.7133008612348475
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,QAT,Qatar,2022,0.00431239,elastic_net_alpha_1_l1_0.2,0.00431239,1.053681842936754,-1.049369452936754,1.049369452936754
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ROU,Romania,2022,0.02371814,elastic_net_alpha_1_l1_0.2,0.02371814,0.6276462420700479,-0.603928102070048,0.603928102070048
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,RUS,Russian Federation,2022,0.1397933,elastic_net_alpha_1_l1_0.2,0.1397933,2.8680304931198535,-2.7282371931198535,2.7282371931198535
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SAU,Saudi Arabia,2022,0.132606,elastic_net_alpha_1_l1_0.2,0.132606,1.3039309248856026,-1.1713249248856026,1.1713249248856026
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SGP,Singapore,2022,0.1973278,elastic_net_alpha_1_l1_0.2,0.1973278,0.8376943686245437,-0.6403665686245437,0.6403665686245437
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SMR,San Marino,2022,0.002156195,elastic_net_alpha_1_l1_0.2,0.002156195,0.015959548917195754,-0.013803353917195754,0.013803353917195754
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SRB,Serbia,2022,0.00934351,elastic_net_alpha_1_l1_0.2,0.00934351,0.37560283828079366,-0.36625932828079366,0.36625932828079366
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SVK,Slovak Republic,2022,0.02120258,elastic_net_alpha_1_l1_0.2,0.02120258,0.38857241037070656,-0.3673698303707066,0.3673698303707066
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SVN,Slovenia,2022,0.02677275,elastic_net_alpha_1_l1_0.2,0.02677275,0.38070795762341536,-0.35393520762341535,0.35393520762341535
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SWE,Sweden,2022,0.8673653,elastic_net_alpha_1_l1_0.2,0.8673653,1.103885254080339,-0.236519954080339,0.236519954080339
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SYR,Syrian Arab Republic,2022,0.002335878,elastic_net_alpha_1_l1_0.2,0.002335878,0.20052144851516762,-0.1981855705151676,0.1981855705151676
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,THA,Thailand,2022,0.01689019,elastic_net_alpha_1_l1_0.2,0.01689019,0.7453016927990753,-0.7284115027990753,0.7284115027990753
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,TKM,Turkmenistan,2022,0.00431239,elastic_net_alpha_1_l1_0.2,0.00431239,0.36225439386270497,-0.35794200386270497,0.35794200386270497
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,TUN,Tunisia,2022,0.001078097,elastic_net_alpha_1_l1_0.2,0.001078097,0.3598648389758189,-0.3587867419758189,0.3587867419758189
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,TUR,Turkiye,2022,0.2866661,elastic_net_alpha_1_l1_0.2,0.2866661,1.6213131026969552,-1.3346470026969552,1.3346470026969552
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,UKR,Ukraine,2022,0.01958544,elastic_net_alpha_1_l1_0.2,0.01958544,0.5771344055627465,-0.5575489655627466,0.5575489655627466
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,URY,Uruguay,2022,0.005390487,elastic_net_alpha_1_l1_0.2,0.005390487,0.36949784839797406,-0.36410736139797406,0.36410736139797406
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,USA,United States,2022,12.35069,elastic_net_alpha_1_l1_0.2,12.35069,19.729069485988006,-7.378379485988006,7.378379485988006
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,UZB,Uzbekistan,2022,0.001078097,elastic_net_alpha_1_l1_0.2,0.001078097,0.3568990981053829,-0.3558210011053829,0.3558210011053829
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,VEN,"Venezuela, RB",2022,0.003593658,elastic_net_alpha_1_l1_0.2,0.003593658,0.16609723452569825,-0.16250357652569825,0.16250357652569825
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,VNM,Viet Nam,2022,0.02414938,elastic_net_alpha_1_l1_0.2,0.02414938,0.44674950194162777,-0.42260012194162777,0.42260012194162777
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ZAF,South Africa,2022,0.04779565,elastic_net_alpha_1_l1_0.2,0.04779565,0.8901805157108756,-0.8423848657108757,0.8423848657108757
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ZWE,Zimbabwe,2022,0.0007187316,elastic_net_alpha_1_l1_0.2,0.0007187316,0.09259409072975777,-0.09187535912975778,0.09187535912975778
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ALB,Albania,2023,0.0007706951,elastic_net_alpha_1_l1_0.2,0.0007706951,0.2973496915438928,-0.2965789964438928,0.2965789964438928
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARE,United Arab Emirates,2023,0.03206092,elastic_net_alpha_1_l1_0.2,0.03206092,0.8033540212699994,-0.7712931012699994,0.7712931012699994
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARG,Argentina,2023,0.01329449,elastic_net_alpha_1_l1_0.2,0.01329449,0.8052541328046355,-0.7919596428046355,0.7919596428046355
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ARM,Armenia,2023,0.005780213,elastic_net_alpha_1_l1_0.2,0.005780213,0.30774752046846354,-0.30196730746846356,0.30196730746846356
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ATG,Antigua and Barbuda,2023,0.001156043,elastic_net_alpha_1_l1_0.2,0.001156043,0.3338448291202424,-0.3326887861202424,0.3326887861202424
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AUS,Australia,2023,0.4618776,elastic_net_alpha_1_l1_0.2,0.4618776,2.5970809041829788,-2.135203304182979,2.135203304182979
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AUT,Austria,2023,0.4801606,elastic_net_alpha_1_l1_0.2,0.4801606,0.9050120956810596,-0.42485149568105957,0.42485149568105957
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,AZE,Azerbaijan,2023,0.006936256,elastic_net_alpha_1_l1_0.2,0.006936256,0.3352133265422549,-0.3282770705422549,0.3282770705422549
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BEL,Belgium,2023,0.4136321,elastic_net_alpha_1_l1_0.2,0.4136321,0.9027128132705665,-0.4890807132705665,0.4890807132705665
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BFA,Burkina Faso,2023,0.001156043,elastic_net_alpha_1_l1_0.2,0.001156043,0.14947821749081147,-0.14832217449081148,0.14832217449081148
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BGD,Bangladesh,2023,0.001156043,elastic_net_alpha_1_l1_0.2,0.001156043,0.5168277014275893,-0.5156716584275892,0.5156716584275892
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BGR,Bulgaria,2023,0.01202284,elastic_net_alpha_1_l1_0.2,0.01202284,0.41480970630397496,-0.402786866303975,0.402786866303975
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BHS,"Bahamas, The",2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.34476076001023725,-0.34244867501023724,0.34244867501023724
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BOL,Bolivia,2023,0.004238823,elastic_net_alpha_1_l1_0.2,0.004238823,0.23835162014772637,-0.23411279714772637,0.23411279714772637
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,BRA,Brazil,2023,0.1532527,elastic_net_alpha_1_l1_0.2,0.1532527,2.590967501094856,-2.437714801094856,2.437714801094856
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CAN,Canada,2023,0.8605196,elastic_net_alpha_1_l1_0.2,0.8605196,2.7603530533383838,-1.8998334533383838,1.8998334533383838
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHE,Switzerland,2023,0.4411294,elastic_net_alpha_1_l1_0.2,0.4411294,0.9310298563634403,-0.48990045636344026,0.48990045636344026
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHL,Chile,2023,0.05549005,elastic_net_alpha_1_l1_0.2,0.05549005,0.7455409393439515,-0.6900508893439515,0.6900508893439515
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CHN,China,2023,38.42308,elastic_net_alpha_1_l1_0.2,38.42308,22.368031316647954,16.055048683352044,16.055048683352044
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CIV,Cote d'Ivoire,2023,0.0007706951,elastic_net_alpha_1_l1_0.2,0.0007706951,0.3239754653182334,-0.3232047702182334,0.3232047702182334
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,COL,Colombia,2023,0.02127118,elastic_net_alpha_1_l1_0.2,0.02127118,0.7162882234763737,-0.6950170434763736,0.6950170434763736
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CUB,Cuba,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.25545982188934013,-0.2531477368893401,0.2531477368893401
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CYP,Cyprus,2023,0.03872743,elastic_net_alpha_1_l1_0.2,0.03872743,0.227336098839928,-0.188608668839928,0.188608668839928
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,CZE,Czechia,2023,0.118687,elastic_net_alpha_1_l1_0.2,0.118687,0.785266931617929,-0.6665799316179291,0.6665799316179291
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DEU,Germany,2023,5.323825,elastic_net_alpha_1_l1_0.2,5.323825,4.636592647595455,0.6872323524045454,0.6872323524045454
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DNK,Denmark,2023,0.7307345,elastic_net_alpha_1_l1_0.2,0.7307345,0.9272073644121025,-0.19647286441210254,0.19647286441210254
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,DZA,Algeria,2023,0.002890107,elastic_net_alpha_1_l1_0.2,0.002890107,0.48080049759368193,-0.47791039059368196,0.47791039059368196
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,EGY,"Egypt, Arab Rep.",2023,0.009441015,elastic_net_alpha_1_l1_0.2,0.009441015,0.8889394972702601,-0.8794984822702601,0.8794984822702601
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ESP,Spain,2023,0.4860224,elastic_net_alpha_1_l1_0.2,0.4860224,2.331321258071967,-1.845298858071967,1.845298858071967
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,EST,Estonia,2023,0.01271647,elastic_net_alpha_1_l1_0.2,0.01271647,0.4593116552392345,-0.4465951852392345,0.4465951852392345
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ETH,Ethiopia,2023,0.005780213,elastic_net_alpha_1_l1_0.2,0.005780213,0.4147790433185795,-0.40899883031857953,0.40899883031857953
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,FIN,Finland,2023,0.378583,elastic_net_alpha_1_l1_0.2,0.378583,0.8820068656591482,-0.5034238656591482,0.5034238656591482
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,FRA,France,2023,2.193091,elastic_net_alpha_1_l1_0.2,2.193091,3.0990473016978415,-0.9059563016978416,0.9059563016978416
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GBR,United Kingdom,2023,1.668825,elastic_net_alpha_1_l1_0.2,1.668825,4.1647719170302215,-2.4959469170302215,2.4959469170302215
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GEO,Georgia,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.3574932219405532,-0.3551811369405532,0.3551811369405532
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GHA,Ghana,2023,0.003468128,elastic_net_alpha_1_l1_0.2,0.003468128,0.34461271287597484,-0.3411445848759748,0.3411445848759748
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GRC,Greece,2023,0.0370319,elastic_net_alpha_1_l1_0.2,0.0370319,0.6974168100476499,-0.6603849100476499,0.6603849100476499
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,GTM,Guatemala,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.32269175603320677,-0.32037967103320675,0.32037967103320675
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HKG,"Hong Kong SAR, China",2023,0.08130834,elastic_net_alpha_1_l1_0.2,0.08130834,0.4665585761545229,-0.3852502361545229,0.3852502361545229
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HRV,Croatia,2023,0.02196481,elastic_net_alpha_1_l1_0.2,0.02196481,0.42325113886696397,-0.40128632886696397,0.40128632886696397
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,HUN,Hungary,2023,0.04990251,elastic_net_alpha_1_l1_0.2,0.04990251,0.5746929333125641,-0.5247904233125641,0.5247904233125641
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IDN,Indonesia,2023,0.02235016,elastic_net_alpha_1_l1_0.2,0.02235016,1.56665059491019,-1.54430043491019,1.54430043491019
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IND,India,2023,0.9509992,elastic_net_alpha_1_l1_0.2,0.9509992,4.853352346061502,-3.902353146061502,3.902353146061502
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRL,Ireland,2023,0.113639,elastic_net_alpha_1_l1_0.2,0.113639,0.6879847930297429,-0.5743457930297429,0.5743457930297429
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRN,"Iran, Islamic Rep.",2023,0.02181067,elastic_net_alpha_1_l1_0.2,0.02181067,1.512486781260126,-1.490676111260126,1.490676111260126
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,IRQ,Iraq,2023,0.0009248341,elastic_net_alpha_1_l1_0.2,0.0009248341,0.49109701466058525,-0.49017218056058526,0.49017218056058526
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ISL,Iceland,2023,0.007706951,elastic_net_alpha_1_l1_0.2,0.007706951,0.5331822020605275,-0.5254752510605275,0.5254752510605275
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ISR,Israel,2023,0.2640401,elastic_net_alpha_1_l1_0.2,0.2640401,0.9798074660463219,-0.7157673660463219,0.7157673660463219
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ITA,Italy,2023,0.9510773,elastic_net_alpha_1_l1_0.2,0.9510773,2.9449505081722154,-1.9938732081722153,1.9938732081722153
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,JOR,Jordan,2023,0.003986596,elastic_net_alpha_1_l1_0.2,0.003986596,0.3822678765483919,-0.3782812805483919,0.3782812805483919
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,JPN,Japan,2023,12.35528,elastic_net_alpha_1_l1_0.2,12.35528,4.79511166647965,7.560168333520351,7.560168333520351
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KAZ,Kazakhstan,2023,0.001156043,elastic_net_alpha_1_l1_0.2,0.001156043,0.62052609873808,-0.6193700557380799,0.6193700557380799
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KEN,Kenya,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.3648485519759995,-0.3625364669759995,0.3625364669759995
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KOR,"Korea, Rep.",2023,17.64583,elastic_net_alpha_1_l1_0.2,17.64583,2.75855244946098,14.88727755053902,14.88727755053902
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,KWT,Kuwait,2023,0.0007706951,elastic_net_alpha_1_l1_0.2,0.0007706951,0.6377360707858966,-0.6369653756858965,0.6369653756858965
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LAO,Lao PDR,2023,0.001156043,elastic_net_alpha_1_l1_0.2,0.001156043,0.17526272179293123,-0.17410667879293124,0.17410667879293124
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LBN,Lebanon,2023,0.01123113,elastic_net_alpha_1_l1_0.2,0.01123113,0.2598306854731237,-0.2485995554731237,0.2485995554731237
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LKA,Sri Lanka,2023,0.007321603,elastic_net_alpha_1_l1_0.2,0.007321603,0.3873562325088663,-0.3800346295088663,0.3800346295088663
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LTU,Lithuania,2023,0.006936256,elastic_net_alpha_1_l1_0.2,0.006936256,0.3816458040197265,-0.3747095480197265,0.3747095480197265
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LUX,Luxembourg,2023,0.02601096,elastic_net_alpha_1_l1_0.2,0.02601096,-0.07903244524437991,0.10504340524437991,0.10504340524437991
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,LVA,Latvia,2023,0.004624171,elastic_net_alpha_1_l1_0.2,0.004624171,0.3486372023676947,-0.3440130313676947,0.3440130313676947
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MAR,Morocco,2023,0.02011614,elastic_net_alpha_1_l1_0.2,0.02011614,0.4589200515576092,-0.43880391155760917,0.43880391155760917
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MEX,Mexico,2023,0.0551047,elastic_net_alpha_1_l1_0.2,0.0551047,1.3592764383220164,-1.3041717383220164,1.3041717383220164
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MKD,North Macedonia,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.2347630895995172,-0.2324510045995172,0.2324510045995172
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MLT,Malta,2023,0.003468128,elastic_net_alpha_1_l1_0.2,0.003468128,0.23245542322735901,-0.22898729522735903,0.22898729522735903
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MNE,Montenegro,2023,0.003468128,elastic_net_alpha_1_l1_0.2,0.003468128,0.3017605842354284,-0.2982924562354284,0.2982924562354284
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,MYS,Malaysia,2023,0.05518177,elastic_net_alpha_1_l1_0.2,0.05518177,0.9644733446462852,-0.9092915746462852,0.9092915746462852
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NAM,Namibia,2023,0.001156043,elastic_net_alpha_1_l1_0.2,0.001156043,0.27480491105268945,-0.27364886805268945,0.27364886805268945
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NLD,Netherlands,2023,0.5949941,elastic_net_alpha_1_l1_0.2,0.5949941,1.1818924202451764,-0.5868983202451764,0.5868983202451764
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NOR,Norway,2023,0.2159873,elastic_net_alpha_1_l1_0.2,0.2159873,1.0032640272486588,-0.7872767272486588,0.7872767272486588
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,NZL,New Zealand,2023,0.06288872,elastic_net_alpha_1_l1_0.2,0.06288872,0.8480304377136199,-0.7851417177136198,0.7851417177136198
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PAK,Pakistan,2023,0.002830553,elastic_net_alpha_1_l1_0.2,0.002830553,0.8136755668588564,-0.8108450138588564,0.8108450138588564
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PAN,Panama,2023,0.005086588,elastic_net_alpha_1_l1_0.2,0.005086588,0.3367526815281796,-0.3316660935281796,0.3316660935281796
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PER,Peru,2023,0.008477646,elastic_net_alpha_1_l1_0.2,0.008477646,0.5180523809392279,-0.5095747349392279,0.5095747349392279
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PHL,Philippines,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.5776902741985662,-0.5753781891985662,0.5753781891985662
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,POL,Poland,2023,0.1666243,elastic_net_alpha_1_l1_0.2,0.1666243,1.4132639211697944,-1.2466396211697943,1.2466396211697943
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PRI,Puerto Rico (US),2023,0.004624171,elastic_net_alpha_1_l1_0.2,0.004624171,0.43175915485272454,-0.4271349838527245,0.4271349838527245
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,PRT,Portugal,2023,0.08377456,elastic_net_alpha_1_l1_0.2,0.08377456,0.8080495188047705,-0.7242749588047706,0.7242749588047706
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,QAT,Qatar,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,1.0359573856724442,-1.0336453006724442,1.0336453006724442
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ROU,Romania,2023,0.03121315,elastic_net_alpha_1_l1_0.2,0.03121315,0.648299883394861,-0.617086733394861,0.617086733394861
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,RUS,Russian Federation,2023,0.1051999,elastic_net_alpha_1_l1_0.2,0.1051999,2.7523781217280385,-2.6471782217280384,2.6471782217280384
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SAU,Saudi Arabia,2023,0.1056623,elastic_net_alpha_1_l1_0.2,0.1056623,1.3981531825476037,-1.2924908825476036,1.2924908825476036
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SGP,Singapore,2023,0.2277789,elastic_net_alpha_1_l1_0.2,0.2277789,0.843458012657879,-0.615679112657879,0.615679112657879
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SLV,El Salvador,2023,0.002312085,elastic_net_alpha_1_l1_0.2,0.002312085,0.25638626180844015,-0.25407417680844013,0.25407417680844013
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SRB,Serbia,2023,0.02003807,elastic_net_alpha_1_l1_0.2,0.02003807,0.3826800520343947,-0.3626419820343947,0.3626419820343947
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SVK,Slovak Republic,2023,0.01965272,elastic_net_alpha_1_l1_0.2,0.01965272,0.3808293823589337,-0.3611766623589337,0.3611766623589337
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SVN,Slovenia,2023,0.02807532,elastic_net_alpha_1_l1_0.2,0.02807532,0.3727607057126888,-0.3446853857126888,0.3446853857126888
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,SWE,Sweden,2023,0.812775,elastic_net_alpha_1_l1_0.2,0.812775,1.19623916668166,-0.38346416668166006,0.38346416668166006
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,THA,Thailand,2023,0.0242769,elastic_net_alpha_1_l1_0.2,0.0242769,0.773415592665641,-0.7491386926656409,0.7491386926656409
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,TUN,Tunisia,2023,0.002697433,elastic_net_alpha_1_l1_0.2,0.002697433,0.34397800456561045,-0.3412805715656104,0.3412805715656104
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,TUR,Turkiye,2023,0.2342913,elastic_net_alpha_1_l1_0.2,0.2342913,1.7228052422070985,-1.4885139422070985,1.4885139422070985
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,UGA,Uganda,2023,0.003468128,elastic_net_alpha_1_l1_0.2,0.003468128,0.18859179498283207,-0.18512366698283209,0.18512366698283209
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,UKR,Ukraine,2023,0.04046149,elastic_net_alpha_1_l1_0.2,0.04046149,0.5461008625668198,-0.5056393725668198,0.5056393725668198
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,USA,United States,2023,10.59949,elastic_net_alpha_1_l1_0.2,10.59949,20.05495099033555,-9.455460990335549,9.455460990335549
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,UZB,Uzbekistan,2023,0.00154139,elastic_net_alpha_1_l1_0.2,0.00154139,0.3557521890514659,-0.3542107990514659,0.3542107990514659
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,VEN,"Venezuela, RB",2023,0.001156043,elastic_net_alpha_1_l1_0.2,0.001156043,0.204390662064723,-0.203234619064723,0.203234619064723
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,VNM,Viet Nam,2023,0.006550908,elastic_net_alpha_1_l1_0.2,0.006550908,0.47852520671644866,-0.47197429871644864,0.47197429871644864
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ZAF,South Africa,2023,0.06049956,elastic_net_alpha_1_l1_0.2,0.06049956,0.87532101647043,-0.81482145647043,0.81482145647043
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,ZWE,Zimbabwe,2023,0.0007706951,elastic_net_alpha_1_l1_0.2,0.0007706951,0.20139344544343862,-0.20062275034343863,0.20062275034343863

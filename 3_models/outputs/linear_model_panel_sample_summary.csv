@@ -1,0 +1,17 @@
+panel_id,panel_label,panel_role,comparison_group,feature_set_role,target_column,lag_suffix,comparison_scope,split,year_start,year_end,years,rows,countries,target_non_missing,feature_columns,complete_feature_rows,any_feature_missing_rows
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,train,1999,2018,20,2073,171,2073,9,1071,1002
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,validation,2019,2020,2,227,130,227,9,158,69
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,test,2021,2023,3,312,128,312,9,162,150
+main,Main v2 model,main,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,all,1999,2023,25,2612,174,2612,9,1391,1221
+suba,Submodel A: RISE and high-tech exports,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,train,2013,2020,8,766,127,766,3,680,86
+suba,Submodel A: RISE and high-tech exports,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,validation,2021,2021,1,92,92,92,3,85,7
+suba,Submodel A: RISE and high-tech exports,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,test,2022,2023,2,173,97,173,3,161,12
+suba,Submodel A: RISE and high-tech exports,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,all,2013,2023,11,1031,128,1031,3,926,105
+subb,"Submodel B: R&D, co-invention, and tax",mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,train,1999,2018,20,1874,119,1874,5,688,1186
+subb,"Submodel B: R&D, co-invention, and tax",mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,validation,2019,2020,2,194,104,194,5,78,116
+subb,"Submodel B: R&D, co-invention, and tax",mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,test,2021,2023,3,284,109,284,5,112,172
+subb,"Submodel B: R&D, co-invention, and tax",mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,all,1999,2023,25,2352,119,2352,5,878,1474
+subc,Submodel C: OECD EPS,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,train,1993,2015,23,914,40,914,1,914,0
+subc,Submodel C: OECD EPS,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,validation,2016,2017,2,80,40,80,1,80,0
+subc,Submodel C: OECD EPS,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,test,2018,2021,4,160,40,160,1,160,0
+subc,Submodel C: OECD EPS,mechanism_submodel,,,env_patent_share_inventions,lag1_3_mean,own_sample_not_direct_ranking,all,1993,2021,29,1154,40,1154,1,1154,0
