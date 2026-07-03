@@ -8,6 +8,22 @@ import numpy as np
 import pandas as pd
 
 
+def build_candidate_comparison(validation_metrics: pd.DataFrame) -> pd.DataFrame:
+    """Rank linear candidates by validation MAE and mark the selected model.
+
+    The modeling pipeline selects the candidate with the lowest validation MAE
+    without touching the test block. This table makes that selection explicit
+    for the report and the notebook: it returns every candidate sorted from best
+    to worst validation MAE, with a 1-based ``rank`` and an ``is_selected`` flag
+    on the minimum-MAE row (the model whose coefficients are reported).
+    """
+    keep = [c for c in ("model", "mae", "rmse", "oos_r2_vs_train_mean", "spearman") if c in validation_metrics.columns]
+    ranked = validation_metrics.loc[:, keep].sort_values("mae").reset_index(drop=True).copy()
+    ranked.insert(0, "rank", ranked.index + 1)
+    ranked["is_selected"] = ranked["mae"] == ranked["mae"].min()
+    return ranked
+
+
 def make_linear_model_figures(
     *,
     panel: pd.DataFrame,
@@ -331,12 +347,14 @@ def _plot_feature_missingness(panel: pd.DataFrame, feature_columns: list[str], s
 
 def _plot_validation_mae(validation_metrics: pd.DataFrame, sns, plt):
     plot_data = validation_metrics.sort_values("mae").head(12).copy()
+    selected_model = plot_data.iloc[0]["model"]
     plot_data["model_label"] = plot_data["model"].str.replace("_", " ", regex=False)
     plot_data = plot_data.sort_values("mae", ascending=False)
+    bar_colors = ["#C44E52" if model == selected_model else "#405C82" for model in plot_data["model"]]
 
     fig, ax = plt.subplots(figsize=(10.8, 6.2), constrained_layout=True)
-    sns.barplot(data=plot_data, y="model_label", x="mae", color="#405C82", ax=ax)
-    ax.set_title("Validation MAE by Linear Candidate", loc="left", fontweight="bold")
+    sns.barplot(data=plot_data, y="model_label", x="mae", palette=bar_colors, hue="model_label", legend=False, ax=ax)
+    ax.set_title("Validation MAE by Linear Candidate (red = selected)", loc="left", fontweight="bold")
     ax.set_xlabel("Validation MAE")
     ax.set_ylabel("")
     _despine(ax)
