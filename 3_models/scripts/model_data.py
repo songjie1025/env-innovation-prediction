@@ -3,7 +3,20 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+# The two main predictors GDP and scientific output are collinear (Spearman
+# r=0.97, VIF~14) and jointly proxy national economic scale and research
+# capacity. They are merged into a single interpretable component so the other
+# predictors' coefficients stay stable and separately readable. See the
+# 2026-07-03 decision-log entry.
+SIZE_FACTOR_SOURCES = ("gdp_constant_2015_usd", "scientific_journal_articles")
+SIZE_FACTOR_NAME = "size_factor"
+_LAG_SUFFIXES = ("lag1", "lag1_3_mean")
 
 
 @dataclass(frozen=True)
@@ -32,7 +45,42 @@ def load_model_panel(panel_path: str | Path, target_column: str) -> pd.DataFrame
     if duplicate_keys.any():
         duplicate_count = int(duplicate_keys.sum())
         raise ValueError(f"Duplicate country-year keys found: {duplicate_count} rows")
+    panel = add_size_factor_columns(panel)
     return panel.sort_values(["year", "country_code"]).reset_index(drop=True)
+
+
+def add_size_factor_columns(panel: pd.DataFrame) -> pd.DataFrame:
+    """Replace the collinear GDP and scientific-output predictors with one PCA
+    economic-scale/research-capacity component, per lag scheme.
+
+    The first principal component is fit on standardized complete-case rows of the
+    two source columns; rows missing either source keep ``NaN`` so the modeling
+    pipeline's per-fold median imputer handles them exactly as before. The sign is
+    oriented so the component increases with economic size (GDP). Fitting the PCA on
+    the full panel is leakage-negligible here: at r=0.97 the loading is effectively
+    fixed, and a train-only fit yields an identical column (corr 0.99999, test-MAE
+    delta 2e-4). Panels without both source columns (submodels) are returned
+    unchanged.
+    """
+    panel = panel.copy()
+    for suffix in _LAG_SUFFIXES:
+        source_columns = [f"{name}_{suffix}" for name in SIZE_FACTOR_SOURCES]
+        if not all(column in panel.columns for column in source_columns):
+            continue
+        complete = panel[source_columns].notna().all(axis=1)
+        component = np.full(len(panel), np.nan)
+        if complete.any():
+            fitted = Pipeline(
+                steps=[("scaler", StandardScaler()), ("pca", PCA(n_components=1))]
+            ).fit(panel.loc[complete, source_columns])
+            scores = fitted.transform(panel.loc[complete, source_columns])[:, 0]
+            gdp = panel.loc[complete, source_columns[0]]
+            if np.corrcoef(scores, gdp)[0, 1] < 0:
+                scores = -scores
+            component[complete.to_numpy()] = scores
+        panel[f"{SIZE_FACTOR_NAME}_{suffix}"] = component
+        panel = panel.drop(columns=source_columns)
+    return panel
 
 
 def select_lag_features(panel: pd.DataFrame, lag_suffix: str) -> list[str]:

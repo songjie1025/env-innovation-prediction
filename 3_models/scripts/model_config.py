@@ -116,9 +116,11 @@ SKEW_TRANSFORM_EXPERIMENT_CONFIG = {
     "feature_set_role": "skew_transformed_main_predictors",
 }
 
+# GDP and scientific output are merged into `size_factor` upstream (see
+# model_data.add_size_factor_columns), so they are no longer standalone columns.
+# The PCA component is already symmetric and centered, so it needs no skew
+# transform; the remaining right-skewed predictors are transformed as before.
 SKEW_TRANSFORM_METHODS = {
-    "gdp_constant_2015_usd_lag1_3_mean": "log1p",
-    "scientific_journal_articles_lag1_3_mean": "log1p",
     "fdi_net_inflows_lag1_3_mean": "asinh",
     "inflation_lag1_3_mean": "asinh",
     "co2_per_capita_ar5_lag1_3_mean": "log1p",
@@ -186,3 +188,30 @@ ROBUSTNESS_PREDICTIONS_OUTPUT = OUTPUT_DIR / "linear_model_robustness_prediction
 ROBUSTNESS_COEFFICIENTS_OUTPUT = OUTPUT_DIR / "linear_model_robustness_coefficients.csv"
 ROBUSTNESS_HISTORICAL_BASELINES_OUTPUT = OUTPUT_DIR / "linear_model_robustness_historical_baselines.csv"
 SKEW_TRANSFORM_PLAN_OUTPUT = OUTPUT_DIR / "linear_model_skew_transform_plan.csv"
+
+# --- Tree model outputs ---
+TREE_OUTPUT_DIR = ROOT_DIR / "3_models" / "outputs" / "tree"
+TREE_VALIDATION_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_validation_metrics.csv"
+TREE_TEST_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_test_metrics.csv"
+TREE_PREDICTIONS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_predictions.csv"
+TREE_IMPORTANCE_OUTPUT = TREE_OUTPUT_DIR / "tree_model_feature_importance.csv"
+TREE_SAMPLE_SUMMARY_OUTPUT = TREE_OUTPUT_DIR / "tree_model_sample_summary.csv"
+TREE_HISTORICAL_BASELINES_OUTPUT = TREE_OUTPUT_DIR / "tree_model_historical_baselines.csv"
+TREE_HISTORICAL_DELTA_OUTPUT = TREE_OUTPUT_DIR / "tree_model_historical_baseline_delta_summary.csv"
+TREE_RUN_SUMMARY_OUTPUT = TREE_OUTPUT_DIR / "tree_model_run_summary.md"
+TREE_FIGURE_INDEX_OUTPUT = TREE_OUTPUT_DIR / "tree_model_figure_index.csv"
+TREE_FIGURES_DIR = ROOT_DIR / "4_analysis" / "figures" / "tree_modeling"
+
+# Tree extension outputs: mechanism submodels, same-sample nested comparison,
+# and the robustness pack (lag1 timing + per-million target).
+TREE_PANEL_TEST_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_panel_test_metrics.csv"
+TREE_PANEL_VALIDATION_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_panel_validation_metrics.csv"
+TREE_PANEL_IMPORTANCE_OUTPUT = TREE_OUTPUT_DIR / "tree_model_panel_feature_importance.csv"
+TREE_NESTED_COMPARISON_OUTPUT = TREE_OUTPUT_DIR / "tree_model_nested_comparison.csv"
+TREE_NESTED_TEST_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_nested_test_metrics.csv"
+TREE_NESTED_IMPORTANCE_OUTPUT = TREE_OUTPUT_DIR / "tree_model_nested_feature_importance.csv"
+TREE_ROBUSTNESS_SUMMARY_OUTPUT = TREE_OUTPUT_DIR / "tree_model_robustness_summary.csv"
+TREE_ROBUSTNESS_TEST_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_robustness_test_metrics.csv"
+TREE_ROBUSTNESS_HISTORICAL_BASELINES_OUTPUT = (
+    TREE_OUTPUT_DIR / "tree_model_robustness_historical_baselines.csv"
+)

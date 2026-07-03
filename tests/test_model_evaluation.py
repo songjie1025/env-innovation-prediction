@@ -173,7 +173,7 @@ class ModelEvaluationTests(unittest.TestCase):
             [
                 {
                     "model": "elastic_net_alpha_1_l1_0.2",
-                    "prediction_rule": "selected_linear_model",
+                    "prediction_rule": "selected_model",
                     "uses_test_labels": False,
                     "mae": 1.0,
                     "rmse": 2.0,

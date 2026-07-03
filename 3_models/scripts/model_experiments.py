@@ -14,12 +14,13 @@ from model_data import (
     matrix_from_panel,
     select_lag_features,
 )
-from model_estimators import build_linear_model_candidates
+from model_estimators import build_linear_model_candidates, build_tree_model_candidates
 from model_evaluation import (
     build_historical_baseline_comparison,
     coefficient_table,
     evaluate_candidates_on_validation,
     evaluate_selected_model,
+    feature_importance_table,
     select_best_validation_model,
 )
 
@@ -201,6 +202,165 @@ def run_panel_linear_experiment_from_panel(
         "test_metrics": test_metrics,
         "predictions": predictions,
         "coefficients": coefficients,
+    }
+
+
+def run_panel_tree_experiment(
+    spec: PanelSpec,
+    *,
+    random_state: int,
+    train_share: float = 0.80,
+    validation_share: float = 0.10,
+    year_column: str = "year",
+    split_years: dict[str, list[int]] | None = None,
+) -> dict[str, Any]:
+    """Run the shared chronological tree-model protocol for one model panel.
+
+    Same split/evaluate/select flow as the linear version, but uses
+    RF/XGBoost candidates and feature importance instead of coefficients.
+    """
+    if spec.panel_path is None:
+        raise ValueError("panel_path is required when running an experiment from disk")
+    panel = load_model_panel(spec.panel_path, spec.target_column)
+    return _run_tree_experiment_from_panel(
+        spec,
+        panel,
+        feature_columns=None,
+        random_state=random_state,
+        train_share=train_share,
+        validation_share=validation_share,
+        year_column=year_column,
+        split_years=split_years,
+    )
+
+
+def _run_tree_experiment_from_panel(
+    spec: PanelSpec,
+    panel: pd.DataFrame,
+    *,
+    feature_columns: list[str] | None,
+    random_state: int,
+    train_share: float = 0.80,
+    validation_share: float = 0.10,
+    year_column: str = "year",
+    split_years: dict[str, list[int]] | None = None,
+) -> dict[str, Any]:
+    panel = _validate_panel_frame(panel, spec.target_column)
+    if feature_columns is None:
+        feature_columns = select_lag_features(panel, spec.lag_suffix)
+    else:
+        missing_features = sorted(set(feature_columns).difference(panel.columns))
+        if missing_features:
+            raise ValueError(f"Panel missing requested feature columns: {missing_features}")
+    if split_years is None:
+        split = chronological_train_validation_test_split(
+            panel,
+            year_column=year_column,
+            train_share=train_share,
+            validation_share=validation_share,
+        )
+    else:
+        split = chronological_split_for_years(
+            panel,
+            train_years=split_years["train"],
+            validation_years=split_years["validation"],
+            test_years=split_years["test"],
+            year_column=year_column,
+        )
+
+    x_train, y_train = matrix_from_panel(split.train, feature_columns, spec.target_column)
+    x_validation, y_validation = matrix_from_panel(split.validation, feature_columns, spec.target_column)
+    x_test, y_test = matrix_from_panel(split.test, feature_columns, spec.target_column)
+    _attach_year_attrs(x_train, split.train_years)
+    _attach_year_attrs(x_validation, split.validation_years)
+
+    candidates = build_tree_model_candidates(random_state=random_state)
+    validation_metrics, _ = evaluate_candidates_on_validation(
+        candidates, x_train, y_train, x_validation, y_validation
+    )
+    best_model = select_best_validation_model(validation_metrics)
+
+    train_validation = pd.concat([split.train, split.validation], ignore_index=True)
+    x_train_validation, y_train_validation = matrix_from_panel(
+        train_validation, feature_columns, spec.target_column
+    )
+    test_metrics, fitted_model, test_predictions = evaluate_selected_model(
+        candidates[best_model],
+        best_model,
+        x_train_validation,
+        y_train_validation,
+        x_test,
+        y_test,
+        score_baseline_mean=float(y_train.mean()),
+    )
+
+    predictions = split.test.loc[:, ["country_code", "country_name", "year", spec.target_column]].copy()
+    predictions["model"] = best_model
+    predictions["observed"] = predictions[spec.target_column]
+    predictions["prediction"] = test_predictions
+    predictions["error"] = predictions[spec.target_column] - predictions["prediction"]
+    predictions["absolute_error"] = predictions["error"].abs()
+
+    sample_summary = _sample_summary(panel, feature_columns, split, spec, year_column)
+    importance = feature_importance_table(fitted_model, feature_columns, best_model)
+
+    validation_metrics = _with_panel_context(validation_metrics, spec)
+    test_metrics = _with_panel_context(test_metrics, spec)
+    predictions = _with_panel_context(predictions, spec)
+    importance = _with_panel_context(importance, spec)
+
+    _add_metric_sample_context(
+        validation_metrics,
+        comparison_scope=_comparison_scope(spec),
+        panel=panel,
+        feature_columns=feature_columns,
+        split_rows={"train_rows": len(split.train), "validation_rows": len(split.validation)},
+        split_countries={
+            "train_countries": split.train["country_code"].nunique(),
+            "validation_countries": split.validation["country_code"].nunique(),
+        },
+    )
+    _add_metric_sample_context(
+        test_metrics,
+        comparison_scope=_comparison_scope(spec),
+        panel=panel,
+        feature_columns=feature_columns,
+        split_rows={"train_validation_rows": len(train_validation), "test_rows": len(split.test)},
+        split_countries={
+            "train_validation_countries": train_validation["country_code"].nunique(),
+            "test_countries": split.test["country_code"].nunique(),
+        },
+    )
+    test_metrics["train_year_start"] = min(split.train_years)
+    test_metrics["train_year_end"] = max(split.train_years)
+    test_metrics["validation_year_start"] = min(split.validation_years)
+    test_metrics["validation_year_end"] = max(split.validation_years)
+    test_metrics["test_year_start"] = min(split.test_years)
+    test_metrics["test_year_end"] = max(split.test_years)
+
+    return {
+        "panel_id": spec.panel_id,
+        "panel_label": spec.panel_label,
+        "panel_role": spec.role,
+        "comparison_group": spec.comparison_group,
+        "feature_set_role": spec.feature_set_role,
+        "target_column": spec.target_column,
+        "lag_suffix": spec.lag_suffix,
+        "panel": panel,
+        "split": split,
+        "best_model": best_model,
+        "feature_columns": feature_columns,
+        "split_years": {
+            "train": split.train_years,
+            "validation": split.validation_years,
+            "test": split.test_years,
+        },
+        "fitted_model": fitted_model,
+        "sample_summary": sample_summary,
+        "validation_metrics": validation_metrics,
+        "test_metrics": test_metrics,
+        "predictions": predictions,
+        "importance": importance,
     }
 
 
@@ -477,7 +637,7 @@ def build_persistence_augmented_comparison_table(
     feature_test = feature_experiment["test_metrics"].iloc[0]
     augmented_test = augmented_experiment["test_metrics"].iloc[0]
     history_candidates = historical_baselines[
-        ~historical_baselines["prediction_rule"].eq("selected_linear_model")
+        ~historical_baselines["prediction_rule"].eq("selected_model")
     ].copy()
     if "uses_test_labels" in history_candidates.columns:
         history_candidates = history_candidates[~history_candidates["uses_test_labels"].fillna(False)].copy()

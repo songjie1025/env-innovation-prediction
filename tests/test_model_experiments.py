@@ -414,7 +414,7 @@ class ModelExperimentTests(unittest.TestCase):
             [
                 {
                     "model": "elastic_net_feature_only",
-                    "prediction_rule": "selected_linear_model",
+                    "prediction_rule": "selected_model",
                     "mae": 1.5,
                     "rmse": 2.0,
                     "oos_r2_vs_train_mean": 0.1,

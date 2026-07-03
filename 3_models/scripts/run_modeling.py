@@ -42,6 +42,8 @@ from model_config import (  # noqa: E402
     PERSISTENCE_AUGMENTED_COMPARISON_OUTPUT,
     PERSISTENCE_AUGMENTED_TEST_METRICS_OUTPUT,
     PREDICTIONS_OUTPUT,
+    PRIMARY_LAG_SUFFIX,
+    PRIMARY_PANEL_PATH,
     PRIMARY_TARGET,
     ROLLING_ORIGIN_PREDICTIONS_OUTPUT,
     ROLLING_ORIGIN_SUMMARY_OUTPUT,
@@ -67,6 +69,26 @@ from model_config import (  # noqa: E402
     TOP_ERRORS_OUTPUT,
     TOP_CORRELATED_PAIRS_OUTPUT,
     TRAIN_SHARE,
+    TREE_FIGURE_INDEX_OUTPUT,
+    TREE_FIGURES_DIR,
+    TREE_HISTORICAL_BASELINES_OUTPUT,
+    TREE_HISTORICAL_DELTA_OUTPUT,
+    TREE_IMPORTANCE_OUTPUT,
+    TREE_NESTED_COMPARISON_OUTPUT,
+    TREE_NESTED_IMPORTANCE_OUTPUT,
+    TREE_NESTED_TEST_METRICS_OUTPUT,
+    TREE_OUTPUT_DIR,
+    TREE_PANEL_IMPORTANCE_OUTPUT,
+    TREE_PANEL_TEST_METRICS_OUTPUT,
+    TREE_PANEL_VALIDATION_METRICS_OUTPUT,
+    TREE_PREDICTIONS_OUTPUT,
+    TREE_ROBUSTNESS_HISTORICAL_BASELINES_OUTPUT,
+    TREE_ROBUSTNESS_SUMMARY_OUTPUT,
+    TREE_ROBUSTNESS_TEST_METRICS_OUTPUT,
+    TREE_RUN_SUMMARY_OUTPUT,
+    TREE_SAMPLE_SUMMARY_OUTPUT,
+    TREE_TEST_METRICS_OUTPUT,
+    TREE_VALIDATION_METRICS_OUTPUT,
     VALIDATION_METRICS_OUTPUT,
     VALIDATION_SHARE,
 )
@@ -87,9 +109,11 @@ from model_experiments import (  # noqa: E402
     build_persistence_augmented_comparison_table,
     build_robustness_summary_table,
     build_skew_transformed_panel,
-    run_rolling_origin_linear_evaluation,
     run_panel_linear_experiment_from_panel,
+    run_panel_tree_experiment,
+    run_rolling_origin_linear_evaluation,
 )
+from model_experiments import _run_tree_experiment_from_panel  # noqa: E402
 from model_visualization import (  # noqa: E402
     make_correlation_diagnostic_figures,
     make_linear_model_figures,
@@ -98,6 +122,7 @@ from model_visualization import (  # noqa: E402
     make_nested_comparison_figures,
     make_review_diagnostic_figures,
     make_robustness_figures,
+    make_tree_model_figures,
 )
 
 
@@ -1212,16 +1237,339 @@ def _dataframe_to_markdown(data: pd.DataFrame) -> str:
     return "\n".join(rows)
 
 
-if __name__ == "__main__":
-    results = run_linear_modeling()
-    best = results["best_model"]
-    test_metrics = results["test_metrics"].iloc[0]
-    print(f"Best validation model: {best}")
-    print(
-        "Final test metrics: "
-        f"MAE={test_metrics['mae']:.4f}, "
-        f"RMSE={test_metrics['rmse']:.4f}, "
-        f"OOS R2={test_metrics['oos_r2_vs_train_mean']:.4f}, "
-        f"Spearman={test_metrics['spearman']:.4f}"
+def _run_tree_panel_experiments() -> dict[str, dict[str, object]]:
+    """Run the tree protocol on the main panel and the three mechanism submodels."""
+    experiments_by_id: dict[str, dict[str, object]] = {}
+    for config in PANEL_CONFIGS:
+        spec = PanelSpec(
+            panel_id=config["panel_id"],
+            panel_label=config["panel_label"],
+            panel_path=config["panel_path"],
+            target_column=config["target_column"],
+            lag_suffix=config["lag_suffix"],
+            role=config["role"],
+            comparison_group="tree",
+            feature_set_role="primary_specification",
+        )
+        experiments_by_id[config["panel_id"]] = run_panel_tree_experiment(
+            spec,
+            random_state=42,
+            train_share=TRAIN_SHARE,
+            validation_share=VALIDATION_SHARE,
+        )
+    return experiments_by_id
+
+
+def _run_tree_nested_experiments(
+    experiments_by_id: dict[str, dict[str, object]],
+) -> list[dict[str, object]]:
+    """Same-sample nested tree comparison: main controls vs main + submodel predictors."""
+    main_experiment = experiments_by_id["main"]
+    main_panel = main_experiment["panel"]
+    main_features = list(main_experiment["feature_columns"])
+    nested_experiments: list[dict[str, object]] = []
+    for sub_id in ["suba", "subb", "subc"]:
+        sub_experiment = experiments_by_id[sub_id]
+        sub_features = list(sub_experiment["feature_columns"])
+        nested_panel = build_nested_submodel_panel(
+            main_panel=main_panel,
+            sub_panel=sub_experiment["panel"],
+            main_feature_columns=main_features,
+            submodel_feature_columns=sub_features,
+            target_column=PRIMARY_TARGET,
+        )
+        baseline_spec = PanelSpec(
+            panel_id=f"main_on_{sub_id}_tree",
+            panel_label=f"Tree main controls on {sub_id.upper()} sample",
+            panel_path=None,
+            target_column=PRIMARY_TARGET,
+            lag_suffix="lag1_3_mean",
+            role="nested_baseline",
+            comparison_group=sub_id,
+            feature_set_role="main_controls",
+        )
+        augmented_spec = PanelSpec(
+            panel_id=f"main_plus_{sub_id}_tree",
+            panel_label=f"Tree main controls plus {sub_id.upper()} predictors",
+            panel_path=None,
+            target_column=PRIMARY_TARGET,
+            lag_suffix="lag1_3_mean",
+            role="nested_augmented",
+            comparison_group=sub_id,
+            feature_set_role="main_plus_submodel",
+        )
+        nested_experiments.append(
+            _run_tree_experiment_from_panel(
+                baseline_spec,
+                nested_panel,
+                feature_columns=main_features,
+                random_state=42,
+                train_share=TRAIN_SHARE,
+                validation_share=VALIDATION_SHARE,
+            )
+        )
+        nested_experiments.append(
+            _run_tree_experiment_from_panel(
+                augmented_spec,
+                nested_panel,
+                feature_columns=main_features + sub_features,
+                random_state=42,
+                train_share=TRAIN_SHARE,
+                validation_share=VALIDATION_SHARE,
+            )
+        )
+    return nested_experiments
+
+
+def _run_tree_robustness_experiments() -> list[dict[str, object]]:
+    """Tree robustness pack: lag1 timing sensitivity and the per-million target."""
+    experiments: list[dict[str, object]] = []
+    for config in ROBUSTNESS_EXPERIMENT_CONFIGS:
+        spec = PanelSpec(
+            panel_id=config["panel_id"],
+            panel_label=config["panel_label"],
+            panel_path=config["panel_path"],
+            target_column=config["target_column"],
+            lag_suffix=config["lag_suffix"],
+            role=config["role"],
+            comparison_group="tree_robustness",
+            feature_set_role=config["feature_set_role"],
+        )
+        experiments.append(
+            run_panel_tree_experiment(
+                spec,
+                random_state=42,
+                train_share=TRAIN_SHARE,
+                validation_share=VALIDATION_SHARE,
+            )
+        )
+    return experiments
+
+
+def run_tree_modeling() -> dict[str, object]:
+    """Run tree model (RF/XGBoost) baseline with historical comparison on main panel."""
+    TREE_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    TREE_FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+    spec = PanelSpec(
+        panel_id="main_tree",
+        panel_label="Main v2 — tree models",
+        panel_path=PRIMARY_PANEL_PATH,
+        target_column=PRIMARY_TARGET,
+        lag_suffix=PRIMARY_LAG_SUFFIX,
+        role="main_tree",
+        comparison_group="tree",
+        feature_set_role="primary_specification",
     )
-    print(f"Outputs written to: {OUTPUT_DIR}")
+    experiment = run_panel_tree_experiment(
+        spec,
+        random_state=42,
+        train_share=TRAIN_SHARE,
+        validation_share=VALIDATION_SHARE,
+    )
+
+    # ---- Save outputs ----
+    experiment["sample_summary"].to_csv(TREE_SAMPLE_SUMMARY_OUTPUT, index=False)
+    experiment["validation_metrics"].to_csv(TREE_VALIDATION_METRICS_OUTPUT, index=False)
+    experiment["test_metrics"].to_csv(TREE_TEST_METRICS_OUTPUT, index=False)
+    experiment["predictions"].to_csv(TREE_PREDICTIONS_OUTPUT, index=False)
+    experiment["importance"].to_csv(TREE_IMPORTANCE_OUTPUT, index=False)
+
+    # ---- Historical baselines ----
+    historical = build_historical_baseline_comparison(
+        split=experiment["split"],
+        target_column=PRIMARY_TARGET,
+        model_predictions=experiment["predictions"],
+        model_name=experiment["best_model"],
+    )
+    historical_delta = build_historical_baseline_delta_summary(historical)
+    historical.to_csv(TREE_HISTORICAL_BASELINES_OUTPUT, index=False)
+    historical_delta.to_csv(TREE_HISTORICAL_DELTA_OUTPUT, index=False)
+
+    # ---- Figures ----
+    from model_data import matrix_from_panel as _matrix_from_panel
+
+    feature_columns = experiment["feature_columns"]
+    train_validation = pd.concat(
+        [experiment["split"].train, experiment["split"].validation], ignore_index=True
+    )
+    x_tv, _ = _matrix_from_panel(train_validation, feature_columns, PRIMARY_TARGET)
+
+    figure_paths = make_tree_model_figures(
+        panel=experiment["panel"],
+        feature_columns=feature_columns,
+        target_column=PRIMARY_TARGET,
+        sample_summary=experiment["sample_summary"],
+        validation_metrics=experiment["validation_metrics"],
+        predictions=experiment["predictions"],
+        importance=experiment["importance"],
+        fitted_model=experiment["fitted_model"],
+        x_train_validation=x_tv,
+        figures_dir=TREE_FIGURES_DIR,
+    )
+    pd.DataFrame(
+        [{"figure": name, "path": _project_relative_path(path)}
+         for name, path in figure_paths.items()]
+    ).to_csv(TREE_FIGURE_INDEX_OUTPUT, index=False)
+
+    # ---- Summary ----
+    best_model = experiment["best_model"]
+    split_years = experiment["split_years"]
+    write_markdown_summary(
+        TREE_RUN_SUMMARY_OUTPUT,
+        best_model=best_model,
+        split_years=split_years,
+        validation_metrics=experiment["validation_metrics"],
+        test_metrics=experiment["test_metrics"],
+        heading="Tree Model Run Summary",
+    )
+    with open(TREE_RUN_SUMMARY_OUTPUT, "a") as fh:
+        fh.write("\n## Historical Baseline Comparison\n\n")
+        fh.write(_dataframe_to_markdown(historical))
+        fh.write("\n\n## Historical Baseline Delta Summary\n\n")
+        fh.write(_dataframe_to_markdown(historical_delta))
+        fh.write("\n")
+
+    # ---- Mechanism submodels + same-sample nested comparison ----
+    # Trees can capture nonlinear/interaction effects that the linear nested test
+    # may miss, so this is the most informative tree extension (esp. EPS, R&D).
+    panel_experiments = _run_tree_panel_experiments()
+    panel_test_metrics = pd.concat(
+        [exp["test_metrics"] for exp in panel_experiments.values()], ignore_index=True
+    )
+    panel_test_metrics["comparison_scope"] = "own_sample_not_direct_ranking"
+    panel_validation_metrics = pd.concat(
+        [exp["validation_metrics"] for exp in panel_experiments.values()], ignore_index=True
+    )
+    panel_importance = pd.concat(
+        [exp["importance"] for exp in panel_experiments.values()], ignore_index=True
+    )
+    panel_test_metrics.to_csv(TREE_PANEL_TEST_METRICS_OUTPUT, index=False)
+    panel_validation_metrics.to_csv(TREE_PANEL_VALIDATION_METRICS_OUTPUT, index=False)
+    panel_importance.to_csv(TREE_PANEL_IMPORTANCE_OUTPUT, index=False)
+
+    nested_experiments = _run_tree_nested_experiments(panel_experiments)
+    nested_comparison = build_nested_comparison_table(nested_experiments)
+    nested_test_metrics = pd.concat(
+        [exp["test_metrics"] for exp in nested_experiments], ignore_index=True
+    )
+    nested_importance = pd.concat(
+        [exp["importance"] for exp in nested_experiments], ignore_index=True
+    )
+    nested_comparison.to_csv(TREE_NESTED_COMPARISON_OUTPUT, index=False)
+    nested_test_metrics.to_csv(TREE_NESTED_TEST_METRICS_OUTPUT, index=False)
+    nested_importance.to_csv(TREE_NESTED_IMPORTANCE_OUTPUT, index=False)
+
+    # ---- Robustness pack: lag1 (t-1) timing + per-million target ----
+    robustness_experiments = _run_tree_robustness_experiments()
+    robustness_historical_by_id, robustness_historical_baselines = (
+        _build_robustness_historical_baselines(robustness_experiments)
+    )
+    robustness_summary = build_robustness_summary_table(
+        robustness_experiments,
+        robustness_historical_by_id,
+    )
+    robustness_test_metrics = pd.concat(
+        [exp["test_metrics"] for exp in robustness_experiments], ignore_index=True
+    )
+    robustness_summary.to_csv(TREE_ROBUSTNESS_SUMMARY_OUTPUT, index=False)
+    robustness_test_metrics.to_csv(TREE_ROBUSTNESS_TEST_METRICS_OUTPUT, index=False)
+    robustness_historical_baselines.to_csv(
+        TREE_ROBUSTNESS_HISTORICAL_BASELINES_OUTPUT, index=False
+    )
+
+    with open(TREE_RUN_SUMMARY_OUTPUT, "a") as fh:
+        fh.write("\n## Mechanism Submodel Own-Sample Comparison (Tree)\n\n")
+        fh.write(
+            "Own-sample diagnostics only; panels have different country/year coverage "
+            "and are not a direct ranking against the main model.\n\n"
+        )
+        fh.write(
+            _dataframe_to_markdown(
+                panel_test_metrics.loc[
+                    :, ["panel_id", "panel_label", "model", "mae", "rmse", "oos_r2_vs_train_mean", "spearman"]
+                ]
+            )
+        )
+        fh.write("\n\n## Same-Sample Nested Submodel Tests (Tree)\n\n")
+        fh.write(
+            "Each comparison uses the same country-year rows for main-controls and "
+            "main-plus-submodel. A negative delta means the submodel predictors help.\n\n"
+        )
+        fh.write(
+            _dataframe_to_markdown(
+                nested_comparison.loc[
+                    :,
+                    [
+                        "comparison_group",
+                        "rows",
+                        "countries",
+                        "baseline_test_mae",
+                        "augmented_test_mae",
+                        "delta_test_mae_augmented_minus_baseline",
+                        "improves_primary_test_mae",
+                    ],
+                ]
+            )
+        )
+        fh.write("\n\n## Tree Robustness Pack (lag1 timing + per-million target)\n\n")
+        fh.write(
+            _dataframe_to_markdown(
+                robustness_summary.loc[
+                    :,
+                    [
+                        "robustness_id",
+                        "target_column",
+                        "lag_suffix",
+                        "best_model",
+                        "test_mae",
+                        "best_historical_baseline_mae",
+                        "delta_test_mae_selected_minus_best_history",
+                        "beats_best_historical_baseline",
+                    ],
+                ]
+            )
+        )
+        fh.write("\n")
+
+    experiment["panel_experiments"] = panel_experiments
+    experiment["nested_comparison"] = nested_comparison
+    experiment["robustness_summary"] = robustness_summary
+    return experiment
+
+
+if __name__ == "__main__":
+    import sys
+
+    run_tree = "--tree" in sys.argv
+    run_both = "--both" in sys.argv or (not run_tree)
+
+    if run_both:
+        print("=== Running linear model pipeline ===")
+        results = run_linear_modeling()
+        best = results["best_model"]
+        test_metrics = results["test_metrics"].iloc[0]
+        print(f"Best validation model: {best}")
+        print(
+            "Final test metrics: "
+            f"MAE={test_metrics['mae']:.4f}, "
+            f"RMSE={test_metrics['rmse']:.4f}, "
+            f"OOS R2={test_metrics['oos_r2_vs_train_mean']:.4f}, "
+            f"Spearman={test_metrics['spearman']:.4f}"
+        )
+        print(f"Outputs written to: {OUTPUT_DIR}")
+
+    if run_both or run_tree:
+        print("\n=== Running tree model pipeline ===")
+        tree_results = run_tree_modeling()
+        t_best = tree_results["best_model"]
+        t_metrics = tree_results["test_metrics"].iloc[0]
+        print(f"Best validation model: {t_best}")
+        print(
+            "Final test metrics: "
+            f"MAE={t_metrics['mae']:.4f}, "
+            f"RMSE={t_metrics['rmse']:.4f}, "
+            f"OOS R2={t_metrics['oos_r2_vs_train_mean']:.4f}, "
+            f"Spearman={t_metrics['spearman']:.4f}"
+        )
+        print(f"Outputs written to: {TREE_OUTPUT_DIR}")

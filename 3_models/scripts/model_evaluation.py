@@ -131,7 +131,7 @@ def build_historical_baseline_comparison(
     rows = [
         _baseline_metric_row(
             model_name=model_name,
-            prediction_rule="selected_linear_model",
+            prediction_rule="selected_model",
             y_true=model_predictions[target_column],
             y_pred=model_predictions["prediction"],
             train_mean=score_baseline_mean,
@@ -194,14 +194,14 @@ def build_historical_baseline_delta_summary(
         raise ValueError(f"historical_baselines missing required columns: {missing_columns}")
 
     selected_rows = historical_baselines[
-        historical_baselines["prediction_rule"].eq("selected_linear_model")
+        historical_baselines["prediction_rule"].eq("selected_model")
     ].copy()
     if selected_rows.empty:
-        raise ValueError("historical_baselines must include the selected_linear_model row")
+        raise ValueError("historical_baselines must include the selected_model row")
     selected = selected_rows.sort_values(["mae", "rmse", "model"], na_position="last").iloc[0]
 
     baselines = historical_baselines[
-        ~historical_baselines["prediction_rule"].eq("selected_linear_model")
+        ~historical_baselines["prediction_rule"].eq("selected_model")
     ].copy()
     if "uses_test_labels" in baselines.columns:
         baselines = baselines[~baselines["uses_test_labels"].fillna(False)].copy()
@@ -386,6 +386,23 @@ def coefficient_table(fitted_pipeline, feature_columns: list[str], model_name: s
     return table.sort_values("abs_coefficient", ascending=False).reset_index(drop=True)
 
 
+def feature_importance_table(fitted_pipeline, feature_columns: list[str], model_name: str) -> pd.DataFrame:
+    """Return feature importances for fitted tree-based estimators."""
+    model = fitted_pipeline.named_steps["model"]
+    importances = getattr(model, "feature_importances_", None)
+    if importances is None:
+        return pd.DataFrame(columns=["model", "feature", "importance"])
+    importance_array = np.ravel(importances)
+    table = pd.DataFrame(
+        {
+            "model": model_name,
+            "feature": feature_columns,
+            "importance": importance_array,
+        }
+    )
+    return table.sort_values("importance", ascending=False).reset_index(drop=True)
+
+
 def _baseline_metric_row(
     *,
     model_name: str,
@@ -414,9 +431,10 @@ def write_markdown_summary(
     split_years: dict[str, list[int]],
     validation_metrics: pd.DataFrame,
     test_metrics: pd.DataFrame,
+    heading: str = "Linear Model Run Summary",
 ) -> None:
     lines = [
-        "# Linear Model Run Summary",
+        f"# {heading}",
         "",
         f"Best validation model: `{best_model}`",
         "",

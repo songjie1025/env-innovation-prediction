@@ -623,7 +623,7 @@ def _plot_historical_baseline_mae(historical_baselines: pd.DataFrame, sns, plt):
     plot_data = historical_baselines.copy().sort_values("mae", ascending=False)
     plot_data["model_label"] = plot_data["model"].str.replace("_", " ", regex=False)
     if "prediction_rule" in plot_data.columns:
-        plot_data["is_selected_model"] = plot_data["prediction_rule"].eq("selected_linear_model")
+        plot_data["is_selected_model"] = plot_data["prediction_rule"].eq("selected_model")
     else:
         plot_data["is_selected_model"] = plot_data["model"].str.contains("elastic|linear|ridge", regex=True)
 
@@ -823,3 +823,122 @@ def _clean_feature_label(feature: str) -> str:
 def _despine(ax) -> None:
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
+
+
+# ---------------------------------------------------------------------------
+# Tree model figures
+# ---------------------------------------------------------------------------
+
+
+def make_tree_model_figures(
+    *,
+    panel: pd.DataFrame,
+    feature_columns: list[str],
+    target_column: str,
+    sample_summary: pd.DataFrame,
+    validation_metrics: pd.DataFrame,
+    predictions: pd.DataFrame,
+    importance: pd.DataFrame,
+    fitted_model,
+    x_train_validation: pd.DataFrame,
+    figures_dir: str | Path,
+) -> dict[str, str]:
+    """Create diagnostic and interpretation figures for tree model checkpoint."""
+    _prepare_matplotlib_cache()
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    figures_dir = Path(figures_dir)
+    figures_dir.mkdir(parents=True, exist_ok=True)
+    sns.set_theme(style="whitegrid", context="notebook")
+
+    paths: dict[str, str] = {}
+    paths["importance"] = _save_figure(
+        _plot_feature_importance(importance, sns, plt),
+        figures_dir / "tree_model_feature_importance.png",
+    )
+    paths["actual_vs_predicted"] = _save_figure(
+        _plot_actual_vs_predicted(predictions, target_column, sns, plt),
+        figures_dir / "tree_model_actual_vs_predicted.png",
+    )
+    paths["error_by_year"] = _save_figure(
+        _plot_error_by_year(predictions, sns, plt),
+        figures_dir / "tree_model_error_by_year.png",
+    )
+
+    # SHAP summary — optional dependency. Skip with a clear notice instead of
+    # silently swallowing failures (never hide errors).
+    shap_sample = x_train_validation.iloc[:500]
+    try:
+        import shap  # noqa: F401
+    except ImportError:
+        print(
+            "[tree figures] SHAP not installed; skipping SHAP summary figure. "
+            "Install with `pip install shap` to enable it."
+        )
+    else:
+        try:
+            shap_fig = _plot_shap_summary(fitted_model, shap_sample, feature_columns, plt)
+            paths["shap_summary"] = _save_figure(
+                shap_fig,
+                figures_dir / "tree_model_shap_summary.png",
+            )
+        except Exception as error:  # pragma: no cover - diagnostic path
+            print(f"[tree figures] SHAP summary figure failed: {error!r}")
+
+    return paths
+
+
+def _plot_feature_importance(importance: pd.DataFrame, sns, plt):
+    """Horizontal bar chart of feature importances."""
+    data = importance.sort_values("importance", ascending=True)
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.barh(data["feature"].apply(_clean_feature_label), data["importance"], color="#5b9bd5")
+    ax.set_xlabel("Feature Importance")
+    ax.set_title("Tree Model — Feature Importance")
+    _despine(ax)
+    fig.tight_layout()
+    return fig
+
+
+def _plot_shap_summary(fitted_model, x_sample, feature_columns, plt):
+    """SHAP beeswarm summary using TreeExplainer.
+
+    The model was trained on pipeline-preprocessed inputs, so the explainer must
+    receive the same preprocessing (imputation). We apply every pipeline step
+    except the final model, and explain exactly the rows we plot so the SHAP
+    matrix and the feature matrix always share the same shape.
+    """
+    import shap
+
+    model = fitted_model.named_steps["model"]
+    preprocessor = fitted_model[:-1]
+    x_processed = preprocessor.transform(x_sample)
+    explainer = shap.TreeExplainer(model)
+    shap_values = explainer.shap_values(x_processed)
+    display_features = [_clean_feature_label(f) for f in feature_columns]
+    fig = plt.figure(figsize=(10, 6))
+    shap.summary_plot(
+        shap_values,
+        x_processed,
+        feature_names=display_features,
+        show=False,
+        max_display=len(feature_columns),
+    )
+    plt.title("SHAP Summary (Tree Model)")
+    fig.tight_layout()
+    return fig
+
+
+def _prepare_matplotlib_cache():
+    import os
+    import tempfile
+    from pathlib import Path
+
+    cache_dir = Path(tempfile.gettempdir()) / "env_innovation_matplotlib"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    os.environ.setdefault("MPLCONFIGDIR", str(cache_dir))
+    os.environ.setdefault("XDG_CACHE_HOME", str(cache_dir))

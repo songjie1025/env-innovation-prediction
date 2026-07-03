@@ -1,5 +1,0 @@
-model,split,prediction_rule,n_test,uses_test_labels,mae,rmse,oos_r2_vs_train_mean,spearman
-country_last_pretest_holdconstant,test,country latest observed train+validation target held constant,312,False,0.3118602401339744,1.5534402797740023,0.8589847558580282,0.9396713041005564
-country_train_validation_mean,test,"country mean target through validation period, global fallback",312,False,0.6794167908354009,3.313285418784909,0.3585029874515381,0.9410278131087497
-elastic_net_alpha_1_l1_0.2,test,selected_linear_model,312,False,1.0384557278659492,2.416171730187962,0.6588600848860342,0.8382202193375337
-global_train_validation_mean,test,constant mean of train+validation targets,312,False,1.543124173267155,4.136773023191855,-7.483574755440259e-07,
