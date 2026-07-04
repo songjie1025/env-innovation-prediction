@@ -9,10 +9,64 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parents[1] / "3_models" / "scripts"
 sys.path.insert(0, str(SCRIPT_DIR))
 
-from run_modeling import build_output_manifest, verify_generated_artifacts  # noqa: E402
+from run_modeling import _figure_index_rows, build_output_manifest, verify_generated_artifacts  # noqa: E402
 
 
 class ModelNotebookTests(unittest.TestCase):
+    def test_interpretability_notebook_is_display_only_evidence_report(self):
+        notebook_path = (
+            Path(__file__).resolve().parents[1]
+            / "3_models"
+            / "notebooks"
+            / "modeling_interpretability_analysis.ipynb"
+        )
+        notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
+        notebook_text = notebook_path.read_text(encoding="utf-8")
+        markdown_text = "\n".join(
+            "".join(cell.get("source", []))
+            for cell in notebook["cells"]
+            if cell.get("cell_type") == "markdown"
+        )
+
+        expected_sections = [
+            "Interpretability Scope",
+            "Performance Boundary",
+            "Global Importance",
+            "SHAP Summary",
+            "Permutation Importance",
+            "Partial Dependence",
+            "Cross-Model Consistency",
+            "Error-Aware Interpretation",
+            "Reviewer Caveats",
+        ]
+        for section in expected_sections:
+            self.assertIn(section, markdown_text)
+
+        expected_artifacts = [
+            "COEFFICIENTS_OUTPUT",
+            "TREE_HISTORICAL_DELTA_OUTPUT",
+            "TREE_IMPORTANCE_OUTPUT",
+            "TREE_PARTIAL_DEPENDENCE_OUTPUT",
+            "TREE_FIGURE_INDEX_OUTPUT",
+            "fig7_permutation_importance",
+            "tree_model_shap_summary",
+            "abs_coefficient > 1e-12",
+            "observed",
+            "post-hoc test-block diagnostic",
+        ]
+        for artifact in expected_artifacts:
+            self.assertIn(artifact, notebook_text)
+
+        forbidden_training_calls = [
+            "run_tree_modeling(",
+            "run_linear_modeling(",
+            "run_panel_tree_experiment(",
+            "run_panel_linear_experiment(",
+            ".fit(",
+        ]
+        for forbidden in forbidden_training_calls:
+            self.assertNotIn(forbidden, notebook_text)
+
     def test_linear_baseline_notebook_checks_generated_artifacts(self):
         notebook_path = (
             Path(__file__).resolve().parents[1]
@@ -85,6 +139,20 @@ class ModelNotebookTests(unittest.TestCase):
                     run_started_at=time.time() - 10,
                     project_root=tmp_path,
                 )
+
+    def test_figure_index_rows_include_png_and_pdf_paths(self):
+        rows = _figure_index_rows({"partial_dependence": SCRIPT_DIR / "example.png"})
+
+        self.assertEqual(
+            rows,
+            [
+                {
+                    "figure": "partial_dependence",
+                    "path": "3_models/scripts/example.png",
+                    "pdf_path": "3_models/scripts/example.pdf",
+                }
+            ],
+        )
 
     def test_linear_baseline_notebook_documents_submodels_and_correlation_diagnostics(self):
         notebook_path = (

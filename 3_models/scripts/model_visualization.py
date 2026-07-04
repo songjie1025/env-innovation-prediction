@@ -838,6 +838,84 @@ def _clean_feature_label(feature: str) -> str:
     return label.replace("_", " ")
 
 
+PARTIAL_DEPENDENCE_COLUMNS = [
+    "feature",
+    "feature_label",
+    "feature_rank",
+    "grid_index",
+    "grid_value",
+    "average_prediction",
+    "centered_average_prediction",
+    "n_reference",
+]
+
+
+def build_partial_dependence_table(
+    *,
+    fitted_model,
+    x_reference: pd.DataFrame,
+    feature_columns: list[str],
+    features_to_plot: list[str],
+    grid_resolution: int = 25,
+) -> pd.DataFrame:
+    """Compute model-level partial dependence values from a reference matrix.
+
+    This deliberately averages predictions over the train+validation design
+    matrix supplied by the caller. It is an interpretation diagnostic for the
+    fitted model, not a tuning criterion and not a causal estimate.
+    """
+    missing_columns = sorted(set(feature_columns) - set(x_reference.columns))
+    if missing_columns:
+        raise ValueError(f"Missing reference columns for PDP: {missing_columns}")
+    if grid_resolution < 1:
+        raise ValueError("grid_resolution must be at least 1")
+
+    x_base = x_reference.loc[:, feature_columns].copy()
+    rows: list[dict[str, object]] = []
+    for feature_rank, feature in enumerate(features_to_plot, start=1):
+        if feature not in x_base.columns:
+            raise ValueError(f"PDP feature is not in reference matrix: {feature}")
+
+        values = pd.to_numeric(x_base[feature], errors="coerce").dropna().to_numpy()
+        if values.size == 0:
+            continue
+
+        unique_values = np.unique(values.astype(float))
+        if unique_values.size <= grid_resolution:
+            grid = unique_values
+        else:
+            quantiles = np.linspace(0.05, 0.95, grid_resolution)
+            grid = np.unique(np.quantile(values.astype(float), quantiles))
+
+        feature_rows: list[dict[str, object]] = []
+        for grid_index, grid_value in enumerate(grid, start=1):
+            x_grid = x_base.copy()
+            x_grid[feature] = float(grid_value)
+            predictions = np.asarray(fitted_model.predict(x_grid), dtype=float)
+            feature_rows.append(
+                {
+                    "feature": feature,
+                    "feature_label": _clean_feature_label(feature),
+                    "feature_rank": feature_rank,
+                    "grid_index": grid_index,
+                    "grid_value": float(grid_value),
+                    "average_prediction": float(np.nanmean(predictions)),
+                    "n_reference": int(len(x_base)),
+                }
+            )
+
+        center = float(np.mean([row["average_prediction"] for row in feature_rows]))
+        for row in feature_rows:
+            row["centered_average_prediction"] = float(row["average_prediction"] - center)
+            rows.append(row)
+
+    if not rows:
+        return pd.DataFrame(columns=PARTIAL_DEPENDENCE_COLUMNS)
+    return pd.DataFrame(rows, columns=PARTIAL_DEPENDENCE_COLUMNS).sort_values(
+        ["feature_rank", "grid_index"]
+    ).reset_index(drop=True)
+
+
 def _despine(ax) -> None:
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -860,6 +938,7 @@ def make_tree_model_figures(
     fitted_model,
     x_train_validation: pd.DataFrame,
     figures_dir: str | Path,
+    partial_dependence: pd.DataFrame | None = None,
 ) -> dict[str, str]:
     """Create diagnostic and interpretation figures for tree model checkpoint."""
     _prepare_matplotlib_cache()
@@ -886,6 +965,11 @@ def make_tree_model_figures(
         _plot_error_by_year(predictions, sns, plt),
         figures_dir / "tree_model_error_by_year.png",
     )
+    if partial_dependence is not None and not partial_dependence.empty:
+        paths["partial_dependence"] = _save_figure(
+            _plot_partial_dependence(partial_dependence, sns, plt),
+            figures_dir / "tree_model_partial_dependence.png",
+        )
 
     # SHAP summary — optional dependency. Skip with a clear notice instead of
     # silently swallowing failures (never hide errors).
@@ -908,6 +992,42 @@ def make_tree_model_figures(
             print(f"[tree figures] SHAP summary figure failed: {error!r}")
 
     return paths
+
+
+def _plot_partial_dependence(partial_dependence: pd.DataFrame, sns, plt):
+    """Line plots of centered partial dependence for selected predictors."""
+    data = partial_dependence.sort_values(["feature_rank", "grid_index"]).copy()
+    features = data[["feature", "feature_label"]].drop_duplicates().to_dict("records")
+    n_features = len(features)
+    fig_height = max(2.6 * n_features, 3.2)
+    fig, axes = plt.subplots(n_features, 1, figsize=(8, fig_height), squeeze=False)
+    palette = sns.color_palette("deep", n_colors=max(n_features, 1))
+
+    for axis_index, feature_info in enumerate(features):
+        ax = axes[axis_index][0]
+        feature_data = data[data["feature"] == feature_info["feature"]]
+        ax.plot(
+            feature_data["grid_value"],
+            feature_data["centered_average_prediction"],
+            marker="o",
+            linewidth=2,
+            color=palette[axis_index],
+        )
+        ax.axhline(0, color="#666666", linewidth=0.8, linestyle="--")
+        ax.set_xlabel(str(feature_info["feature_label"]).title())
+        ax.set_ylabel("Centered avg. prediction")
+        _despine(ax)
+
+    fig.suptitle("Tree Model — Partial Dependence (Top Predictors)")
+    fig.text(
+        0.01,
+        0.01,
+        "Computed on train+validation rows; diagnostic only, not causal.",
+        fontsize=8,
+        color="#4d4d4d",
+    )
+    fig.tight_layout(rect=(0, 0.04, 1, 0.96))
+    return fig
 
 
 def _plot_feature_importance(importance: pd.DataFrame, sns, plt):

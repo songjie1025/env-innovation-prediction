@@ -195,6 +195,7 @@ TREE_VALIDATION_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_validation_metric
 TREE_TEST_METRICS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_test_metrics.csv"
 TREE_PREDICTIONS_OUTPUT = TREE_OUTPUT_DIR / "tree_model_predictions.csv"
 TREE_IMPORTANCE_OUTPUT = TREE_OUTPUT_DIR / "tree_model_feature_importance.csv"
+TREE_PARTIAL_DEPENDENCE_OUTPUT = TREE_OUTPUT_DIR / "tree_model_partial_dependence.csv"
 TREE_SAMPLE_SUMMARY_OUTPUT = TREE_OUTPUT_DIR / "tree_model_sample_summary.csv"
 TREE_HISTORICAL_BASELINES_OUTPUT = TREE_OUTPUT_DIR / "tree_model_historical_baselines.csv"
 TREE_HISTORICAL_DELTA_OUTPUT = TREE_OUTPUT_DIR / "tree_model_historical_baseline_delta_summary.csv"

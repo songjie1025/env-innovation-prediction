@@ -10,6 +10,7 @@ SCRIPT_DIR = Path(__file__).resolve().parents[1] / "3_models" / "scripts"
 sys.path.insert(0, str(SCRIPT_DIR))
 
 from model_visualization import (  # noqa: E402
+    build_partial_dependence_table,
     make_correlation_diagnostic_figures,
     make_linear_model_figures,
     make_missingness_pattern_figures,
@@ -17,10 +18,101 @@ from model_visualization import (  # noqa: E402
     make_nested_comparison_figures,
     make_review_diagnostic_figures,
     make_robustness_figures,
+    make_tree_model_figures,
 )
 
 
+class _AdditivePredictor:
+    def predict(self, frame: pd.DataFrame):
+        return frame["x_lag1_3_mean"] * 2.0 + frame["z_lag1_3_mean"] * 0.5
+
+
 class ModelVisualizationTests(unittest.TestCase):
+    def test_build_partial_dependence_table_uses_reference_grid_and_centers_predictions(self):
+        x_reference = pd.DataFrame(
+            {
+                "x_lag1_3_mean": [0.0, 1.0, 2.0, 3.0, 0.0, 1.0, 2.0, 3.0],
+                "z_lag1_3_mean": [1.0, 1.5, 2.0, 2.5, 1.0, 1.5, 2.0, 2.5],
+            }
+        )
+
+        table = build_partial_dependence_table(
+            fitted_model=_AdditivePredictor(),
+            x_reference=x_reference,
+            feature_columns=["x_lag1_3_mean", "z_lag1_3_mean"],
+            features_to_plot=["x_lag1_3_mean"],
+            grid_resolution=4,
+        )
+
+        self.assertEqual(
+            list(table.columns),
+            [
+                "feature",
+                "feature_label",
+                "feature_rank",
+                "grid_index",
+                "grid_value",
+                "average_prediction",
+                "centered_average_prediction",
+                "n_reference",
+            ],
+        )
+        self.assertEqual(table["feature"].unique().tolist(), ["x_lag1_3_mean"])
+        self.assertEqual(table["feature_label"].unique().tolist(), ["x"])
+        self.assertEqual(table["grid_value"].tolist(), [0.0, 1.0, 2.0, 3.0])
+        self.assertTrue(table["average_prediction"].is_monotonic_increasing)
+        self.assertAlmostEqual(table["centered_average_prediction"].mean(), 0.0)
+        self.assertEqual(table["n_reference"].unique().tolist(), [len(x_reference)])
+
+    def test_make_tree_model_figures_writes_partial_dependence_png_and_pdf_files(self):
+        x_reference = pd.DataFrame(
+            {
+                "x_lag1_3_mean": [0.0, 1.0, 2.0, 3.0],
+                "z_lag1_3_mean": [1.0, 1.5, 2.0, 2.5],
+            }
+        )
+        partial_dependence = build_partial_dependence_table(
+            fitted_model=_AdditivePredictor(),
+            x_reference=x_reference,
+            feature_columns=["x_lag1_3_mean", "z_lag1_3_mean"],
+            features_to_plot=["x_lag1_3_mean"],
+            grid_resolution=4,
+        )
+        predictions = pd.DataFrame(
+            {
+                "year": [2021, 2021, 2022, 2022],
+                "target": [0.2, 0.4, 0.6, 0.8],
+                "prediction": [0.25, 0.35, 0.7, 0.75],
+                "error": [-0.05, 0.05, -0.1, 0.05],
+            }
+        )
+        importance = pd.DataFrame(
+            {
+                "feature": ["x_lag1_3_mean", "z_lag1_3_mean"],
+                "importance": [0.7, 0.3],
+            }
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            figure_paths = make_tree_model_figures(
+                panel=pd.DataFrame(),
+                feature_columns=["x_lag1_3_mean", "z_lag1_3_mean"],
+                target_column="target",
+                sample_summary=pd.DataFrame(),
+                validation_metrics=pd.DataFrame(),
+                predictions=predictions,
+                importance=importance,
+                fitted_model=_AdditivePredictor(),
+                x_train_validation=x_reference,
+                figures_dir=Path(tmp),
+                partial_dependence=partial_dependence,
+            )
+
+            self.assertIn("partial_dependence", figure_paths)
+            png_path = Path(figure_paths["partial_dependence"])
+            self.assertTrue(png_path.exists())
+            self.assertTrue(png_path.with_suffix(".pdf").exists())
+
     def test_make_linear_model_figures_writes_expected_png_and_pdf_files(self):
         panel = pd.DataFrame(
             {

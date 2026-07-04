@@ -81,6 +81,7 @@ from model_config import (  # noqa: E402
     TREE_PANEL_IMPORTANCE_OUTPUT,
     TREE_PANEL_TEST_METRICS_OUTPUT,
     TREE_PANEL_VALIDATION_METRICS_OUTPUT,
+    TREE_PARTIAL_DEPENDENCE_OUTPUT,
     TREE_PREDICTIONS_OUTPUT,
     TREE_ROBUSTNESS_HISTORICAL_BASELINES_OUTPUT,
     TREE_ROBUSTNESS_SUMMARY_OUTPUT,
@@ -115,6 +116,7 @@ from model_experiments import (  # noqa: E402
 )
 from model_experiments import _run_tree_experiment_from_panel  # noqa: E402
 from model_visualization import (  # noqa: E402
+    build_partial_dependence_table,
     make_correlation_diagnostic_figures,
     make_linear_model_figures,
     make_missingness_pattern_figures,
@@ -316,16 +318,7 @@ def run_linear_modeling() -> dict[str, object]:
             figures_dir=FIGURES_DIR,
         )
     )
-    pd.DataFrame(
-        [
-            {
-                "figure": name,
-                "path": _project_relative_path(path),
-                "pdf_path": _project_relative_path(Path(path).with_suffix(".pdf")),
-            }
-            for name, path in figure_paths.items()
-        ]
-    ).to_csv(FIGURE_INDEX_OUTPUT, index=False)
+    pd.DataFrame(_figure_index_rows(figure_paths)).to_csv(FIGURE_INDEX_OUTPUT, index=False)
     write_markdown_summary(
         RUN_SUMMARY_OUTPUT,
         best_model=best_model,
@@ -1220,6 +1213,17 @@ def _project_relative_path(path: str | Path) -> str:
         return str(resolved)
 
 
+def _figure_index_rows(figure_paths: dict[str, str]) -> list[dict[str, str]]:
+    return [
+        {
+            "figure": name,
+            "path": _project_relative_path(path),
+            "pdf_path": _project_relative_path(Path(path).with_suffix(".pdf")),
+        }
+        for name, path in figure_paths.items()
+    ]
+
+
 def _dataframe_to_markdown(data: pd.DataFrame) -> str:
     if data.empty:
         return "_No rows._"
@@ -1394,6 +1398,20 @@ def run_tree_modeling() -> dict[str, object]:
         [experiment["split"].train, experiment["split"].validation], ignore_index=True
     )
     x_tv, _ = _matrix_from_panel(train_validation, feature_columns, PRIMARY_TARGET)
+    partial_dependence_features = (
+        experiment["importance"].dropna(subset=["feature", "importance"])
+        .sort_values("importance", ascending=False)["feature"]
+        .head(3)
+        .tolist()
+    )
+    partial_dependence = build_partial_dependence_table(
+        fitted_model=experiment["fitted_model"],
+        x_reference=x_tv,
+        feature_columns=feature_columns,
+        features_to_plot=partial_dependence_features,
+        grid_resolution=25,
+    )
+    partial_dependence.to_csv(TREE_PARTIAL_DEPENDENCE_OUTPUT, index=False)
 
     figure_paths = make_tree_model_figures(
         panel=experiment["panel"],
@@ -1406,11 +1424,9 @@ def run_tree_modeling() -> dict[str, object]:
         fitted_model=experiment["fitted_model"],
         x_train_validation=x_tv,
         figures_dir=TREE_FIGURES_DIR,
+        partial_dependence=partial_dependence,
     )
-    pd.DataFrame(
-        [{"figure": name, "path": _project_relative_path(path)}
-         for name, path in figure_paths.items()]
-    ).to_csv(TREE_FIGURE_INDEX_OUTPUT, index=False)
+    pd.DataFrame(_figure_index_rows(figure_paths)).to_csv(TREE_FIGURE_INDEX_OUTPUT, index=False)
 
     # ---- Summary ----
     best_model = experiment["best_model"]
@@ -1428,7 +1444,28 @@ def run_tree_modeling() -> dict[str, object]:
         fh.write(_dataframe_to_markdown(historical))
         fh.write("\n\n## Historical Baseline Delta Summary\n\n")
         fh.write(_dataframe_to_markdown(historical_delta))
+        fh.write("\n\n## Partial Dependence Diagnostic\n\n")
+        if partial_dependence.empty:
+            fh.write("No partial dependence table was generated because no valid feature grid was available.\n")
+        else:
+            fh.write(
+                "Computed on train+validation rows for the top predictors ranked by the fitted "
+                "tree model's impurity-based feature importance. This is a fitted-model response "
+                "diagnostic, not a causal estimate; PDP curves may average over feature "
+                "combinations that are sparse or absent in the observed panel.\n\n"
+            )
+            pdp_summary = (
+                partial_dependence.groupby(["feature_rank", "feature_label"], as_index=False)
+                .agg(
+                    grid_points=("grid_value", "count"),
+                    centered_response_min=("centered_average_prediction", "min"),
+                    centered_response_max=("centered_average_prediction", "max"),
+                )
+                .sort_values("feature_rank")
+            )
+            fh.write(_dataframe_to_markdown(pdp_summary.round(4)))
         fh.write("\n")
+    experiment["partial_dependence"] = partial_dependence
 
     # ---- Mechanism submodels + same-sample nested comparison ----
     # Trees can capture nonlinear/interaction effects that the linear nested test
