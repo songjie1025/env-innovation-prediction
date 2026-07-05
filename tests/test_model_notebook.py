@@ -13,6 +13,85 @@ from run_modeling import _figure_index_rows, build_output_manifest, verify_gener
 
 
 class ModelNotebookTests(unittest.TestCase):
+    def test_validation_selection_notebook_is_display_only_selection_report(self):
+        notebook_path = (
+            Path(__file__).resolve().parents[1]
+            / "3_models"
+            / "notebooks"
+            / "modeling_validation_selection.ipynb"
+        )
+        notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
+        source_text = "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"])
+        markdown_text = "\n".join(
+            "".join(cell.get("source", []))
+            for cell in notebook["cells"]
+            if cell.get("cell_type") == "markdown"
+        )
+
+        expected_sections = [
+            "Validation-Only Model Selection",
+            "Selection Protocol",
+            "Artifact Contract",
+            "Mathematical Target Inversion",
+            "Validation Selection Visualization",
+            "Validation Candidate Ranking",
+            "Validation-Selected Final Specs",
+            "Validation/Test Generalization Gap",
+            "Reviewer Interpretation",
+        ]
+        for section in expected_sections:
+            self.assertIn(section, markdown_text)
+
+        expected_artifacts = [
+            "load_validation_selection_notebook_tables",
+            "PERSISTENCE_VALIDATION_LEVEL_CORRECTION_OUTPUT",
+            "PERSISTENCE_VALIDATION_LEVEL_CORRECTION_SUMMARY_OUTPUT",
+            "PERSISTENCE_VALIDATION_SELECTION_OUTPUT",
+            "PERSISTENCE_VALIDATION_SELECTED_TEST_LEVEL_CORRECTION_OUTPUT",
+            "PERSISTENCE_VALIDATION_SELECTED_TEST_LEVEL_CORRECTION_SUMMARY_OUTPUT",
+            "PERSISTENCE_SELECTION_FIGURE_OUTPUT",
+            "persistence_adjusted_validation_level_correction_predictions.csv",
+            "persistence_adjusted_validation_level_correction_summary.csv",
+            "persistence_adjusted_validation_model_selection.csv",
+            "persistence_adjusted_validation_selected_test_level_correction_predictions.csv",
+            "persistence_adjusted_validation_selected_test_level_correction_summary.csv",
+            "validation_corrected_level_mae",
+            "n_forecast",
+            "corrected_level_mae_validation",
+            "corrected_level_mae_test",
+            "test_minus_validation_corrected_level_mae",
+            "history-only baseline",
+            "\\widehat{y}^{\\mathrm{corr}}",
+        ]
+        for artifact in expected_artifacts:
+            self.assertIn(artifact, source_text)
+
+        forbidden_training_calls = [
+            "run_and_write_outputs(",
+            "run_persistence_adjusted_family_comparison(",
+            ".fit(",
+            ".predict(",
+        ]
+        for forbidden in forbidden_training_calls:
+            self.assertNotIn(forbidden, source_text)
+
+        forbidden_write_calls = [
+            ".to_csv(",
+            ".to_parquet(",
+            ".to_excel(",
+            ".to_json(",
+            ".savefig(",
+            ".write_text(",
+            ".write_bytes(",
+        ]
+        for forbidden in forbidden_write_calls:
+            self.assertNotIn(forbidden, source_text)
+
+        for cell in notebook["cells"]:
+            if cell.get("cell_type") == "code":
+                self.assertEqual(cell.get("outputs", []), [])
+                self.assertIsNone(cell.get("execution_count"))
+
     def test_interpretability_notebook_is_display_only_evidence_report(self):
         notebook_path = (
             Path(__file__).resolve().parents[1]
@@ -21,7 +100,7 @@ class ModelNotebookTests(unittest.TestCase):
             / "modeling_interpretability_analysis.ipynb"
         )
         notebook = json.loads(notebook_path.read_text(encoding="utf-8"))
-        notebook_text = notebook_path.read_text(encoding="utf-8")
+        source_text = "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"])
         markdown_text = "\n".join(
             "".join(cell.get("source", []))
             for cell in notebook["cells"]
@@ -35,6 +114,11 @@ class ModelNotebookTests(unittest.TestCase):
             "SHAP Summary",
             "Permutation Importance",
             "Partial Dependence",
+            "Persistence-Adjusted Target Diagnostics",
+            "Delta Target Performance",
+            "Delta-To-Level Correction",
+            "Delta Target Feature Roles",
+            "Log-Ratio Robustness",
             "Cross-Model Consistency",
             "Error-Aware Interpretation",
             "Reviewer Caveats",
@@ -44,18 +128,46 @@ class ModelNotebookTests(unittest.TestCase):
 
         expected_artifacts = [
             "COEFFICIENTS_OUTPUT",
+            "OUTPUT_DIR",
             "TREE_HISTORICAL_DELTA_OUTPUT",
             "TREE_IMPORTANCE_OUTPUT",
             "TREE_PARTIAL_DEPENDENCE_OUTPUT",
             "TREE_FIGURE_INDEX_OUTPUT",
             "fig7_permutation_importance",
             "tree_model_shap_summary",
+            "PERSISTENCE_ADJUSTED_COMPARISON_OUTPUT",
+            "PERSISTENCE_ADJUSTED_SUMMARY_OUTPUT",
+            "PERSISTENCE_ADJUSTED_NATIVE_IMPORTANCE_OUTPUT",
+            "PERSISTENCE_ADJUSTED_TOP_FEATURES_OUTPUT",
+            "PERSISTENCE_LEVEL_CORRECTION_OUTPUT",
+            "PERSISTENCE_LEVEL_CORRECTION_SUMMARY_OUTPUT",
+            "fig12_persistence_adjusted_family_comparison",
+            "fig13_persistence_adjusted_delta_feature_roles",
+            "persistence_adjusted_model_family_comparison.csv",
+            "persistence_adjusted_model_family_summary.csv",
+            "persistence_adjusted_native_importance.csv",
+            "persistence_adjusted_top_interpretation_features.csv",
+            "persistence_adjusted_level_correction_predictions.csv",
+            "persistence_adjusted_level_correction_summary.csv",
+            "delta_lag1",
+            "log_ratio_lag1",
+            "Block-safe delta-to-level correction",
+            "n_test_excluded_anchor_gap",
+            "forecast_path_eligible",
+            "delta_corrected_mae_minus_history",
+            "selected best-family summary",
+            "near-zero differences should not be treated as material",
+            "delta_family_comparison",
+            "ratio_family_comparison",
+            "active_delta_features",
+            "normalized_importance\"] > 0",
+            "checks sensitivity of the delta-target conclusion",
             "abs_coefficient > 1e-12",
             "observed",
             "post-hoc test-block diagnostic",
         ]
         for artifact in expected_artifacts:
-            self.assertIn(artifact, notebook_text)
+            self.assertIn(artifact, source_text)
 
         forbidden_training_calls = [
             "run_tree_modeling(",
@@ -65,7 +177,24 @@ class ModelNotebookTests(unittest.TestCase):
             ".fit(",
         ]
         for forbidden in forbidden_training_calls:
-            self.assertNotIn(forbidden, notebook_text)
+            self.assertNotIn(forbidden, source_text)
+
+        forbidden_write_calls = [
+            ".to_csv(",
+            ".to_parquet(",
+            ".to_excel(",
+            ".to_json(",
+            ".savefig(",
+            ".write_text(",
+            ".write_bytes(",
+        ]
+        for forbidden in forbidden_write_calls:
+            self.assertNotIn(forbidden, source_text)
+
+        for cell in notebook["cells"]:
+            if cell.get("cell_type") == "code":
+                self.assertEqual(cell.get("outputs", []), [])
+                self.assertIsNone(cell.get("execution_count"))
 
     def test_linear_baseline_notebook_checks_generated_artifacts(self):
         notebook_path = (
