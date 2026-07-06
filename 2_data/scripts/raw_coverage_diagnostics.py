@@ -51,7 +51,6 @@ REQUIRED_COLUMNS = {
 VARIABLE_GROUPS = {
     "env_patent_share_inventions": "Target and patent dynamics",
     "env_patents_per_million": "Target and patent dynamics",
-    "env_technology_rta": "Target and patent dynamics",
     "env_co_invention_share": "Target and patent dynamics",
     "rd_expenditure_gdp": "R&D and knowledge capacity",
     "researchers_per_million": "R&D and knowledge capacity",
@@ -73,6 +72,7 @@ VARIABLE_GROUPS = {
     "gdp_constant_2015_usd": "Policy and macro conditions",
     "fdi_net_inflows": "Policy and macro conditions",
     "wgi_regulatory_quality": "Policy and macro conditions",
+    "manufacturing_share": "Policy and macro conditions",
 }
 
 GROUP_ORDER = [
@@ -821,7 +821,6 @@ def _labelize(value: str) -> str:
     replacements = {
         "co2": "CO2",
         "rd": "R&D",
-        "rta": "RTA",
         "rise": "RISE",
         "eps": "EPS",
         "gdp": "GDP",

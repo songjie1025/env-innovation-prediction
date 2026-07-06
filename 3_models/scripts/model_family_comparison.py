@@ -122,23 +122,35 @@ def figure_family_overview(df: pd.DataFrame, lag: str = "lag1_3_mean"):
     panels = [p for p in ["main", "suba", "subb", "subc"] if p in sub["panel_id"].unique()]
     fig, axes = plt.subplots(2, 2, figsize=(11, 8), constrained_layout=True)
     fig.suptitle(
-        f"No feature model beats national persistence — v2 panels (test MAE, {LAG_SHORT[lag]} lag)",
+        f"No feature model beats national persistence — v2 panels (test MAE & RMSE, {LAG_SHORT[lag]} lag)",
         fontsize=14, fontweight="bold",
     )
+    import numpy as np
+
     for ax, pid in zip(axes.ravel(), panels):
         d = sub[sub["panel_id"].eq(pid)]
         fams = ["Linear", "RandomForest", "XGBoost"]
-        vals = [float(d[d["family"].eq(f)]["test_mae"].iloc[0]) for f in fams]
+        mae_vals = [float(d[d["family"].eq(f)]["test_mae"].iloc[0]) for f in fams]
+        rmse_vals = [float(d[d["family"].eq(f)]["test_rmse"].iloc[0]) for f in fams]
         base = float(d["persistence_baseline_mae"].iloc[0])
-        bars = ax.bar(fams, vals, color=[FAMILY_COLORS[f] for f in fams], edgecolor="white")
-        for b, v in zip(bars, vals):
-            ax.text(b.get_x() + b.get_width() / 2, v, f"{v:.2f}", ha="center", va="bottom", fontsize=10)
+        x = np.arange(len(fams))
+        w = 0.4
+        bars_mae = ax.bar(x - w / 2, mae_vals, w, color=[FAMILY_COLORS[f] for f in fams],
+                          edgecolor="white", label="MAE")
+        bars_rmse = ax.bar(x + w / 2, rmse_vals, w, color=[FAMILY_COLORS[f] for f in fams],
+                           edgecolor="white", alpha=0.5, hatch="///", label="RMSE")
+        for bars, vals in ((bars_mae, mae_vals), (bars_rmse, rmse_vals)):
+            for b, v in zip(bars, vals):
+                ax.text(b.get_x() + b.get_width() / 2, v, f"{v:.2f}", ha="center", va="bottom", fontsize=8.5)
+        ax.set_xticks(x)
+        ax.set_xticklabels(fams)
         ax.axhline(base, color=C_BASELINE, ls="--", lw=1.6)
-        ax.text(2.5, base, f" persistence\n {base:.2f}", color=C_BASELINE, fontsize=9, va="center", ha="left")
+        ax.text(2.5, base, f" persistence\n MAE {base:.2f}", color=C_BASELINE, fontsize=9, va="center", ha="left")
         label = d["panel_label"].iloc[0]
         ax.set_title(f"{PANEL_SHORT.get(pid, pid)} — {label}", fontsize=11, loc="left")
-        ax.set_ylabel("Test MAE")
-        ax.set_ylim(0, max(max(vals), base) * 1.35)
+        ax.set_ylabel("Test MAE / RMSE")
+        ax.legend(frameon=False, fontsize=8, loc="upper left")
+        ax.set_ylim(0, max(max(rmse_vals), base) * 1.35)
         for sp in ("top", "right"):
             ax.spines[sp].set_visible(False)
     return fig

@@ -59,6 +59,10 @@ WORLD_BANK_LITERATURE_INDICATORS = {
         "variable": "high_tech_exports",
         "description": "High-technology exports as percent of manufactured exports.",
     },
+    "NV.IND.MANF.ZS": {
+        "variable": "manufacturing_share",
+        "description": "Manufacturing value added as percent of GDP.",
+    },
     "EG.FEC.RNEW.ZS": {
         "variable": "renewable_energy_share",
         "description": "Renewable energy consumption as percent of final energy consumption.",
@@ -268,22 +272,6 @@ def build_literature_predictor_download_plan(
             entries.extend(_rise_entries(predictor_text or "RISE score", row_number, comments))
         if "economic policy uncertainty" in predictor_code_text:
             entries.append(_epu_entry(predictor_text or "Economic Policy Uncertainty Index", row_number, comments))
-        if "env tech rta" in lower_text or "env_tech" in lower_text:
-            entries.append(
-                _oecd_patent_literature_entry(
-                    variable="env_technology_rta",
-                    source_variable="IX.DEV.ENV_PAT._Z",
-                    description=(
-                        "OECD environment-related technology specialization index used as "
-                        "the lagged environmental-technology RTA predictor."
-                    ),
-                    predictor_text=predictor_text or "Lagged Env Tech RTA",
-                    row_number=row_number,
-                    start_year=start_year,
-                    end_year=end_year,
-                    comments=comments,
-                )
-            )
         if "co-invention" in lower_text or "international collaboration" in lower_text:
             entries.append(
                 _oecd_patent_literature_entry(
