@@ -16,7 +16,7 @@ Primary cleaned panel package:
 
 - `2_data/processed/model_panels/v2/model_panel_main_no_imputation.csv`
 - Target: `env_patent_share_inventions`
-- Active main predictors: `gdp_constant_2015_usd`, `renewable_energy_share`, `wgi_regulatory_quality`, `co2_per_capita_ar5`, `fdi_net_inflows`, `env_technology_rta`, `scientific_journal_articles`, `trade_openness`, `inflation`
+- Active main predictors: `gdp_constant_2015_usd`, `renewable_energy_share`, `wgi_regulatory_quality`, `co2_per_capita_ar5`, `fdi_net_inflows`, `manufacturing_share`, `scientific_journal_articles`, `trade_openness`, `inflation`
 - Target years: 1999-2023
 - Main no-imputation sample after dropping missing target: 2612 rows, 174 countries
 

@@ -50,7 +50,7 @@ Candidate variables:
 |---|---|---|---|---|
 | Market size / economic scale | GDP, constant 2015 US dollars | World Bank WDI | Positive | Candidate for raw predictorsv1 |
 | Economic development | GDP per capita | World Bank WDI | Positive | Replaced by total GDP for the main raw predictor set |
-| Industrial structure | Manufacturing value added share | World Bank WDI | Ambiguous | Candidate |
+| Industrial structure / capacity | Manufacturing value added share | World Bank WDI | Positive | Main predictor; industrial-commons proxy (Cohen & Zysman 1987; Pisano & Shih 2009/2012). |
 | Trade exposure | Trade openness | World Bank WDI | Ambiguous / positive | Candidate from CSV; data source to verify. |
 | Macroeconomic stability | Inflation | World Bank WDI | Ambiguous | Candidate from CSV; data source to verify. |
 | International capital links | Foreign direct investment | World Bank WDI | Ambiguous / positive | Candidate from CSV; data source to verify. |
@@ -77,7 +77,6 @@ Candidate variables:
 | Scientific output | Scientific journal articles | World Bank WDI | Positive | Candidate from CSV; likely exploratory or capacity proxy. |
 | Technology-intensive production | High-tech exports | World Bank WDI | Positive / ambiguous | Candidate from CSV; may proxy innovation system or industrial composition. |
 | General patenting capacity | Total resident patent applications | World Bank WDI | Positive | Candidate from CSV; use cautiously because the target is patent-based. |
-| Green technology specialization | Lagged environmental-technology RTA | OECD patent data, calculated | Positive | Candidate from CSV; useful for path dependence or predictive baseline. |
 | International collaboration | Co-invention rate | OECD patent data, calculated | Positive | Candidate from CSV; useful for knowledge diffusion mechanisms. |
 
 Research notes to collect:
@@ -197,7 +196,7 @@ The predictor assessment is especially provisional. The literature review is sti
 | R&D capacity | Treat `rd_expenditure_gdp` as a strong candidate if coverage permits. | Patent-policy and induced-innovation literature repeatedly points to innovation capacity or knowledge stocks. | WDI R&D is general R&D, not green R&D. |
 | Researchers | Keep `researchers_per_million` as a secondary capacity proxy. | Conceptually aligned with innovation capacity. | Direct environmental-patent evidence is weaker and coverage is thin. |
 | Energy variables | Use at most one energy-system variable in the first small model. | Popp (2002), Johnstone et al. (2010), and Nesta et al. (2014). | WDI renewable share, fossil share, energy intensity, and CO2 are not equivalent to energy prices or policy incentives. |
-| Manufacturing share | Keep as optional structural control. | Brunnermeier and Cohen (2003) and competition/structure evidence. | Country-level manufacturing share is a rough proxy for industry composition. |
+| Manufacturing share | Use `manufacturing_share` as the main-model industrial-capacity predictor. | Cohen and Zysman (1987), "Manufacturing Matters," and Pisano and Shih (2009, 2012) on the "industrial commons": manufacturing capability underwrites innovation capability. | Well covered (203 countries, 1990-2024) and near-independent of economic scale (main-panel VIF 1.06). |
 | RISE | Keep as an alternative or robustness policy predictor, preferably using lagged Renewable Energy or Energy Efficiency pillar scores rather than the overall score. | RISE methodology note and 2026-05-20 decision log update. | Broader coverage than EPS, but conceptually wider and with weaker direct patent evidence. |
 | Manual predictor sheet | Treat all predictor concepts in `Managerial AI- literature review - List 1.csv` as part of the current consideration pool. | 2026-05-29 screening decision and team discussion. | Classify into main, robustness, exploratory, or data-limited roles after coverage and collinearity checks. |
 
