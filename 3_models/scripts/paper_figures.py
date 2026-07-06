@@ -104,31 +104,51 @@ def _bar_labels(ax, bars, fmt="{:.3f}", pad=0.01, horizontal=True):
 # Figure 1: No feature model beats national persistence
 # ---------------------------------------------------------------------------
 def fig1_forecast_vs_persistence(plt) -> None:
-    hb = pd.read_csv(OUT / "linear_model_historical_baselines.csv").set_index("model")["mae"]
+    hb_all = pd.read_csv(OUT / "linear_model_historical_baselines.csv").set_index("model")
+    hb = hb_all["mae"]
+    hb_rmse = hb_all["rmse"]
     pa = pd.read_csv(OUT / "linear_model_persistence_augmented_comparison.csv")
-    pa_mae = float(pa.loc[pa["model_stage"].eq("persistence_augmented_linear"), "test_mae"].iloc[0])
-    tree_mae = float(pd.read_csv(TREE / "tree_model_test_metrics.csv")["mae"].iloc[0])
+    pa_row = pa.loc[pa["model_stage"].eq("persistence_augmented_linear")].iloc[0]
+    pa_mae = float(pa_row["test_mae"])
+    pa_rmse = float(pa_row["test_rmse"])
+    tree_metrics = pd.read_csv(TREE / "tree_model_test_metrics.csv").iloc[0]
+    tree_mae = float(tree_metrics["mae"])
+    tree_rmse = float(tree_metrics["rmse"])
+    # Reference the model actually selected by validation instead of a fixed name.
+    selected_linear = str(pd.read_csv(OUT / "linear_model_test_metrics.csv")["model"].iloc[0])
 
     rows = [
-        ("Persistence (last value)", float(hb["country_last_pretest_holdconstant"]), C_PERSIST, "baseline"),
-        ("Persistence-augmented linear", pa_mae, C_GOOD, "feature+history"),
-        ("Random Forest (features only)", tree_mae, C_TREE, "feature model"),
-        ("Country mean", float(hb["country_train_validation_mean"]), C_BASELINE, "baseline"),
-        ("ElasticNet (features only)", float(hb["elastic_net_alpha_1_l1_0.2"]), C_LINEAR, "feature model"),
-        ("Global mean", float(hb["global_train_validation_mean"]), C_BASELINE, "baseline"),
+        ("Persistence (last value)", float(hb["country_last_pretest_holdconstant"]),
+         float(hb_rmse["country_last_pretest_holdconstant"]), C_PERSIST, "baseline"),
+        ("Persistence-augmented linear", pa_mae, pa_rmse, C_GOOD, "feature+history"),
+        ("Random Forest (features only)", tree_mae, tree_rmse, C_TREE, "feature model"),
+        ("Country mean", float(hb["country_train_validation_mean"]),
+         float(hb_rmse["country_train_validation_mean"]), C_BASELINE, "baseline"),
+        ("Selected linear (features only)", float(hb[selected_linear]),
+         float(hb_rmse[selected_linear]), C_LINEAR, "feature model"),
+        ("Global mean", float(hb["global_train_validation_mean"]),
+         float(hb_rmse["global_train_validation_mean"]), C_BASELINE, "baseline"),
     ]
-    df = pd.DataFrame(rows, columns=["label", "mae", "color", "kind"]).sort_values("mae")
+    df = pd.DataFrame(rows, columns=["label", "mae", "rmse", "color", "kind"]).sort_values("mae")
 
-    fig, ax = plt.subplots(figsize=(8.2, 4.6), constrained_layout=True)
-    bars = ax.barh(df["label"], df["mae"], color=df["color"], edgecolor="white")
-    _bar_labels(ax, bars, pad=0.015)
+    y = np.arange(len(df))
+    h = 0.4
+    fig, ax = plt.subplots(figsize=(8.6, 5.0), constrained_layout=True)
+    bars_mae = ax.barh(y + h / 2, df["mae"], h, color=df["color"], edgecolor="white", label="MAE")
+    bars_rmse = ax.barh(y - h / 2, df["rmse"], h, color=df["color"], edgecolor="white",
+                        alpha=0.5, hatch="///", label="RMSE")
+    _bar_labels(ax, bars_mae, pad=0.03)
+    _bar_labels(ax, bars_rmse, pad=0.03)
+    ax.set_yticks(y)
+    ax.set_yticklabels(df["label"])
     bench = float(hb["country_last_pretest_holdconstant"])
     ax.axvline(bench, color=C_PERSIST, ls="--", lw=1.2, alpha=0.7)
-    ax.text(bench, -0.7, "  persistence benchmark", color=C_PERSIST, fontsize=9, va="top")
-    ax.set_xlabel("Test MAE (lower is better) — main target, 2021–2023")
+    ax.text(bench, -0.9, "  persistence MAE benchmark", color=C_PERSIST, fontsize=9, va="top")
+    ax.set_xlabel("Test error (lower is better) — main target, 2021–2023")
     ax.set_ylabel("")
     ax.set_title("No feature-based model beats simple national persistence")
-    ax.set_xlim(0, df["mae"].max() * 1.18)
+    ax.set_xlim(0, df["rmse"].max() * 1.18)
+    ax.legend(frameon=False, loc="lower right")
     _save(fig, "fig1_forecast_vs_persistence", plt)
 
 
@@ -149,7 +169,7 @@ def fig2_drivers_linear_vs_tree(plt) -> None:
     b1 = axes[0].barh(coef["feat"], coef["coefficient"], color=colors, edgecolor="white")
     axes[0].axvline(0, color="#333", lw=1)
     axes[0].set_title("(a) Linear model — standardized coefficients")
-    axes[0].set_xlabel("ElasticNet coefficient (sign = direction)")
+    axes[0].set_xlabel("Linear coefficient (sign = direction)")
     for b, v in zip(b1, coef["coefficient"]):
         off = 0.02 if v >= 0 else -0.02
         axes[0].text(v + off, b.get_y() + b.get_height() / 2, f"{v:.2f}",
@@ -255,7 +275,7 @@ def write_summary_table() -> None:
              float(hb["country_train_validation_mean"]) - bench],
             ["Global mean", "baseline", "main", float(hb["global_train_validation_mean"]), np.nan, np.nan,
              float(hb["global_train_validation_mean"]) - bench],
-            ["ElasticNet (features only)", "linear", "main", float(lin["mae"]), float(lin["rmse"]),
+            ["Selected linear (features only)", "linear", "main", float(lin["mae"]), float(lin["rmse"]),
              float(lin["oos_r2_vs_train_mean"]), float(lin["mae"]) - bench],
             ["Random Forest (features only)", "tree", "main", float(tree["mae"]), float(tree["rmse"]),
              float(tree["oos_r2_vs_train_mean"]), float(tree["mae"]) - bench],
