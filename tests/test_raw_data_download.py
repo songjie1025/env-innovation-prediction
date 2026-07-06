@@ -41,9 +41,9 @@ class RawDataDownloadTests(unittest.TestCase):
                         "comments": "",
                     },
                     {
-                        "paper name ": "Patent paper",
-                        "predictors used": "Lagged Env Tech RTA",
-                        "Indicator Data Code": "(OECD) calculate through ENV_TECH",
+                        "paper name ": "Industrial structure paper",
+                        "predictors used": "Manufacturing value added share",
+                        "Indicator Data Code": "(WDI) NV.IND.MANF.ZS",
                         "comments": "",
                     },
                     {
@@ -69,8 +69,8 @@ class RawDataDownloadTests(unittest.TestCase):
         self.assertEqual(by_variable["rise_energy_efficiency"]["dataset_id"], "world_bank_data360")
         self.assertEqual(by_variable["rise_energy_efficiency"]["indicator_prefix"], "WB_RISE_EE_")
         self.assertEqual(
-            by_variable["env_technology_rta"]["source_variable"],
-            "IX.DEV.ENV_PAT._Z",
+            by_variable["manufacturing_share"]["source_variable"],
+            "NV.IND.MANF.ZS",
         )
         self.assertEqual(by_variable["carbon_tax"]["dataset_id"], "oecd_carbon_pricing")
         self.assertEqual(by_variable["carbon_tax"]["status"], "planned")

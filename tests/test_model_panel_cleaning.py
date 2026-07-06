@@ -239,12 +239,12 @@ class ModelPanelCleaningTests(unittest.TestCase):
         self.assertEqual(metadata["rows"], 1)
         self.assertEqual(metadata["target_non_missing"], 1)
 
-    def test_default_main_panel_uses_oecd_rta_index_predictor(self):
+    def test_default_main_panel_uses_manufacturing_share_predictor(self):
         main_definition = next(definition for definition in default_panel_definitions() if definition.panel_id == "main")
         main_predictors = [spec.variable for spec in main_definition.predictors]
 
-        self.assertIn("env_technology_rta", main_predictors)
-        self.assertNotIn("env_technology_share_for_rta", main_predictors)
+        self.assertIn("manufacturing_share", main_predictors)
+        self.assertNotIn("env_technology_rta", main_predictors)
 
     def test_v2_main_panel_excludes_reassessed_fossil_and_tertiary_predictors(self):
         main_definition = next(definition for definition in v2_panel_definitions() if definition.panel_id == "main")
@@ -253,7 +253,7 @@ class ModelPanelCleaningTests(unittest.TestCase):
         self.assertEqual(len(main_predictors), 9)
         self.assertNotIn("fossil_energy_share", main_predictors)
         self.assertNotIn("tertiary_enrollment", main_predictors)
-        self.assertIn("env_technology_rta", main_predictors)
+        self.assertIn("manufacturing_share", main_predictors)
         self.assertIsNone(main_definition.anchor_variable)
         self.assertEqual(main_definition.raw_start_year, 1996)
         self.assertEqual(main_definition.raw_end_year, 2022)

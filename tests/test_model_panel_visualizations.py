@@ -63,8 +63,8 @@ class ModelPanelVisualizationTests(unittest.TestCase):
                     "country_name": ["United States", "United States", "Canada", "Canada"],
                     "year": [2000, 2001, 2000, 2001],
                     "env_patent_share_inventions": [1.0, 1.1, 2.0, None],
-                    "env_technology_rta_lag1": [0.8, 1.2, 1.5, 2.0],
-                    "env_technology_rta_lag1_3_mean": [0.9, 1.1, None, 1.8],
+                    "manufacturing_share_lag1": [0.8, 1.2, 1.5, 2.0],
+                    "manufacturing_share_lag1_3_mean": [0.9, 1.1, None, 1.8],
                     "gdp_constant_2015_usd_lag1": [100.0, 101.0, 80.0, 81.0],
                     "gdp_constant_2015_usd_lag1_3_mean": [99.0, 100.0, 79.0, None],
                 }
