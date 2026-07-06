@@ -125,7 +125,7 @@ SKEW_TRANSFORM_METHODS = {
     "inflation_lag1_3_mean": "asinh",
     "co2_per_capita_ar5_lag1_3_mean": "log1p",
     "trade_openness_lag1_3_mean": "log1p",
-    "env_technology_rta_lag1_3_mean": "log1p",
+    "manufacturing_share_lag1_3_mean": "log1p",
 }
 
 COUNTRY_CODE_COLUMN = "country_code"

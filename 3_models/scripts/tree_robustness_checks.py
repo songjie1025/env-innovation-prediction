@@ -186,7 +186,7 @@ def _clean(label: str) -> str:
     names = {
         "size_factor": "Economic scale / research capacity",
         "gdp_constant_2015_usd": "GDP (constant USD)", "co2_per_capita_ar5": "CO2 per capita",
-        "wgi_regulatory_quality": "Regulatory quality", "env_technology_rta": "Env. tech RTA",
+        "wgi_regulatory_quality": "Regulatory quality", "manufacturing_share": "Manufacturing share",
         "scientific_journal_articles": "Scientific articles", "fdi_net_inflows": "FDI net inflows",
         "renewable_energy_share": "Renewable share", "trade_openness": "Trade openness",
         "inflation": "Inflation",

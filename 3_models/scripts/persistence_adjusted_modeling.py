@@ -1353,7 +1353,7 @@ def _clean_feature_label(feature: str) -> str:
     label = label.replace("_lag1_3_mean", " (lag 1-3 mean)")
     label = label.replace("_lag1", " (lag 1)")
     label = label.replace("env_patent_share_inventions", "environmental patent share")
-    label = label.replace("env_technology_rta", "environmental technology RTA")
+    label = label.replace("manufacturing_share", "manufacturing value added share")
     label = label.replace("co2_per_capita_ar5", "CO2 per capita")
     label = label.replace("fdi_net_inflows", "FDI net inflows")
     label = label.replace("gdp_constant_2015_usd", "GDP")
