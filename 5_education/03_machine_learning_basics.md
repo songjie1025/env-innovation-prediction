@@ -43,7 +43,7 @@ In this project, possible features include:
 
 The target is the value the model tries to predict.
 
-In this project, the target is a country-year OECD patent-based measure of environment-related innovation: `env_patent_share_inventions`. A robustness target such as environment-related inventions per million people may still be used to check whether the findings depend on the target definition.
+In this project, the target is a country-year OECD patent-based measure of environment-related innovation: `env_patent_share_inventions`, interpreted as a country's percentage contribution to worldwide environment-related inventions. A robustness target such as environment-related inventions per million people may still be used to check whether the findings depend on the target definition.
 
 ## Training Data
 

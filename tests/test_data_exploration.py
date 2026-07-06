@@ -194,7 +194,13 @@ class DataExplorationTests(unittest.TestCase):
                 "INV_PS.DEV.ENV_PAT._Z",
             },
         )
-        self.assertTrue(candidates["selection_rationale"].str.contains("broad").all())
+        rationale_by_source = candidates.set_index("source_variable")["selection_rationale"]
+        self.assertIn(
+            "worldwide environment-related invention pool",
+            rationale_by_source["PT_INV.DEV.ENV_PAT._Z"],
+        )
+        self.assertIn("diagnostic domestic portfolio-share", rationale_by_source["PT_TECH.DEV.ENV_PAT._Z"])
+        self.assertIn("size-normalized", rationale_by_source["INV_PS.DEV.ENV_PAT._Z"])
 
 
 if __name__ == "__main__":

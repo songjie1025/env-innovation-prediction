@@ -17,9 +17,9 @@ The selected main target is `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT.
 
 Reasons:
 
-1. It matches the OECD public description of environment-related inventions as a share of all domestic inventions.
-2. It is normalized by overall invention output, which helps avoid country-size dominance.
-3. It avoids the interpretation problem already observed for `env_patent_share_tech`, where technology-domain percentages can exceed 100 in small or multi-classified patent portfolios.
+1. It matches an OECD patent-indicator series for each country or aggregate area's contribution to worldwide environment-related inventions.
+2. It has broad country-year coverage, but it should be interpreted as a global contribution share rather than a domestic portfolio share.
+3. It avoids using `env_patent_share_tech` as the main target, where the domestic all-technologies share can exceed 100 in small or multi-classified patent portfolios.
 
 `env_patents_per_million` should remain a robustness or alternative target because it captures patent intensity per population, but it may be more sensitive to country innovation-system scale and skewness. `env_patent_share_tech` should stay out of the main target role because values above 100 create interpretation risk, but it can still be used for diagnostic or sensitivity discussion if needed.
 

@@ -13,7 +13,7 @@ from data_common import PROCESSED_DIR, RAW_PREDICTORS_V1_DIR, filter_country_row
 TARGET_VARIABLE = "env_patent_share_inventions"
 ROBUSTNESS_TARGET_VARIABLE = "env_patents_per_million"
 TARGET_LABELS = {
-    "env_patent_share_inventions": "Environment-related patent share of inventions",
+    "env_patent_share_inventions": "Environment-related invention share of world total",
     "env_patents_per_million": "Environment-related patents per million people",
 }
 MANIFEST_FILE_NAME = "raw_download_manifest.csv"

@@ -14,7 +14,7 @@ The core task is to:
 3. Build an interpretable machine learning model.
 4. Assess which predictors are most strongly associated with future environment-related innovation.
 
-The main target variable is fixed as `PT_INV.DEV.ENV_PAT._Z` / `env_patent_share_inventions`. The final predictor subset, country-year coverage, evaluation metrics, and final model comparison strategy will be confirmed after literature review, coverage checks, and initial modeling.
+The main target variable is fixed as `PT_INV.DEV.ENV_PAT._Z` / `env_patent_share_inventions`, interpreted from OECD metadata as a country or aggregate area's percentage contribution to worldwide environment-related inventions. The final predictor subset, country-year coverage, evaluation metrics, and final model comparison strategy will be confirmed after literature review, coverage checks, and initial modeling.
 
 ## Source of Truth
 

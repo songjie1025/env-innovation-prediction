@@ -18,7 +18,7 @@
 
 ## One-Paragraph Summary
 
-This OECD data source is the closest match to the project's intended outcome because it defines environment-related innovation through patent indicators. The public indicator describes the measure as the share of environment-related inventions in all domestic inventions, covering domains such as environmental management, water-related adaptation, and climate-change mitigation, and focusing on higher-value inventions. It provides public metadata and data access for environment-related technologies, including the selected main target and robustness alternatives. For this project, the most important distinction is between the OECD measure based on percentage of inventions and the measure based on percentage of technologies, because those labels affect interpretability. The source is not an empirical study of determinants, so it cannot justify predictors by itself.
+This OECD data source is the closest match to the project's intended outcome because it defines environment-related innovation through patent indicators. The corrected 2026-07-06 metadata check separates two easily confused percentage measures: `PT_INV.DEV.ENV_PAT._Z` is a country or aggregate area's percentage contribution to worldwide environment-related inventions, while `PT_TECH.DEV.ENV_PAT._Z` is the percentage of all domestic technologies / inventions that are environment-related. Both cover domains such as environmental management, water-related adaptation, and climate-change mitigation, and development indicators focus on higher-value inventions. The source provides public metadata and data access for environment-related technologies, including the selected main target and robustness alternatives. It is not an empirical study of determinants, so it cannot justify predictors by itself.
 
 ## Why This Source Is Relevant
 
@@ -31,7 +31,7 @@ This OECD data source is the closest match to the project's intended outcome bec
 
 | Item | What the source uses / says | Relevance for our project |
 |---|---|---|
-| Innovation outcome | Environment-related inventions as a share of all domestic inventions, plus related OECD patent indicators. | Direct source for the dependent variable; supports `env_patent_share_inventions` most directly. |
+| Innovation outcome | Country contribution to worldwide environment-related inventions (`PT_INV`) and domestic green-technology portfolio share (`PT_TECH`), plus related OECD patent indicators. | Direct source for the dependent variable; supports `env_patent_share_inventions` only when it is described as a global contribution share. |
 | Patent definition or technology class | Environment-related technology domains and higher-value inventions in OECD patent data. | Requires companion methodology sources for detailed taxonomy, value filters, and caveats. |
 | Predictor variables | Not applicable. | Does not support predictor selection directly. |
 | Policy variables | Not applicable. | Use OECD EPS and empirical policy papers for policy predictors. |
@@ -43,7 +43,7 @@ This OECD data source is the closest match to the project's intended outcome bec
 | Years | Local exploration found 1990-2023 coverage for the selected main target and robustness target. | Fits the project horizon, but predictors may shorten the usable panel. |
 | Lag structure | Not applicable. | Target should remain at outcome year `t`; predictors should be lagged. |
 | Data sources | OECD Patents - indicators / OECD Data Explorer. | Official source for raw target extraction. |
-| Transformations | Percentage of inventions, percentage of technologies, and inventions per population options. | `env_patent_share_inventions` is the selected main target; `env_patents_per_million` is a robustness option. |
+| Transformations | Percentage of inventions, percentage of technologies, and inventions per population options. | `env_patent_share_inventions` is the selected main target but is a global contribution share; `env_patents_per_million` is a robustness option. |
 
 ## Key Findings for Predictor Selection
 
@@ -89,7 +89,7 @@ This OECD data source is the closest match to the project's intended outcome bec
 
 ## Open Questions After Reading
 
-1. Does the downloaded `PT_INV.DEV.ENV_PAT._Z` series exactly match the public indicator definition on the current OECD page?
+1. Does the selected `PT_INV.DEV.ENV_PAT._Z` global-share target still match the intended research question, or should the domestic-share `PT_TECH` definition be revisited despite its interpretation risk?
 2. What OECD family-size or value threshold is used for "higher-value inventions" in the current Data Explorer release?
 
 ## Chinese Translation
@@ -112,7 +112,7 @@ This OECD data source is the closest match to the project's intended outcome bec
 
 ### 一段式摘要
 
-该 OECD 数据来源最接近本项目预期的结果变量，因为它通过专利指标定义 environment-related innovation。公共指标将该度量描述为环境相关发明在全部国内发明中的占比，覆盖 environmental management、water-related adaptation 和 climate-change mitigation 等领域，并聚焦于 higher-value inventions。它为环境相关技术提供公开元数据和数据访问，包括已选主目标和稳健性替代指标。对本项目而言，最重要的区别是基于 percentage of inventions 的 OECD 度量与基于 percentage of technologies 的度量之间的区别，因为这些标签会影响可解释性。该来源不是关于决定因素的实证研究，因此不能单独为预测变量提供依据。
+该 OECD 数据来源最接近本项目预期的结果变量，因为它通过专利指标定义 environment-related innovation。2026-07-06 更正后的 metadata 检查区分了两个容易混淆的百分比指标：`PT_INV.DEV.ENV_PAT._Z` 是某国家或聚合地区对世界环境相关发明池的百分比贡献，`PT_TECH.DEV.ENV_PAT._Z` 则是环境相关技术/发明在本国全部技术/发明中的占比。二者都覆盖 environmental management、water-related adaptation 和 climate-change mitigation 等领域，development 指标聚焦 higher-value inventions。该来源为环境相关技术提供公开 metadata 和数据访问，包括已选主目标和稳健性替代指标。它不是关于决定因素的实证研究，因此不能单独为预测变量提供依据。
 
 ### 为什么这个来源相关
 
@@ -125,7 +125,7 @@ This OECD data source is the closest match to the project's intended outcome bec
 
 | 项目 | 来源使用 / 说明的内容 | 对本项目的相关性 |
 |---|---|---|
-| 创新结果 | Environment-related inventions as a share of all domestic inventions，以及相关 OECD patent indicators。 | 因变量的直接来源；最直接支持 `env_patent_share_inventions`。 |
+| 创新结果 | 国家对世界环境相关发明池的贡献份额（`PT_INV`）、国内绿色技术组合占比（`PT_TECH`），以及相关 OECD patent indicators。 | 因变量的直接来源；只有在将 `env_patent_share_inventions` 描述为 global contribution share 时才直接支持该变量。 |
 | 专利定义或技术类别 | OECD patent data 中的 environment-related technology domains 和 higher-value inventions。 | 需要配套方法来源来说明详细 taxonomy、value filters 和 caveats。 |
 | 预测变量 | 不适用。 | 不直接支持预测变量选择。 |
 | 政策变量 | 不适用。 | 政策预测变量应使用 OECD EPS 和实证政策论文。 |
@@ -137,7 +137,7 @@ This OECD data source is the closest match to the project's intended outcome bec
 | 年份 | 本地探索显示，已选主目标和稳健性目标覆盖 1990-2023。 | 符合项目时间范围，但预测变量可能缩短可用面板。 |
 | 滞后结构 | 不适用。 | 目标应保持在结果年份 `t`；预测变量应进行滞后处理。 |
 | 数据来源 | OECD Patents - indicators / OECD Data Explorer。 | 原始目标提取的官方来源。 |
-| 变换 | Percentage of inventions、percentage of technologies 和 inventions per population 选项。 | `env_patent_share_inventions` 是已选主目标；`env_patents_per_million` 可作为稳健性选项。 |
+| 变换 | Percentage of inventions、percentage of technologies 和 inventions per population 选项。 | `env_patent_share_inventions` 是已选主目标，但应解释为 global contribution share；`env_patents_per_million` 可作为稳健性选项。 |
 
 ### 预测变量选择的关键发现
 
@@ -183,5 +183,5 @@ This OECD data source is the closest match to the project's intended outcome bec
 
 ### 阅读后的开放问题
 
-1. 下载的 `PT_INV.DEV.ENV_PAT._Z` series 是否与当前 OECD 页面上的公共指标定义完全一致？
+1. 已选的 `PT_INV.DEV.ENV_PAT._Z` global-share target 是否仍然匹配研究问题，还是需要重新讨论 domestic-share `PT_TECH`，即使它有解释风险？
 2. 当前 Data Explorer release 对 "higher-value inventions" 使用了什么 OECD family-size 或 value threshold？

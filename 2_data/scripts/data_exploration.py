@@ -42,22 +42,25 @@ OECD_PATENT_TARGET_CANDIDATES = [
         "variable": "env_patent_share_tech",
         "source_variable": "PT_TECH.DEV.ENV_PAT._Z",
         "unit_measure": "PT_TECH",
-        "description": "Environment-related technologies as a percentage of all technologies.",
-        "measurement_note": "Percent share; normalized by the country's overall technology portfolio.",
+        "description": "Environment-related technologies as a percentage of all domestic technologies / inventions.",
+        "measurement_note": "Internal country portfolio share; country rows should not be summed.",
         "selection_rationale": (
-            "broad normalized target candidate for comparing the environment-related share "
-            "of each country's technology portfolio."
+            "diagnostic domestic portfolio-share candidate; kept out of the main target role "
+            "because values above 100 create interpretation risk."
         ),
     },
     {
         "variable": "env_patent_share_inventions",
         "source_variable": "PT_INV.DEV.ENV_PAT._Z",
         "unit_measure": "PT_INV",
-        "description": "Environment-related technologies as a percentage of inventions.",
-        "measurement_note": "Percent share; normalized by the country's overall invention output.",
+        "description": "Country or aggregate area's percentage contribution to worldwide environment-related inventions.",
+        "measurement_note": (
+            "Global contribution share; country rows sum to about 100 by year after aggregate rows "
+            "such as W, OECD, EU27_2020, and EA19 are excluded."
+        ),
         "selection_rationale": (
-            "broad normalized target candidate for comparing the environment-related share "
-            "of each country's invention output."
+            "broad country-year target candidate for comparing each country's contribution "
+            "to the worldwide environment-related invention pool."
         ),
     },
     {

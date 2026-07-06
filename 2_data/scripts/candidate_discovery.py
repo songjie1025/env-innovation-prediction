@@ -101,8 +101,8 @@ PREDICTOR_CONCEPTS = [
         "literature_support": "Moderate; patent studies often control for market size or total demand.",
         "expected_direction": "Positive",
         "include_decision": "candidate_control",
-        "decision_reason": "Useful control if the target is not fully size-normalized.",
-        "measurement_caveat": "Can duplicate country-size information; use sparingly with normalized targets.",
+        "decision_reason": "Useful control because the selected global-share target is sensitive to national innovation-system scale.",
+        "measurement_caveat": "Can dominate interpretation when the target is a contribution share; separate scale effects from policy or capability mechanisms.",
         "lag_recommendation": "Use t-1.",
         "metadata_match_keywords": "gdp; gross domestic product; population; market size",
     },
@@ -396,7 +396,7 @@ def classify_target_candidate(
         return (
             "main_target_candidate",
             True,
-            "Preferred normalized target: environment-related technologies as a share of inventions.",
+            "Selected target: country contribution to worldwide environment-related inventions.",
         )
     if variable == "INV_PS.DEV.ENV_PAT._Z":
         return (
@@ -408,7 +408,7 @@ def classify_target_candidate(
         return (
             "secondary_target",
             False,
-            "Technology-share candidate kept for robustness only because values can be hard to interpret.",
+            "Domestic all-technologies share kept for diagnostics only because values above 100 create interpretation risk.",
         )
     if patent_type == "DEV" and tech in BROAD_ENVIRONMENT_TECH_DOMAINS and pat == "_Z":
         return (

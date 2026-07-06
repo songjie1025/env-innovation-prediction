@@ -129,7 +129,7 @@ RAW_TARGETS = [
         "source": "OECD Patents - indicators",
         "role": "main_target",
         "unit_measure": "PT_INV",
-        "description": "Environment-related technologies as a percentage of inventions.",
+        "description": "Country or aggregate area's percentage contribution to worldwide environment-related inventions.",
     },
     {
         "dataset_id": "oecd_patents_environment",

@@ -16,9 +16,9 @@ Selected main target and robustness targets:
 
 | Concept | Candidate source | Candidate measure | Status | Notes |
 |---|---|---|---|---|
-| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_inventions`: `PT_INV.DEV.ENV_PAT._Z`, environment-related technologies as percentage of inventions | Main target | Active decision in `0_organization/decision_log.md`; strong coverage in first-pass exploration: 1990-2023, 202 countries. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_inventions`: `PT_INV.DEV.ENV_PAT._Z`, country or aggregate area's percentage contribution to worldwide environment-related inventions | Main target | Active decision in `0_organization/decision_log.md`; strong coverage in first-pass exploration: 1990-2023, 202 countries. This is a global-share measure, not a domestic green-portfolio share. |
 | Environment-related innovation | OECD `Patents - indicators` | `env_patents_per_million`: `INV_PS.DEV.ENV_PAT._Z`, environment-related inventions per million people | Robustness target | Useful normalized intensity alternative: 1990-2023, 196 countries. |
-| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_tech`: `PT_TECH.DEV.ENV_PAT._Z`, environment-related technologies as percentage of all technologies | Diagnostic / sensitivity only | Not used as the main target because values above 100 create interpretation risk. |
+| Environment-related innovation | OECD `Patents - indicators` | `env_patent_share_tech`: `PT_TECH.DEV.ENV_PAT._Z`, environment-related technologies as percentage of all domestic technologies / inventions | Diagnostic / sensitivity only | Not used as the main target because values above 100 create interpretation risk. This is an internal country portfolio share and should not be summed across countries. |
 
 Target-variable rule:
 
@@ -189,9 +189,9 @@ The predictor assessment is especially provisional. The literature review is sti
 
 | Project decision | Current assessment | Evidence basis | Caveat |
 |---|---|---|---|
-| Main target | Use `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z` as the selected main target. | Active 2026-05-20 decision, OECD patent indicator metadata, Hascic and Migotto (2015), and OECD patent-statistics guidance. | Report the exact indicator code and unit. |
+| Main target | Use `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z` as the selected main target, interpreted as a global contribution share. | Active 2026-05-20 decision, corrected 2026-07-06 OECD patent-indicator metadata check, Hascic and Migotto (2015), and OECD patent-statistics guidance. | Report the exact indicator code, unit, and the fact that country rows sum to about 100 after aggregate rows are excluded. |
 | Robustness target | Keep `env_patents_per_million` as a robustness or alternative intensity target. | Patent-statistics normalization logic. | May be more sensitive to general innovation-system scale and skewness. |
-| Non-main target | Keep `env_patent_share_tech` out of the main model. | Prior data-quality decision and interpretation risk for values above 100. | Could remain a carefully caveated sensitivity variable. |
+| Non-main target | Keep `env_patent_share_tech` out of the main model. | Corrected OECD metadata interpretation: this is the domestic all-technologies share, but observed values above 100 create interpretation risk. | Could remain a carefully caveated sensitivity variable. |
 | Predictor timing | Use three-year lagged moving averages, `x_lag1_3_mean`, as the main timing specification. | Active 2026-06-08 decision and literature support for delayed innovation responses. | Single-year lags remain robustness checks. |
 | Policy predictor | Treat lagged `eps_index` as the strongest policy predictor candidate. | Kruse et al. (2022), Johnstone et al. (2010), Nesta et al. (2014), and Johnstone et al. (2012). | EPS narrows the panel and should be interpreted as predictive association, not causal proof. |
 | R&D capacity | Treat `rd_expenditure_gdp` as a strong candidate if coverage permits. | Patent-policy and induced-innovation literature repeatedly points to innovation capacity or knowledge stocks. | WDI R&D is general R&D, not green R&D. |

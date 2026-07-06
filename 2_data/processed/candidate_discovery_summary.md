@@ -32,7 +32,7 @@ The catalogs are reviewer-facing discovery artifacts. They should be read togeth
 
 | source_variable | candidate_role | recommended_use | include | coverage_checked | countries_with_data | first_year | last_year | reason |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| PT_INV.DEV.ENV_PAT._Z | main_target_candidate | main outcome candidate | True | True | 202 | 1990 | 2023 | Selected main target: environment-related technologies as a share of inventions. |
+| PT_INV.DEV.ENV_PAT._Z | main_target_candidate | main outcome candidate | True | True | 202 | 1990 | 2023 | Selected target: country contribution to worldwide environment-related inventions. |
 | INV_PS.DEV.ENV_PAT._Z | secondary_target | robustness outcome candidate | True | True | 196 | 1990 | 2023 | Size-normalized patent intensity candidate; useful robustness target. |
 
 ## Mechanism Or Descriptive Target Candidates
@@ -59,7 +59,7 @@ The catalogs are reviewer-facing discovery artifacts. They should be read togeth
 | variable_concept | source | source_variable | include_decision | coverage_summary | decision_reason |
 | --- | --- | --- | --- | --- | --- |
 | GDP per capita | World Bank WDI | NY.GDP.PCAP.KD | candidate | gdp_per_capita: 213 countries, 35 years, 1990-2024 | Strong coverage and clear interpretation, but may absorb several mechanisms. |
-| GDP/population/market size | World Bank WDI | NY.GDP.MKTP.KD; SP.POP.TOTL | candidate_control | gdp: 213 countries, 35 years, 1990-2024; population: 217 countries, 35 years, 1990-2024 | Useful control if the target is not fully size-normalized. |
+| GDP/population/market size | World Bank WDI | NY.GDP.MKTP.KD; SP.POP.TOTL | candidate_control | gdp: 213 countries, 35 years, 1990-2024; population: 217 countries, 35 years, 1990-2024 | Useful control because the selected global-share target is sensitive to national innovation-system scale. |
 | R&D expenditure | World Bank WDI | GB.XPD.RSDV.GD.ZS | candidate | rd_expenditure_gdp: 156 countries, 29 years, 1996-2024 | High conceptual fit; coverage is the main constraint. |
 | Renewable energy share | World Bank WDI | EG.FEC.RNEW.ZS | candidate_energy_variable | renewable_energy_share: 212 countries, 33 years, 1990-2022 | Prefer at most one energy-system variable in the first small model. |
 | Environmental policy stringency | OECD EPS | POL_STRINGENCY.EPS | candidate | eps_index: 40 countries, 31 years, 1990-2020 | Best policy candidate if narrower OECD-style coverage is acceptable. |

@@ -17,7 +17,7 @@ The model should support two outputs:
 
 The main target variable and main predictor timing specification are fixed:
 
-1. Main target: `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z`.
+1. Main target: `env_patent_share_inventions` / `PT_INV.DEV.ENV_PAT._Z`, interpreted as a country or aggregate area's percentage contribution to worldwide environment-related inventions.
 2. Main timing: for each selected predictor `x`, use `x_lag1_3_mean`, the mean of years `t-1`, `t-2`, and `t-3`, to predict target year `t`.
 
 The active v2 main panel fixes the first main-model predictor subset after the pre-modeling reassessment. The first modeling checkpoint uses the v2 no-imputation main panel, `*_lag1_3_mean` features, and a simple chronological 80/10/10 train/validation/test split confirmed after teacher consultation on 2026-06-17. The first runnable pipeline focuses on interpretable linear models and chooses the candidate with the lowest validation MAE before reporting final test performance on the latest contiguous period.

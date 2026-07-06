@@ -21,7 +21,7 @@ Using code does not mean every decision is automatic. The main target and timing
 
 The main dataset should be a country-year panel. This means each row represents one country in one calendar year, such as Germany in 2010 or Brazil in 2015.
 
-An outcome is the value a later analysis or model tries to explain or predict. In this project, the selected outcome is the OECD environment-related patent measure `env_patent_share_inventions`.
+An outcome is the value a later analysis or model tries to explain or predict. In this project, the selected outcome is the OECD environment-related patent measure `env_patent_share_inventions`, interpreted as a country's contribution share in the worldwide environment-related invention pool.
 
 A predictor is an input variable that may help explain or predict the outcome. Candidate predictors usually come from earlier years, such as GDP per capita, R&D expenditure, renewable energy share, CO2 emissions per capita, or an environmental policy index. Same-year predictors should be used only if they are clearly justified and documented.
 

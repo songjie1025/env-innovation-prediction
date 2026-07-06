@@ -185,7 +185,7 @@ Decision:
 Keep `env_patent_share_inventions` (`PT_INV.DEV.ENV_PAT._Z`) as the main target, and generate parallel robustness target panels for `env_patents_per_million` (`INV_PS.DEV.ENV_PAT._Z`). The robustness panels reuse the active v2 predictor specification, lag definitions, target-observed row filtering, and no-imputation versus retrospective linear-interpolation variants. Write them under `2_data/processed/model_panels/robustness/env_patents_per_million/v2/`.
 
 Reason:
-The main target measures the share of domestic inventions that are environment-related. `env_patents_per_million` is a size-normalized patent-intensity outcome, so it tests whether later model results are specific to an invention-share measure or also hold for patent intensity. Keeping the robustness target in a separate package preserves the main v2 deliverable while making the modeling stage able to loop over outcomes with the same feature design.
+The main target measures each country or aggregate area's percentage contribution to worldwide environment-related inventions in the OECD patent-indicator series. `env_patents_per_million` is a size-normalized patent-intensity outcome, so it tests whether later model results are specific to a global-share measure or also hold for patent intensity. Keeping the robustness target in a separate package preserves the main v2 deliverable while making the modeling stage able to loop over outcomes with the same feature design.
 
 Alternatives considered:
 Replacing the main target was rejected because the active target decision still favors `PT_INV.DEV.ENV_PAT._Z`. Using `PT_TECH.DEV.ENV_PAT._Z` as the second target was rejected because the percentage-of-technologies measure has interpretation risk and values above 100. Duplicating the whole panel-cleaning script was rejected in favor of parameterizing the target variable.
@@ -344,7 +344,7 @@ Decision:
 Use PT_INV.DEV.ENV_PAT._Z (Percentage of inventions) as the main target variable.
 
 Reason:
-Based on the screening in `GitHub/2_data/notebook/candidate_discovery.ipynb`, combined with offline reviews and discussions, "Percentage of inventions" was selected over "Inventions per person". This choice was made because the "Percentage of inventions" measure offers better country coverage, higher data quality, and is logically more compelling.
+Based on the screening in `GitHub/2_data/notebook/candidate_discovery.ipynb`, combined with offline reviews and discussions, "Percentage of inventions" was selected over "Inventions per person". The 2026-07-06 OECD metadata correction clarifies that this selected `PT_INV` series is a global contribution share of environment-related inventions, not a domestic green-share measure. The official metadata PDF is saved at `1_literature_review/pdfs/2026_oecd_patent-indicators-metadata.pdf`.
 
 Alternatives considered:
 Inventions per person as other possible target variable candidate
@@ -400,7 +400,7 @@ Decision:
 The first literature-review pass treats `env_patent_share_inventions` as the leading main target candidate, with `env_patents_per_million` kept as a robustness or alternative intensity target.
 
 Reason:
-OECD target metadata and patent-measurement sources support a normalized patent-share measure tied to domestic inventions. This choice is easier to defend than `env_patent_share_tech`, which was already excluded as a main target because values above 100 create interpretation risk. A per-million indicator remains useful because it preserves patent intensity, but it may be more sensitive to general innovation-system scale.
+OECD target metadata and patent-measurement sources support a broad patent-share measure for environment-related inventions. The 2026-07-06 metadata correction clarifies that `PT_INV` is best interpreted as a global contribution share, while `env_patent_share_tech` / `PT_TECH` is the domestic all-technologies share and remains excluded as a main target because values above 100 create interpretation risk. A per-million indicator remains useful because it preserves patent intensity, but it may be more sensitive to general innovation-system scale.
 
 Alternatives considered:
 Using `env_patents_per_million` as the main target was considered but deferred because the project should first check skewness and size effects. Returning to `env_patent_share_tech` as the main target was rejected under the active 2026-05-16 decision.
@@ -414,7 +414,7 @@ Decision:
 `env_patent_share_tech` (`PT_TECH.DEV.ENV_PAT._Z`) will not be used as the main target variable.
 
 Reason:
-The OECD API and the locally downloaded raw data both report Eritrea in 2016 with `PT_TECH = 350` and status `Normal value`. This is not a download or parsing error. However, values above 100 make the variable difficult to interpret as a simple country-level share of green innovation. The most plausible explanation is that the "percentage of technologies" measure can be inflated in very small patent systems when inventions are assigned to multiple technology categories. This creates a high interpretation risk for the main analysis.
+The OECD API and the locally downloaded raw data both report Eritrea in 2016 with `PT_TECH = 350` and status `Normal value`. This is not a download or parsing error. The 2026-07-06 metadata correction clarifies that `PT_TECH` is the domestic all-technologies share: environment-related technologies as a percentage of all domestic technologies / inventions. However, values above 100 make the variable difficult to interpret as a simple bounded country-level share of green innovation. The most plausible explanation is that the "percentage of technologies" measure can be inflated in very small patent systems when inventions are assigned to multiple technology categories. This creates a high interpretation risk for the main analysis.
 
 Alternatives considered:
 Using `env_patent_share_tech` as the main target was rejected. It may still be considered as a robustness or sensitivity variable if the sample is filtered and the interpretation is stated carefully. `env_patents_per_million` and `env_patent_share_inventions` remain candidate target variables.
