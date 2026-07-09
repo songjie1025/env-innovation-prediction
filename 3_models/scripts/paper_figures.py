@@ -181,7 +181,7 @@ def fig2_drivers_linear_vs_tree(plt) -> None:
     _bar_labels(axes[1], b2, fmt="{:.2f}", pad=0.005)
     axes[1].set_xlim(0, imp["importance"].max() * 1.18)
 
-    fig.suptitle("Most associated predictors: GDP and scientific output dominate",
+    fig.suptitle("Most associated predictors: economic scale and research capacity dominate",
                  fontsize=14, fontweight="bold")
     _save(fig, "fig2_drivers_linear_vs_tree", plt)
 
@@ -303,7 +303,9 @@ def main() -> None:
     print(f"Writing paper figures to: {FIG_DIR}")
     fig1_forecast_vs_persistence(plt)
     fig2_drivers_linear_vs_tree(plt)
-    fig3_nested_incremental_value(plt)
+    # fig3 (single-shot nested) intentionally removed: its "predictors help in
+    # tree models" reading was overturned by the 25-seed robustness check. Use the
+    # multi-seed nested figure (fig6, tree_robustness_checks.py) instead.
     fig4_error_by_quantile(plt)
     fig5_rolling_origin(plt)
     write_summary_table()
