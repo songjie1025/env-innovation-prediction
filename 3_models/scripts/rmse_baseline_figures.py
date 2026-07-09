@@ -67,23 +67,46 @@ def _read_csv(path: Path) -> pd.DataFrame:
 
 
 def _persistence_rmse_for_panel(panel_id: str) -> float | None:
-    """Return the persistence Test RMSE for a panel, or None if not committed.
+    """Compute the national-persistence Test RMSE for a panel.
 
-    Only the MAIN panel has a national-persistence RMSE in any committed CSV
-    (linear or tree historical baselines, `country_last_pretest_holdconstant`).
-    Submodels A/B/C have no such row, so this returns None for them and the
-    caller draws the panel without a baseline line.
+    The committed CSVs only saved the persistence *MAE* for the submodels (in
+    model_family_comparison.csv) and the persistence *RMSE* for the main panel (in
+    the historical-baseline tables). The persistence baseline itself is
+    deterministic and needs no model training, so we reconstruct it directly from
+    the panel and the chronological split. This mirrors _persistence_baseline_mae
+    in model_family_comparison.py and reproduces its stored MAE exactly, extending
+    it to RMSE for every panel.
     """
-    if panel_id != "main":
+    import numpy as np
+    import sys
+
+    sys.path.insert(0, str(REPO_ROOT / "3_models" / "scripts"))
+    from model_config import PANEL_CONFIGS, TRAIN_SHARE, VALIDATION_SHARE
+    from model_data import (
+        chronological_train_validation_test_split,
+        load_model_panel,
+        select_lag_features,
+    )
+
+    cfg = next((c for c in PANEL_CONFIGS if c["panel_id"] == panel_id), None)
+    if cfg is None:
         return None
-    for path in (LINEAR_BASELINES_CSV, TREE_BASELINES_CSV):
-        if not path.exists():
-            continue
-        table = pd.read_csv(path)
-        match = table[table["model"].eq(PERSISTENCE_RULE)]
-        if not match.empty:
-            return float(match.iloc[0]["rmse"])
-    return None
+    target = cfg["target_column"]
+    panel = load_model_panel(cfg["panel_path"], target)
+    select_lag_features(panel, LAG)  # validate lag availability
+    split = chronological_train_validation_test_split(
+        panel, train_share=TRAIN_SHARE, validation_share=VALIDATION_SHARE
+    )
+    tv = pd.concat([split.train, split.validation], ignore_index=True)
+    latest = (
+        tv.sort_values(["country_code", "year"]).groupby("country_code").tail(1)
+        .set_index("country_code")[target]
+    )
+    global_mean = float(tv[target].mean())
+    test = split.test
+    pred = test["country_code"].map(latest).fillna(global_mean).to_numpy(float)
+    y = test[target].to_numpy(float)
+    return float(np.sqrt(np.mean((y - pred) ** 2)))
 
 
 def _value_labels(ax, bars, values) -> None:
