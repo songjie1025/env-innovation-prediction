@@ -19,6 +19,9 @@ tests/*
 !tests/test_*.py
 tests/__pycache__/
 
+# === Local contributor-agent notes ===
+AGENTS.md
+
 # === Virtual environments ===
 venv/
 .venv/
